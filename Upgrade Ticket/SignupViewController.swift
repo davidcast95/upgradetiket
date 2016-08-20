@@ -111,13 +111,13 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     //MARK: Function
     func UsernameIsInvalid() {
         dispatch_async(dispatch_get_main_queue(), {
-            self.usernameTextfield.Invalid()
+            self.usernameTextfield.Invalid("Invalid username")
         })
     }
     
     func EmailIsInvalid() {
         dispatch_async(dispatch_get_main_queue(), {
-            self.emailTextfield.Invalid()
+            self.emailTextfield.Invalid("Invalid email")
         })
     }
 
