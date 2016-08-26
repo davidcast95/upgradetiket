@@ -178,6 +178,7 @@ extension UIViewController {
 
 extension UITextField {
     func Required() {
+        self.text = ""
         self.attributedPlaceholder = NSAttributedString(string: "this field is required", attributes: [NSForegroundColorAttributeName : UIColor.redColor()])
     }
     func PasswordDoesntMatch() {
@@ -189,6 +190,11 @@ extension UITextField {
         self.attributedPlaceholder = NSAttributedString(string: "password min 8 alphanumeric", attributes: [NSForegroundColorAttributeName : UIColor.redColor()])
     }
     func Invalid(message:String) {
+        self.text = ""
+        self.attributedPlaceholder = NSAttributedString(string: message, attributes: [NSForegroundColorAttributeName : UIColor.redColor()])
+    }
+    func Success(message:String) {
+        self.text = ""
         self.attributedPlaceholder = NSAttributedString(string: message, attributes: [NSForegroundColorAttributeName : UIColor.redColor()])
     }
 }
@@ -207,7 +213,21 @@ extension String {
         let end = start.advancedBy(r.endIndex - r.startIndex)
         return self[Range(start ..< end)]
     }
+    
+    func IsValidEmail() -> Bool {
+        let regexEmail = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", regexEmail)
+        return emailTest.evaluateWithObject(self)
+    }
+    var dateTime : NSDate
+    {
+        let dateFormatter = NSDateFormatter()
+        
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let dateFromString : NSDate = dateFormatter.dateFromString(self)!
+        return dateFromString
+    }
+    
 }
-
 
 

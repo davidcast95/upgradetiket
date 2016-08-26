@@ -28,6 +28,7 @@ class SettingViewController: UIViewController {
         activeUser.removeObjectForKey("id")
         activeUser.removeObjectForKey("name")
         activeUser.removeObjectForKey("email")
+        SystemReset()
         if let homeVC = storyboard?.instantiateViewControllerWithIdentifier("home") as? HomeViewController {
             self.presentViewController(homeVC, animated: true, completion: nil)
         }

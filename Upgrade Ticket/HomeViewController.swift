@@ -11,7 +11,6 @@ import UIKit
 class HomeViewController: UIViewController {
 
     @IBOutlet weak var logoImage: UIImageView!
-    @IBOutlet weak var companyLabel: UILabel!
     @IBOutlet weak var signButton: UIButton!
     @IBOutlet weak var exploreButton: UIButton!
     
@@ -27,23 +26,19 @@ class HomeViewController: UIViewController {
         }
         
         logoImage.alpha = 0
-        companyLabel.alpha = 0
         signButton.alpha = 0
         exploreButton.alpha = 0
         //animations
-        UIView.animateWithDuration(2, delay: 0.2, options: .CurveEaseInOut, animations: {
+        UIView.animateWithDuration(0.5, delay: 0.2, options: .CurveEaseInOut, animations: {
             self.logoImage.frame.origin.y -= 100
             }, completion: nil)
-        UIView.animateWithDuration(2, delay: 0.55, options: .CurveEaseInOut, animations: {
-            self.companyLabel.alpha = 1
+        UIView.animateWithDuration(1, delay: 0.4, options: .CurveEaseInOut, animations: {
+            self.signButton.alpha = 1
             }, completion: nil)
-        UIView.animateWithDuration(3, delay: 0.4, options: .CurveEaseInOut, animations: {
-            self.signButton.alpha = 0.6
+        UIView.animateWithDuration(1.5, delay: 0.5, options: .CurveEaseInOut, animations: {
+            self.exploreButton.alpha = 1
             }, completion: nil)
-        UIView.animateWithDuration(3, delay: 0.5, options: .CurveEaseInOut, animations: {
-            self.exploreButton.alpha = 0.6
-            }, completion: nil)
-        UIView.animateWithDuration(2, delay: 0.45, options: .CurveEaseInOut, animations: {
+        UIView.animateWithDuration(1, delay: 0.45, options: .CurveEaseInOut, animations: {
             self.logoImage.alpha = 1
             }, completion: nil)
     }

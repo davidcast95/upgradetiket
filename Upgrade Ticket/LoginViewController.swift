@@ -23,6 +23,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        //SetUpTextField()
         if (activeUser.valueForKey("id") != nil) {
             NSUserDefaults.standardUserDefaults().removePersistentDomainForName(NSBundle.mainBundle().bundleIdentifier!)
             NSUserDefaults.standardUserDefaults().synchronize()
@@ -35,6 +36,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     //MARK:Textfield
+    func SetUpTextField() {
+        let frame = CGRectMake(0, usernameTextField.frame.height-4, usernameTextField.bounds.width, 4)
+        let borderdown = UIView(frame: frame)
+        borderdown.backgroundColor = UIColor.whiteColor()
+        usernameTextField.addSubview(borderdown)
+    }
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
         textField.backgroundColor = UIColor.whiteColor()
         

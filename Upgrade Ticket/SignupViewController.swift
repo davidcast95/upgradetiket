@@ -42,6 +42,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: - Actions
     @IBAction func CancelTapped(sender: AnyObject) {
+        print("das")
         if let navigation = self.navigationController {
             navigation.popViewControllerAnimated(true)
         } else {
@@ -58,12 +59,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
                     print(responseData)
                     if responseData == "1" {
                         dispatch_async(dispatch_get_main_queue(), {
-                            let alertController = UIAlertController(title: "Sorry, your username is not available!", message:
-                                "", preferredStyle: UIAlertControllerStyle.Alert)
-                            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default,handler: nil))
-                            
-                            self.presentViewController(alertController, animated: true, completion: nil)
-                            self.usernameTextfield.text = ""
+                            self.usernameTextfield.Invalid("Username has been used")
                         })
                         
                     }
@@ -72,26 +68,24 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         }
     }
     @IBAction func EmailDidEnd(sender: AnyObject) {
-        emailInvalid = false
         if let email = emailTextfield.text {
-            let postParameter = "email=\(email)"
-            let link = "http://rico.webmurahbagus.com/admin/API/CekEmail.php"
-            AjaxPost(link, parameter: postParameter, done: { (data) in
-                if let responseData = String(data: data, encoding: NSUTF8StringEncoding) {
-                    print(responseData)
-                    if responseData == "1" {
-                        dispatch_async(dispatch_get_main_queue(), {
-                            let alertController = UIAlertController(title: "Sorry, your email is not available!", message:
-                                "", preferredStyle: UIAlertControllerStyle.Alert)
-                            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default,handler: nil))
+            if email.IsValidEmail() {
+                let postParameter = "email=\(email)"
+                let link = "http://rico.webmurahbagus.com/admin/API/CekEmail.php"
+                AjaxPost(link, parameter: postParameter, done: { (data) in
+                    if let responseData = String(data: data, encoding: NSUTF8StringEncoding) {
+                        print(responseData)
+                        if responseData == "1" {
+                            dispatch_async(dispatch_get_main_queue(), {
+                                self.emailTextfield.Invalid("Email has been registered")
+                            })
                             
-                            self.presentViewController(alertController, animated: true, completion: nil)
-                            self.emailTextfield.text = ""
-                        })
-                        
+                        }
                     }
-                }
-            })
+                })
+            } else {
+                emailTextfield.Invalid("Invalid email")
+            }
         }
 
     }
@@ -109,17 +103,6 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     }
 
     //MARK: Function
-    func UsernameIsInvalid() {
-        dispatch_async(dispatch_get_main_queue(), {
-            self.usernameTextfield.Invalid("Invalid username")
-        })
-    }
-    
-    func EmailIsInvalid() {
-        dispatch_async(dispatch_get_main_queue(), {
-            self.emailTextfield.Invalid("Invalid email")
-        })
-    }
 
     func Validation() -> Bool {
         var valid = true
@@ -196,7 +179,6 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
                         self.Alert("Please check your internet connection!")
                     })        }
     }
-    
     
     @IBAction func Tapped(sender: AnyObject) {
         offsetScrollY = 0

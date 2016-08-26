@@ -156,7 +156,7 @@ class PaymentViewController: UIViewController, UIPickerViewDelegate, UIGestureRe
         if let id = activeUser.valueForKey("id") as? String {
             self.indicator.startAnimating()
             let flight = reservation.flight
-            let postParameter = "id_jadwal=\(flight.id)&flight_number=\(flight.number)&id_member=\(id)&person=\(searchFlight.passenger)&date=\(searchFlight.dateFlight.sqlDate)&total=\(flight.price * Double(reservation.passengers.count))&payment_method=\(paymentMethodTextField.text!)&card_holder=\(cardHolderTextField.text!)&card_number=\(cardNumberTextField.text!)"
+            let postParameter = "id_jadwal=\(flight.id)&flight_number=\(flight.airlines) \(flight.number)&id_member=\(id)&person=\(searchFlight.passenger)&total=\(flight.price * Double(reservation.passengers.count))&payment_method=\(paymentMethodTextField.text!)&card_holder=\(cardHolderTextField.text!)&card_number=\(cardNumberTextField.text!)"
             
             let link = "http://rico.webmurahbagus.com/admin/API/InserttransactionAPI.php"
             AjaxPost(link, parameter: postParameter, done: { (data) in

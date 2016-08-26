@@ -12,7 +12,7 @@
         <attribute name="image" optional="YES" attributeType="Transformable" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Destinations" positionX="-54" positionY="-9" width="128" height="103"/>
         <element name="Airlines" positionX="-36" positionY="36" width="128" height="90"/>
+        <element name="Destinations" positionX="-414" positionY="242" width="117" height="103"/>
     </elements>
 </model>

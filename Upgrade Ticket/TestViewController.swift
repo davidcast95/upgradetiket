@@ -15,6 +15,7 @@ class TestViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     var displayCell = Array<Bool>()
     var destView = UIView()
     var selectedIndex = -1
+    var no_result = false
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -50,7 +51,19 @@ class TestViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     
     //MARK : - TableViewCell Animation
     
-
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if (searchBar.text != "") {
+            if (filteredCities.count == 0) {
+                no_result = true
+                return tableView.frame.height
+            }
+            no_result = false
+            return 135
+        } else {
+            no_result = false
+            return 135
+        }
+    }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (searchBar.text != "") {
@@ -63,17 +76,22 @@ class TestViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("city_cell", forIndexPath: indexPath) as? CityTableViewCell
         
         if searchBar.text != "" {
             if (filteredCities.count == 0) {
-                cell?.cityLabel.text = "No Result Found"
+                let no_result_cell = tableView.dequeueReusableCellWithIdentifier("no-result")
+                no_result_cell!.selectionStyle = .None
+                print("noresult")
+                return no_result_cell!
             } else {
+                let cell = tableView.dequeueReusableCellWithIdentifier("city_cell", forIndexPath: indexPath) as? CityTableViewCell
                 let imageData = filteredCities[indexPath.row].image
                 cell?.featureImage.image = UIImage(data: imageData)
                 cell?.cityLabel.text = filteredCities[indexPath.row].cityAlias
+                return cell!
             }
         } else {
+            let cell = tableView.dequeueReusableCellWithIdentifier("city_cell", forIndexPath: indexPath) as? CityTableViewCell
             let imageData = cities[indexPath.row].image
             if indexPath.row % 2 == 0 {
                 cell?.featureImage.image = UIImage(data: imageData)
@@ -81,28 +99,31 @@ class TestViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                 cell?.featureImage.image = UIImage(data: imageData)
             }
             cell?.cityLabel.text = cities[indexPath.row].cityAlias
+            return cell!
         }
-        return cell!
     }
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        print("select")
         if let id = self.restorationIdentifier {
-            print(id)
-            if id == "origin" {
-                if searchBar.text == "" {
-                    searchFlight.origin = cities[indexPath.row]
+            if !no_result {
+                print("dsad")
+                if id == "origin" {
+                    if searchBar.text == "" {
+                        searchFlight.origin = cities[indexPath.row]
+                    } else {
+                        searchFlight.origin = filteredCities[indexPath.row]
+                    }
+                    if let destVC = storyboard?.instantiateViewControllerWithIdentifier("destination") as? TestViewController {
+                        self.presentViewController(destVC, animated: true, completion: nil)
+                    }
                 } else {
-                    searchFlight.origin = filteredCities[indexPath.row]
+                    if searchBar.text == "" {
+                        searchFlight.dest = cities[indexPath.row]
+                    } else {
+                        searchFlight.dest = filteredCities[indexPath.row]
+                    }
+                    
                 }
-                if let destVC = storyboard?.instantiateViewControllerWithIdentifier("destination") as? TestViewController {
-                    self.presentViewController(destVC, animated: true, completion: nil)
-                }
-            } else {
-                if searchBar.text == "" {
-                    searchFlight.dest = cities[indexPath.row]
-                } else {
-                    searchFlight.dest = filteredCities[indexPath.row]
-                }
-                
             }
         }
     }

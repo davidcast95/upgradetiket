@@ -11,11 +11,12 @@ import UIKit
 class HistoryTableViewCell: UITableViewCell {
 
     
-    @IBOutlet weak var flightNumber: UILabel!
-    @IBOutlet weak var typeText: UILabel!
-    @IBOutlet weak var typeView: UIView!
-    @IBOutlet weak var flightTime: UILabel!
-    @IBOutlet weak var total: UILabel!
+    @IBOutlet weak var destinationFlight: UILabel!
+    @IBOutlet weak var flightDetail: UILabel!
+    @IBOutlet weak var depart: UILabel!
+    @IBOutlet weak var arrive: UILabel!
+    @IBOutlet weak var passenger: UILabel!
+    @IBOutlet weak var subtotal: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

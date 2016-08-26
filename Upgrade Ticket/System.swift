@@ -37,6 +37,27 @@ func FecthFromCoreData(entity:String) -> [NSManagedObject] {
     return returnResult
 }
 
+func SelectFromID(entity:String,id:Int) -> [NSManagedObject] {
+    var returnResult = Array<NSManagedObject>()
+    
+    let appDelegate =
+        UIApplication.sharedApplication().delegate as! AppDelegate
+    
+    let managedContext = appDelegate.managedObjectContext
+    
+    let fetchRequest = NSFetchRequest(entityName: entity)
+    fetchRequest.predicate = NSPredicate(format: "id = \(id)", id)
+    
+    do {
+        let results = try managedContext.executeFetchRequest(fetchRequest)
+        returnResult = results as! [NSManagedObject]
+    } catch let error as NSError {
+        print("Could not fetch \(error), \(error.userInfo)")
+    }
+    
+    return returnResult
+}
+
 class City {
     var id = 0
     var city = ""
@@ -226,16 +247,58 @@ class Reservation {
 }
 
 class Transaction {
+    var id = 0
+    var status = -1
+    var passenger = 0
+    var from = ""
+    var to = ""
     var flight_number = ""
-    var arrival = ""
-    var departure = ""
+    var arrival = NSDate()
+    var departure = NSDate()
     var passengers = Array<Passenger>()
     var payment_method = ""
     var card_number = ""
     var card_holder = ""
     var total:Double = 0
+    
+    func SaveToCoreData() {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        let entity =  NSEntityDescription.entityForName("Transactions",inManagedObjectContext:managedContext)
+        let transactionContext = NSManagedObject(entity: entity!,insertIntoManagedObjectContext: managedContext)
+        transactionContext.setValue(id, forKey: "id")
+        transactionContext.setValue(status, forKey: "status")
+        transactionContext.setValue(passenger, forKey: "passenger")
+        transactionContext.setValue(from, forKey: "from")
+        transactionContext.setValue(to, forKey: "to")
+        transactionContext.setValue(flight_number, forKey: "flight_number")
+        transactionContext.setValue(arrival, forKey: "arrival")
+        transactionContext.setValue(departure, forKey: "departure")
+        transactionContext.setValue(payment_method, forKey: "payment_method")
+        transactionContext.setValue(card_holder, forKey: "card_holder")
+        transactionContext.setValue(card_number, forKey: "card_number")
+        transactionContext.setValue(total, forKey: "total")
+        
+        do {
+            try managedContext.save()
+            print("\(id) has been saved to core data")
+        } catch let error as NSError  {
+            print("Could not save \(error), \(error.userInfo)")
+        }
+    }
+    
 }
+
 
 var searchFlight = SearchFlight()
 var reservation = Reservation()
 var activeUser = NSUserDefaults()
+var history = Array<Transaction>()
+var viewTransaction = Transaction()
+
+func SystemReset() {
+    searchFlight = SearchFlight()
+    reservation = Reservation()
+    history.removeAll()
+    viewTransaction = Transaction()
+}

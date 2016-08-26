@@ -17,6 +17,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     var isDisconnected = false
     @IBOutlet var tapListener: UITapGestureRecognizer!
     @IBOutlet weak var backButton: UIButton!
+    @IBOutlet weak var leftOffsetNavTitle: NSLayoutConstraint!
     
     // MARK: - Slider Property
     @IBOutlet weak var sliderView: UIView!
@@ -70,12 +71,21 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         CreateMask()
         RespositioningSettingView()
         
+        if searchFlight.isRoundTrip {
+            leftOffsetNavTitle.constant = 16
+            backButton.hidden = false
+        } else {
+            leftOffsetNavTitle.constant = 36
+            backButton.hidden = true
+        }
         
     }
     override func viewWillAppear(animated: Bool) {
         if searchFlight.isRoundTrip {
+            leftOffsetNavTitle.constant = 16
             backButton.hidden = false
         } else {
+            leftOffsetNavTitle.constant = 36
             backButton.hidden = true
         }
         searchFlight.Print()
@@ -277,6 +287,9 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     //MARK: - Segue
     
     @IBAction func BackToFlight(segue:UIStoryboardSegue) {
+        if searchFlight.isRoundTrip {
+            searchFlight.Swap()
+        }
         searchFlight.isRoundTrip = false
         searchFlight.activeResult = .Flight
     }
