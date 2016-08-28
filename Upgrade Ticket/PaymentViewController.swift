@@ -130,7 +130,11 @@ class PaymentViewController: UIViewController, UIPickerViewDelegate, UIGestureRe
     
     @IBAction func ConfirmPressed(sender: UIButton) {
         if (paymentMethodTextField.text != "" && cardHolderTextField.text != "" && cardNumberTextField.text != "") {
-            CreateReservation()
+            CreateReservation(reservation.flight)
+            print(reservation.back.id)
+            if (reservation.back.id != "0") {
+                CreateReservation(reservation.back)
+            }
         } else {
             if (paymentMethodTextField.text == "") {
                 paymentMethodTextField.layer.borderColor = UIColor.redColor().CGColor
@@ -152,12 +156,11 @@ class PaymentViewController: UIViewController, UIPickerViewDelegate, UIGestureRe
         }
     }
     
-    func CreateReservation() {
+    func CreateReservation(flight:Flight) {
         if let id = activeUser.valueForKey("id") as? String {
             self.indicator.startAnimating()
-            let flight = reservation.flight
-            let postParameter = "id_jadwal=\(flight.id)&flight_number=\(flight.airlines) \(flight.number)&id_member=\(id)&person=\(searchFlight.passenger)&total=\(flight.price * Double(reservation.passengers.count))&payment_method=\(paymentMethodTextField.text!)&card_holder=\(cardHolderTextField.text!)&card_number=\(cardNumberTextField.text!)"
-            
+            let postParameter = "id_jadwal=\(flight.id)&flight_number=\(flight.airlines.airlines) \(flight.number)&id_member=\(id)&person=\(searchFlight.passenger)&total=\(Int(flight.price * Double(reservation.passengers.count)))&payment_method=\(paymentMethodTextField.text!)&card_holder=\(cardHolderTextField.text!)&card_number=\(cardNumberTextField.text!)"
+            print(postParameter)
             let link = "http://rico.webmurahbagus.com/admin/API/InserttransactionAPI.php"
             AjaxPost(link, parameter: postParameter, done: { (data) in
                 dispatch_async(dispatch_get_main_queue(),{
@@ -171,22 +174,26 @@ class PaymentViewController: UIViewController, UIPickerViewDelegate, UIGestureRe
     
     func CreateDetailReservation(id:String) {
         var success = true
+        var i = 0
         for passenger in reservation.passengers {
-            print(passenger.fullname)
             let postParameter = "id_transaksi=\(id)&fullname=\(passenger.fullname)&no_ktp=\(passenger.idcard)&no_passport=\(passenger.passport)"
             let link = "http://rico.webmurahbagus.com/admin/API/InsertdetailAPI.php"
             AjaxPost(link, parameter: postParameter, done: { (data) in
                 if let responseData = String(data: data, encoding: NSUTF8StringEncoding) {
                     if responseData != "1" {
-                        print(responseData)
                         success = false
+                    }
+                    else if (success && i + 1 == reservation.passengers.count) {
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.indicator.stopAnimating()
+                            self.Thankyou(id)
+                        })
+                    } else {
+                        i += 1
                     }
                 }
             })
-        }
-        if (success) {
-            self.indicator.stopAnimating()
-            self.Thankyou(id)
+            
         }
     }
     
@@ -195,13 +202,13 @@ class PaymentViewController: UIViewController, UIPickerViewDelegate, UIGestureRe
         var link = "http://rico.webmurahbagus.com/admin/API/MailAPI.php"
         AjaxPost(link, parameter: postParameter, done: { (data) in
             if let result = String(data: data, encoding: NSUTF8StringEncoding) {
-                print(result)
+                print("mailapi = \(result)")
             }
         })
         link = "http://rico.webmurahbagus.com/admin/API/NotifMailAPI.php"
         AjaxPost(link, parameter: postParameter, done: { (data) in
             if let result = String(data: data, encoding: NSUTF8StringEncoding) {
-                print(result)
+                print("notif api = \(result)")
             }
         })
         let thanyouVC = self.storyboard?.instantiateViewControllerWithIdentifier("thankyou")

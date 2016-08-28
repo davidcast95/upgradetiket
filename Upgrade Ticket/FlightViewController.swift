@@ -252,6 +252,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
                 } else {
                     flightResults[i].old = flightResults[maxIndex].price
                     flightResults[i].new = flightResults[minIndex].price
+                    flightResults[i].id = flightResults[minIndex].id
                     result.append(flightResults[i])
                 }
                 flightResults[maxIndex] = Flight()
@@ -259,7 +260,6 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
             }
         }
         flightResults = result
-        print(flightResults)
     }
     func ShowRoundTripConfirmation() {
         let alert = UIAlertController(title: "Are you want to round trip ?", message: "You will choose for your returning flight", preferredStyle: .Alert)
