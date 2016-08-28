@@ -35,6 +35,8 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    override func viewDidAppear(animated: Bool) {
         badgeProccess.layer.cornerRadius = 10
         if processCount > 0 {
             badgeProccess.hidden = false
@@ -95,12 +97,12 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
         cell.flightDetail.text = transaction.flight_number
         cell.passenger.text = transaction.passenger.passengerFormat
         cell.subtotal.text = transaction.total.currency
+        cell.confirmed.hidden = (transaction.status != 4)
         return cell
     }
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let index = indexPath.row
         viewTransaction = filteredHistory[index]
-        print(viewTransaction.id)
         
     }
     
@@ -159,10 +161,18 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func FilterStatus() {
-        filteredHistory = history.filter({
-            history in
-            return history.status == status
-        })
+        if status == 2 {
+            filteredHistory = history.filter({
+                history in
+                return history.status == status || history.status == 4
+            })
+            
+        } else {
+            filteredHistory = history.filter({
+                history in
+                return history.status == status
+            })
+        }
         self.historyTableView.reloadData()
     }
     func FindTransactionInSession(transaction:Transaction) -> Bool {
@@ -190,6 +200,7 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
 
     //MARK: Connectivity
     func GetHistory() {
+        processCount = 0
         loading = true
         if let userId = activeUser.valueForKey("id") {
             let postParameter = "iduser=\(userId)"

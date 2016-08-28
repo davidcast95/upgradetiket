@@ -11,24 +11,33 @@ import UIKit
 class DetailReservationTableViewController: UITableViewController {
 
     let sectionsString = ["Tiket Information", "Payment Information","Passenger Information"]
-    var numOfRowsInSection = [1,3,3]
+    var numOfRowsInSection = [1,3,4 + 1]
     var loading = true
+    @IBOutlet weak var buttonContainer: UIView!
     
     var paymentInformation = Array<String>()
     var passengersInformation = Array<String>()
     let paymentField = ["Card Holder","Payment Method","Rekening"]
     let passengerField = ["Fullname","ID Card","Passport"]
+    var indexField = 0
     
     @IBOutlet var detailTableView: UITableView!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
     }
     
     override func viewDidAppear(animated: Bool) {
         GenerateDetail()
         GetDetail()
+        if viewTransaction.status != 2 {
+            print("asd")
+            buttonContainer.hidden = true
+            buttonContainer.frame = CGRectMake(0, 0, 0, 0)
+        }
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -105,8 +114,17 @@ class DetailReservationTableViewController: UITableViewController {
                 }
                 else {
                     let index = indexPath.row
-                    cell.field.text = passengerField[index % passengerField.count]
-                    cell.value.text = passengersInformation[index]
+                    if (index < passengersInformation.count) {
+                        if (index % 4 == 0) {
+                            cell.field.text = passengersInformation[index]
+                            cell.value.text = ""
+                            
+                        } else {
+                            cell.field.text = passengerField[indexField % passengerField.count]
+                            indexField+=1
+                            cell.value.text = passengersInformation[index]
+                        }
+                    }
                 }
                 return cell
             } else {
@@ -133,14 +151,19 @@ class DetailReservationTableViewController: UITableViewController {
                     let string = NSString(data: data, encoding: NSUTF8StringEncoding)
                     print(string)
                     let details = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers) as? [[String : AnyObject]]
+                    var i = 1
                     for detail in details! {
                         if let fullname = detail["fullname"] as? String, ktp = detail["no_ktp"] as? String, passport = detail["no_passport"] as? String {
+                            self.passengersInformation.append("Person \(i)")
                             self.passengersInformation.append(fullname)
                             self.passengersInformation.append(ktp)
                             self.passengersInformation.append(passport)
+                            i+=1
                         }
                     }
                     self.loading = false
+                    self.numOfRowsInSection[2] = (self.passengersInformation.count)
+                    self.indexField = 0
                     dispatch_async(dispatch_get_main_queue(), {
                         self.tableView.reloadData()
                         

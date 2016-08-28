@@ -60,6 +60,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
 
     //MARK: Action
+    @IBAction func ForgotPasswordTap(sender: AnyObject) {
+        if let forgotVC = storyboard?.instantiateViewControllerWithIdentifier("forgotpassword") {
+            if let nav = self.navigationController {
+                nav.pushViewController(forgotVC, animated: true)
+            } else {
+                self.showViewController(forgotVC, sender: nil)
+            }
+        }
+    }
     @IBAction func Login(sender: UIButton) {
         var flag = true
         if (usernameTextField.text == "") {

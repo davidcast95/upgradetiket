@@ -154,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/DetailReservationTableViewController.swift"
-            timestampString = "493878756.875018"
+            timestampString = "494099254.710739"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "120"
-            endingLineNumber = "120"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
             landmarkName = "GenerateDetail()"
             landmarkType = "5">
          </BreakpointContent>
@@ -170,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/DetailReservationTableViewController.swift"
-            timestampString = "493878756.875018"
+            timestampString = "494099254.710739"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "134"
-            endingLineNumber = "134"
+            startingLineNumber = "152"
+            endingLineNumber = "152"
             landmarkName = "GetDetail()"
             landmarkType = "5">
          </BreakpointContent>
@@ -186,27 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/ProfileAccountViewController.swift"
-            timestampString = "493880754.747081"
+            timestampString = "494099714.496935"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "103"
             endingLineNumber = "103"
-            landmarkName = "tableView(_:didSelectRowAtIndexPath:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Upgrade Ticket/ProfileAccountViewController.swift"
-            timestampString = "493880754.747081"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "100"
-            endingLineNumber = "100"
             landmarkName = "tableView(_:didSelectRowAtIndexPath:)"
             landmarkType = "5">
          </BreakpointContent>

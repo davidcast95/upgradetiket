@@ -17,6 +17,7 @@ class HistoryTableViewCell: UITableViewCell {
     @IBOutlet weak var arrive: UILabel!
     @IBOutlet weak var passenger: UILabel!
     @IBOutlet weak var subtotal: UILabel!
+    @IBOutlet weak var confirmed: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

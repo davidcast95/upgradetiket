@@ -23,6 +23,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     var emailInvalid = false
     var keyboardHeight:CGFloat = 300
     var offsetScrollY:CGFloat = 0
+    var isKeyboardShow = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +32,11 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         emailTextfield.delegate = self
         passwordTextfield.delegate = self
         confirmTextfield.delegate = self
-        
+        if view.frame.width < 500 {
+            scrollView.contentSize = CGSizeMake(contentView.frame.width, 680)
+            contentView.frame = CGRectMake(0, 0, contentView.frame.width, 680)
+            
+        }
         // Do any additional setup after loading the view.
     }
 
@@ -41,14 +46,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     }
     
     //MARK: - Actions
-    @IBAction func CancelTapped(sender: AnyObject) {
-        print("das")
-        if let navigation = self.navigationController {
-            navigation.popViewControllerAnimated(true)
-        } else {
-            self.dismissViewControllerAnimated(true, completion: nil)
-        }
-    }
+    
     @IBAction func UsernameDidEnd(sender: UITextField) {
         usernameInvalid = false
         if let username = usernameTextfield.text {
@@ -183,29 +181,32 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     @IBAction func Tapped(sender: AnyObject) {
         offsetScrollY = 0
         UIView.animateWithDuration(0.5, animations: {
-            self.scrollView.contentOffset = CGPointMake(0, 0)
+            self.scrollView.contentOffset = CGPointMake(0, 200)
         })
+        isKeyboardShow = false
         view.endEditing(true)
     }
     
     @IBAction func Scroll(sender: UIPanGestureRecognizer) {
-        let point = sender.translationInView(self.view)
-        offsetScrollY -= point.y / 3
-        print(offsetScrollY)
-        if (offsetScrollY > 0 && offsetScrollY < 200) {
-            scrollView.contentOffset = CGPointMake(0, offsetScrollY)
-        }
-        if (offsetScrollY < 0) {
-            offsetScrollY = 0
-        }
-        if (offsetScrollY > 400) {
-            offsetScrollY = 400
+        if isKeyboardShow {
+            let point = sender.translationInView(self.view)
+            offsetScrollY -= point.y / 3
+            if (offsetScrollY > 0 && offsetScrollY < 200) {
+                scrollView.contentOffset = CGPointMake(0, offsetScrollY)
+            }
+            if (offsetScrollY < 0) {
+                offsetScrollY = 0
+            }
+            if (offsetScrollY > 400) {
+                offsetScrollY = 400
+            }
         }
     }
     
     
     //MARK: Text Field
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        isKeyboardShow = true
         let textfieldY = textField.frame.origin.y
         let keyboardY = self.view.frame.height - keyboardHeight
         if keyboardY - textfieldY < 0 {
