@@ -30,7 +30,7 @@ class PaymentViewController: UIViewController, UIPickerViewDelegate, UIGestureRe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        thankyou = false
         screen = view.frame
         CreateMask()
         RespositioningSettingView()
@@ -158,6 +158,7 @@ class PaymentViewController: UIViewController, UIPickerViewDelegate, UIGestureRe
     
     func CreateReservation(flight:Flight) {
         if let id = activeUser.valueForKey("id") as? String {
+            print("Creating transasction = \(flight.id)")
             self.indicator.startAnimating()
             let postParameter = "id_jadwal=\(flight.id)&flight_number=\(flight.airlines.airlines) \(flight.number)&id_member=\(id)&person=\(searchFlight.passenger)&total=\(Int(flight.price * Double(reservation.passengers.count)))&payment_method=\(paymentMethodTextField.text!)&card_holder=\(cardHolderTextField.text!)&card_number=\(cardNumberTextField.text!)"
             print(postParameter)
@@ -211,7 +212,10 @@ class PaymentViewController: UIViewController, UIPickerViewDelegate, UIGestureRe
                 print("notif api = \(result)")
             }
         })
-        let thanyouVC = self.storyboard?.instantiateViewControllerWithIdentifier("thankyou")
-        self.showViewController(thanyouVC!, sender: self)
+        if (!thankyou) {
+            thankyou = true
+            let thanyouVC = self.storyboard?.instantiateViewControllerWithIdentifier("thankyou")
+            self.showViewController(thanyouVC!, sender: self)
+        }
     }
 }

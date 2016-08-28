@@ -23,7 +23,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var sliderView: UIView!
     var buttonWidth = CGFloat()
     var selectView = UIView()
-    var menus = ["Bizniz","First"]
+    var menus = ["Bisnis","First"]
     var idMenus = ["b","f"]
     var buttons = Array<UIButton>()
     var indexMenu = 0
@@ -121,10 +121,11 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         sliderView.addSubview(selectView)
         for menu in menus {
             let button = UIButton()
-            button.setAttributedTitle(NSAttributedString(string: menu, attributes: [NSForegroundColorAttributeName : UIColor.grayColor()]), forState: .Normal)
+            button.setAttributedTitle(NSAttributedString(string: menu, attributes: [NSForegroundColorAttributeName : UIColor.grayColor(), NSFontAttributeName : UIFont(name: "Futura", size: 18)!]), forState: .Normal)
             button.setAttributedTitle(NSAttributedString(string: menu, attributes: [NSForegroundColorAttributeName : UIColor.blackColor()]), forState: .Highlighted)
-            button.setAttributedTitle(NSAttributedString(string: menu, attributes: [NSForegroundColorAttributeName : UIColor.blackColor(), NSFontAttributeName : UIFont.boldSystemFontOfSize(18)]), forState: .Selected)
+            button.setAttributedTitle(NSAttributedString(string: menu, attributes: [NSForegroundColorAttributeName : UIColor.blackColor(), NSFontAttributeName : UIFont(name: "Futura", size: 18)!]), forState: .Selected)
             button.addTarget(self, action: #selector(sliderChange), forControlEvents: .TouchUpInside)
+            
             sliderView.addSubview(button)
             buttons.append(button)
         }

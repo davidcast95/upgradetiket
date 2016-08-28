@@ -296,6 +296,8 @@ var activeUser = NSUserDefaults()
 var history = Array<Transaction>()
 var viewTransaction = Transaction()
 
+var thankyou = false
+
 func SystemReset() {
     searchFlight = SearchFlight()
     reservation = Reservation()

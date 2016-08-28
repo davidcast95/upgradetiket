@@ -103,10 +103,8 @@ class TestViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
     }
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        print("select")
         if let id = self.restorationIdentifier {
             if !no_result {
-                print("dsad")
                 if id == "origin" {
                     if searchBar.text == "" {
                         searchFlight.origin = cities[indexPath.row]
