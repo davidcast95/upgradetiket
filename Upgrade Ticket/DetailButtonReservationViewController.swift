@@ -83,7 +83,24 @@ class DetailButtonReservationViewController: UIViewController {
     }
     
     func Cancel() {
-        
+        let processingAlert = self.ProcessingAlert("Processing . . .")
+        let postParameter = "idtransaksi=\(viewTransaction.id)"
+        print(postParameter)
+        let link = "http://rico.webmurahbagus.com/admin/API/CancelTransactionAPI.php"
+        AjaxPost(link, parameter: postParameter, done: { (data) in
+            self.EndProcessingAlert(processingAlert, complete: {
+                if let result = String(data: data,encoding: NSUTF8StringEncoding) {
+                    if result == "1" {
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.FindTransactionById(viewTransaction.id).status = 1
+                            self.dismissViewControllerAnimated(true, completion: nil)
+                        })
+                    }
+                }
+                
+            })
+        })
+
     }
     
 }

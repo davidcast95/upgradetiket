@@ -3698,7 +3698,7 @@
                                     <constraint firstAttribute="height" constant="44" id="RBY-ii-BqS"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Futura-CondensedExtraBold" family="Futura" pointSize="18"/>
-                                <state key="normal" title="Confirm">
+                                <state key="normal" title="Reserve Now">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="default">
@@ -5179,7 +5179,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c2m-F5-yYx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1696.5" y="2212.5"/>
+            <point key="canvasLocation" x="1486" y="2261"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="YAl-ie-W7u">
@@ -5652,7 +5652,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Done Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="czG-b8-v6A">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Done Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="czG-b8-v6A">
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="16"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -5716,16 +5716,18 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.081079574560000006" green="0.66660505950000004" blue="0.95707775299999998" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="czG-b8-v6A" firstAttribute="top" secondItem="MPl-kp-fbJ" secondAttribute="bottom" constant="2" id="10V-lB-Osp"/>
                             <constraint firstAttribute="trailingMargin" secondItem="tap-tt-ehw" secondAttribute="trailing" id="9Vl-92-VUs"/>
                             <constraint firstItem="Vdg-An-7dP" firstAttribute="top" secondItem="tap-tt-ehw" secondAttribute="bottom" constant="14" id="9gN-2h-xR2"/>
                             <constraint firstItem="czG-b8-v6A" firstAttribute="centerX" secondItem="jDH-2a-ehf" secondAttribute="centerX" id="FeF-K3-eHo"/>
                             <constraint firstItem="czG-b8-v6A" firstAttribute="centerX" secondItem="wed-Cu-kGs" secondAttribute="centerX" id="JMf-a0-ETD"/>
+                            <constraint firstItem="czG-b8-v6A" firstAttribute="leading" secondItem="jDH-2a-ehf" secondAttribute="leadingMargin" id="Mc2-88-8yz"/>
                             <constraint firstItem="Vdg-An-7dP" firstAttribute="centerX" secondItem="jDH-2a-ehf" secondAttribute="centerX" id="Tzl-9w-MoE"/>
                             <constraint firstItem="wed-Cu-kGs" firstAttribute="centerX" secondItem="tap-tt-ehw" secondAttribute="centerX" id="Yne-eS-Fap"/>
                             <constraint firstItem="tap-tt-ehw" firstAttribute="top" secondItem="wed-Cu-kGs" secondAttribute="bottom" constant="63" id="a5B-7F-iqO"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="czG-b8-v6A" secondAttribute="trailing" id="aFF-gI-QA7"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Vdg-An-7dP" secondAttribute="trailing" id="aiC-ra-Cin"/>
                             <constraint firstItem="Vdg-An-7dP" firstAttribute="leading" secondItem="jDH-2a-ehf" secondAttribute="leadingMargin" id="bac-Q1-5GS"/>
                             <constraint firstItem="MPl-kp-fbJ" firstAttribute="centerX" secondItem="czG-b8-v6A" secondAttribute="centerX" id="chw-jD-s87"/>
@@ -5742,20 +5744,22 @@
                                 <exclude reference="wed-Cu-kGs"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="chw-jD-s87"/>
+                                <exclude reference="t3P-sJ-tQK"/>
+                                <exclude reference="Yne-eS-Fap"/>
+                                <exclude reference="xfT-jS-o3n"/>
+                                <exclude reference="10V-lB-Osp"/>
+                                <exclude reference="FeF-K3-eHo"/>
+                                <exclude reference="JMf-a0-ETD"/>
+                                <exclude reference="Mc2-88-8yz"/>
+                                <exclude reference="aFF-gI-QA7"/>
+                                <exclude reference="9Vl-92-VUs"/>
+                                <exclude reference="a5B-7F-iqO"/>
+                                <exclude reference="iBg-yG-mmp"/>
                                 <exclude reference="9gN-2h-xR2"/>
                                 <exclude reference="Tzl-9w-MoE"/>
                                 <exclude reference="aiC-ra-Cin"/>
                                 <exclude reference="bac-Q1-5GS"/>
-                                <exclude reference="9Vl-92-VUs"/>
-                                <exclude reference="a5B-7F-iqO"/>
-                                <exclude reference="iBg-yG-mmp"/>
-                                <exclude reference="10V-lB-Osp"/>
-                                <exclude reference="FeF-K3-eHo"/>
-                                <exclude reference="JMf-a0-ETD"/>
-                                <exclude reference="Yne-eS-Fap"/>
-                                <exclude reference="xfT-jS-o3n"/>
-                                <exclude reference="chw-jD-s87"/>
-                                <exclude reference="t3P-sJ-tQK"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -5767,20 +5771,22 @@
                                 <include reference="wed-Cu-kGs"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="chw-jD-s87"/>
+                                <include reference="t3P-sJ-tQK"/>
+                                <include reference="Yne-eS-Fap"/>
+                                <include reference="xfT-jS-o3n"/>
+                                <include reference="10V-lB-Osp"/>
+                                <include reference="FeF-K3-eHo"/>
+                                <include reference="JMf-a0-ETD"/>
+                                <include reference="Mc2-88-8yz"/>
+                                <include reference="aFF-gI-QA7"/>
+                                <include reference="9Vl-92-VUs"/>
+                                <include reference="a5B-7F-iqO"/>
+                                <include reference="iBg-yG-mmp"/>
                                 <include reference="9gN-2h-xR2"/>
                                 <include reference="Tzl-9w-MoE"/>
                                 <include reference="aiC-ra-Cin"/>
                                 <include reference="bac-Q1-5GS"/>
-                                <include reference="9Vl-92-VUs"/>
-                                <include reference="a5B-7F-iqO"/>
-                                <include reference="iBg-yG-mmp"/>
-                                <include reference="10V-lB-Osp"/>
-                                <include reference="FeF-K3-eHo"/>
-                                <include reference="JMf-a0-ETD"/>
-                                <include reference="Yne-eS-Fap"/>
-                                <include reference="xfT-jS-o3n"/>
-                                <include reference="chw-jD-s87"/>
-                                <include reference="t3P-sJ-tQK"/>
                             </mask>
                         </variation>
                     </view>
@@ -8446,7 +8452,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="v8V-wd-V7h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2382" y="2206.5"/>
+            <point key="canvasLocation" x="2082" y="2538"/>
         </scene>
     </scenes>
     <resources>
@@ -8462,7 +8468,7 @@
         <image name="settings" width="170" height="170"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="hf1-7M-Xr3"/>
+        <segue reference="JeT-Aa-XBP"/>
         <segue reference="Rcm-Nz-RHj"/>
     </inferredMetricsTieBreakers>
 </document>

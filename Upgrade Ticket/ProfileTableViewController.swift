@@ -261,7 +261,9 @@ class ProfileTableViewController: UITableViewController {
                     print(responseData)
                     if responseData == "1" {
                         dispatch_async(dispatch_get_main_queue(), {
-                            self.Alert("Sorry, your email is not available!")
+                            self.EndProcessingAlert(processingAlert, complete: {
+                                self.Alert("Sorry, your email has been registered!")
+                            })
                         })
                     } else {
                         if let id = activeUser.valueForKey("id") {
