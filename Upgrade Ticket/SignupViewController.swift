@@ -24,7 +24,13 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     var keyboardHeight:CGFloat = 300
     var offsetScrollY:CGFloat = 0
     var isKeyboardShow = false
+    @IBOutlet weak var headerTitle: NSLayoutConstraint!
+    @IBOutlet weak var fieldHeaderTitle: NSLayoutConstraint!
     
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         usernameTextfield.delegate = self
@@ -32,10 +38,13 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         emailTextfield.delegate = self
         passwordTextfield.delegate = self
         confirmTextfield.delegate = self
+        print(view.frame.width)
         if view.frame.width < 500 {
-            scrollView.contentSize = CGSizeMake(contentView.frame.width, 680)
-            contentView.frame = CGRectMake(0, 0, contentView.frame.width, 800)
-            print(contentView.frame)
+            headerTitle.constant = 30
+            fieldHeaderTitle.constant = 0
+        } else {
+            headerTitle.constant = 58
+            fieldHeaderTitle.constant = 38
             
         }
         // Do any additional setup after loading the view.
@@ -193,7 +202,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     @IBAction func Tapped(sender: AnyObject) {
         offsetScrollY = 0
         UIView.animateWithDuration(0.5, animations: {
-            self.scrollView.contentOffset = CGPointMake(0, 200)
+            self.scrollView.contentOffset = CGPointMake(0, 0)
         })
         isKeyboardShow = false
         view.endEditing(true)
