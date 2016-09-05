@@ -40,6 +40,7 @@
 		5166B0B81CDCF446007EBA38 /* System.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5166B0B71CDCF446007EBA38 /* System.swift */; };
 		51821A4F1D734FB0007558B0 /* DetailButtonReservationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51821A4E1D734FB0007558B0 /* DetailButtonReservationViewController.swift */; };
 		51821A511D7370D1007558B0 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51821A501D7370D1007558B0 /* ForgotPasswordViewController.swift */; };
+		518C021B1D7C0730003D44F3 /* LoadingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518C021A1D7C0730003D44F3 /* LoadingTableViewCell.swift */; };
 		5191B8211CE8E67F00C5B133 /* FlightViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5191B8201CE8E67F00C5B133 /* FlightViewController.swift */; };
 		51B86F7A1D7015C0000CCB28 /* DefaultUITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B86F791D7015C0000CCB28 /* DefaultUITextField.swift */; };
 		51B86F7D1D701A40000CCB28 /* DefaultUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B86F7C1D701A40000CCB28 /* DefaultUIButton.swift */; };
@@ -108,6 +109,7 @@
 		5166B0B71CDCF446007EBA38 /* System.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = System.swift; sourceTree = "<group>"; };
 		51821A4E1D734FB0007558B0 /* DetailButtonReservationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailButtonReservationViewController.swift; sourceTree = "<group>"; };
 		51821A501D7370D1007558B0 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
+		518C021A1D7C0730003D44F3 /* LoadingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingTableViewCell.swift; sourceTree = "<group>"; };
 		5191B8201CE8E67F00C5B133 /* FlightViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightViewController.swift; sourceTree = "<group>"; };
 		51B86F791D7015C0000CCB28 /* DefaultUITextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultUITextField.swift; sourceTree = "<group>"; };
 		51B86F7C1D701A40000CCB28 /* DefaultUIButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultUIButton.swift; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 				5161AFEA1D6411FD0014F0A1 /* OneWayTicketTableViewCell.swift */,
 				5155CFF81D6755600057CA2C /* RoundTripTicketTableViewCell.swift */,
 				51447BE71D6FE4BE00DA3D9D /* DetailTransactionTableViewCell.swift */,
+				518C021A1D7C0730003D44F3 /* LoadingTableViewCell.swift */,
 			);
 			name = Component;
 			sourceTree = "<group>";
@@ -396,6 +399,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				518C021B1D7C0730003D44F3 /* LoadingTableViewCell.swift in Sources */,
 				513280031D0F04EB00A61D31 /* ProfileTableViewController.swift in Sources */,
 				51044EE21D0454E200B3D0B5 /* OriginFlightViewController.swift in Sources */,
 				51B86F7A1D7015C0000CCB28 /* DefaultUITextField.swift in Sources */,

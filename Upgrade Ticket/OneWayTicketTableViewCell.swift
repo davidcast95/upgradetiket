@@ -18,6 +18,7 @@ class OneWayTicketTableViewCell: UITableViewCell {
     @IBOutlet weak var passengerLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var subtotalLabel: UILabel!
+    @IBOutlet weak var taxLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

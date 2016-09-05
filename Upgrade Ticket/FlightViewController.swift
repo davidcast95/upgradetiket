@@ -24,7 +24,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     var buttonWidth = CGFloat()
     var selectView = UIView()
     var menus = ["Bisnis","First"]
-    var idMenus = ["b","f"]
+    var idMenus = ["B","F"]
     var buttons = Array<UIButton>()
     var indexMenu = 0
     
@@ -48,6 +48,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     var flightResults = Array<Flight>()
     var flightDisplay = Array<Flight>()
     var displayCell = Array<Bool>()
+    var selectedCell = NSIndexPath()
     
     
     // MARK: - Core
@@ -228,40 +229,40 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         
         return (prices.maxElement()!,prices.minElement()!)
     }
-    func GroupFlight() {
-        var result = Array<Flight>()
-        for i in 0 ..< flightResults.count {
-            print("......................\(flightResults[i].number)")
-            if flightResults[i].number != "" {
-                var max = flightResults[i].price,min = flightResults[i].price
-                var maxIndex = i, minIndex = i
-                for j in 0 ..< flightResults.count {
-                    if (flightResults[j].number != "" && flightResults[i].number == flightResults[j].number && flightResults[i].departure == flightResults[j].departure && flightResults[i].arrival == flightResults[j].arrival) {
-                        if flightResults[j].price > max {
-                            max = flightResults[j].price
-                            maxIndex = j
-                        }
-                        if flightResults[j].price < min {
-                            min = flightResults[j].price
-                            minIndex = j
-                        }
-                    }
-                }
-                if maxIndex == minIndex {
-                    flightResults[i].new = flightResults[i].price
-                    result.append(flightResults[i])
-                } else {
-                    flightResults[i].old = flightResults[maxIndex].price
-                    flightResults[i].new = flightResults[minIndex].price
-                    flightResults[i].id = flightResults[minIndex].id
-                    result.append(flightResults[i])
-                }
-                flightResults[maxIndex] = Flight()
-                flightResults[minIndex] = Flight()
-            }
-        }
-        flightResults = result
-    }
+//    func GroupFlight() {
+//        var result = Array<Flight>()
+//        for i in 0 ..< flightResults.count {
+//            print("......................\(flightResults[i].number)")
+//            if flightResults[i].number != "" {
+//                var max = flightResults[i].price,min = flightResults[i].price
+//                var maxIndex = i, minIndex = i
+//                for j in 0 ..< flightResults.count {
+//                    if (flightResults[j].number != "" && flightResults[i].number == flightResults[j].number && flightResults[i].departure == flightResults[j].departure && flightResults[i].arrival == flightResults[j].arrival) {
+//                        if flightResults[j].price > max {
+//                            max = flightResults[j].price
+//                            maxIndex = j
+//                        }
+//                        if flightResults[j].price < min {
+//                            min = flightResults[j].price
+//                            minIndex = j
+//                        }
+//                    }
+//                }
+//                if maxIndex == minIndex {
+//                    flightResults[i].new = flightResults[i].price
+//                    result.append(flightResults[i])
+//                } else {
+//                    flightResults[i].old = flightResults[maxIndex].price
+//                    flightResults[i].new = flightResults[minIndex].price
+//                    flightResults[i].id = flightResults[minIndex].id
+//                    result.append(flightResults[i])
+//                }
+//                flightResults[maxIndex] = Flight()
+//                flightResults[minIndex] = Flight()
+//            }
+//        }
+//        flightResults = result
+//    }
     func ShowRoundTripConfirmation() {
         let alert = UIAlertController(title: "Are you want to round trip ?", message: "You will choose for your returning flight", preferredStyle: .Alert)
         
@@ -338,6 +339,9 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     
     //MARK: - Table
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if isSearching {
+            return 1
+        }
         if emptyResult {
             return 1
         }
@@ -345,13 +349,17 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     }
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if emptyResult || isSearching {
+            print(tableView.frame.height)
             return tableView.frame.height
         }
-        return 78
+        if (indexPath == selectedCell) {
+            return 277.5
+        } else {
+            return 103.5
+        }
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if isSearching {
-            print("searching")
             let cell = tableView.dequeueReusableCellWithIdentifier("searching", forIndexPath: indexPath)
             return cell
         }
@@ -370,41 +378,71 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
             } else {
                 cell.flightTimeLabel.text = "\(flight.departure.timeOnly) - Tommorrow, \(flight.arrival.timeOnly)"
             }
-            cell.oldPrice.text = ""
-            if flight.old > 0 {
-                let strikeOldPrice = NSMutableAttributedString(string: flight.old.currency, attributes: [NSStrikethroughStyleAttributeName : 1])
-                cell.oldPrice.attributedText = strikeOldPrice
-            }
-            cell.newPrice.text = flight.new.currency
+            cell.points.text = flight.points.points
+            cell.transitFlag.hidden = flight.transit == ""
+            cell.transitLabel.text = flight.transit
             return cell
         }
     }
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        view.endEditing(true)
-        if indexPath.row < flightResults.count {
+        if (!isSearching) {
+            view.endEditing(true)
             let reservedFlight = flightResults[indexPath.row]
-            
-            //create reservation
-            if searchFlight.isRoundTrip {
-                reservation.back = reservedFlight
-            } else {
-                reservation.flight = reservedFlight
-            }
-            
-            //push navigation
-            if activeUser.valueForKey("id") != nil {
+            //transit
+            if reservedFlight.transit != "" && selectedCell == indexPath {
+                
+                //create reservation
                 if searchFlight.isRoundTrip {
-                    searchFlight.activeResult = .Proceed
-                    let returnViewController = self.storyboard?.instantiateViewControllerWithIdentifier("proceed")
-                    self.showViewController(returnViewController!, sender: self)
+                    reservation.back = reservedFlight
                 } else {
-                    ShowRoundTripConfirmation()
+                    reservation.flight = reservedFlight
                 }
                 
-            } else {
-                let loginViewController = storyboard?.instantiateViewControllerWithIdentifier("login") as! LoginViewController
-                loginViewController.lastVC = self
-                self.presentViewController(loginViewController, animated: true, completion: nil)
+                //push navigation
+                if activeUser.valueForKey("id") != nil {
+                    if searchFlight.isRoundTrip {
+                        searchFlight.activeResult = .Proceed
+                        let returnViewController = self.storyboard?.instantiateViewControllerWithIdentifier("proceed")
+                        self.showViewController(returnViewController!, sender: self)
+                    } else {
+                        ShowRoundTripConfirmation()
+                    }
+                    
+                } else {
+                    let loginViewController = storyboard?.instantiateViewControllerWithIdentifier("login") as! LoginViewController
+                    loginViewController.lastVC = self
+                    self.presentViewController(loginViewController, animated: true, completion: nil)
+                }
+            }
+            else if reservedFlight.transit != "" {
+                selectedCell = indexPath
+                tableView.beginUpdates()
+                tableView.endUpdates()
+            }
+            else if indexPath.row < flightResults.count {
+                
+                //create reservation
+                if searchFlight.isRoundTrip {
+                    reservation.back = reservedFlight
+                } else {
+                    reservation.flight = reservedFlight
+                }
+                
+                //push navigation
+                if activeUser.valueForKey("id") != nil {
+                    if searchFlight.isRoundTrip {
+                        searchFlight.activeResult = .Proceed
+                        let returnViewController = self.storyboard?.instantiateViewControllerWithIdentifier("proceed")
+                        self.showViewController(returnViewController!, sender: self)
+                    } else {
+                        ShowRoundTripConfirmation()
+                    }
+                    
+                } else {
+                    let loginViewController = storyboard?.instantiateViewControllerWithIdentifier("login") as! LoginViewController
+                    loginViewController.lastVC = self
+                    self.presentViewController(loginViewController, animated: true, completion: nil)
+                }
             }
         }
     }
@@ -415,10 +453,8 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
             if displayCell[i] {
                 displayCell[i] = false
                 cell.alpha = 0
-                let angle:CGFloat = 10/180 * CGFloat(M_PI)
-                let rotation = CGAffineTransformMakeRotation(angle)
-                let translate = CGAffineTransformMakeTranslation(50, 80)
-                cell.transform = CGAffineTransformConcat(rotation, translate)
+                let translate = CGAffineTransformMakeTranslation(50, 0)
+                cell.transform = translate
                 UIView.animateWithDuration(1, delay: 0.1 * Double(i), options: .CurveEaseInOut, animations: {
                     cell.alpha = 1
                     cell.transform = CGAffineTransformIdentity
@@ -473,19 +509,17 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         self.indicator.startAnimating()
         flightResults.removeAll()
         displayCell.removeAll()
-        postParameter = "from=\(searchFlight.origin.id)&to=\(searchFlight.dest.id)&date=\(searchFlight.dateFlight.sqlDate)&passenger=\(searchFlight.passenger)&kodeharga=\(idMenus[indexMenu])"
+        postParameter = "from=\(searchFlight.origin.id)&to=\(searchFlight.dest.id)&date=\(searchFlight.dateFlight.sqlDate)&passenger=\(searchFlight.passenger)&tipe=\(idMenus[indexMenu])"
         let link = "http://rico.webmurahbagus.com/admin/API/GetJadwalAPI.php"
         AjaxPost(link, parameter: postParameter,
                  done: { (data) in
-                    self.isSearching = false
                     do {
+                        let string = NSString(data: data, encoding: NSUTF8StringEncoding)
+                        print(string)
                         let flights = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers) as? [[String : AnyObject]]
                         if flights?.count == 0 {
-                            self.indicator.stopAnimating()
                             self.NoFlight()
-                            print("noflight")
                         } else {
-                            print("onok")
                             self.emptyResult = false
                             for flight in flights! {
                                 
@@ -513,22 +547,31 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
                                 if let price = flight["price"] as? String {
                                     tempFlight.price = Double(price)!
                                 }
-                                if let type = flight["kode_harga"] as? String {
+                                if let points = flight["points"] as? String {
+                                    tempFlight.points = Int(points)!
+                                }
+                                if let type = flight["tipe"] as? String {
                                     tempFlight.type = type
+                                }
+                                if let tax = flight["tax"] as? String {
+                                    tempFlight.tax = Double(tax)!
                                 }
                                 if let id_airplane = flight["id_airplane"] as? String {
                                     tempFlight.airlines = searchFlight.FindAirlinesById(Int(id_airplane)!)
                                 }
+                                if let transit = flight["transit"] as? String {
+                                    tempFlight.transit = transit
+                                }
                                 self.flightResults.append(tempFlight)
+                                self.isSearching = false
                             }
                             
-                            self.GroupFlight()
                             for _ in self.flightResults {
                                 self.displayCell.append(true)
                             }
                             self.TableLoad()
                         }
-                            
+                        
                     } catch {
                         print("error")
                     }

@@ -18,6 +18,7 @@ class RoundTripTicketTableViewCell: UITableViewCell {
     @IBOutlet weak var arrivalDestination: UILabel!
     @IBOutlet weak var passengerDestination: UILabel!
     @IBOutlet weak var priceDestination: UILabel!
+    @IBOutlet weak var taxDestination: UILabel!
     
     //MARK: returning properties
     @IBOutlet weak var returningFlight: UILabel!
@@ -27,6 +28,7 @@ class RoundTripTicketTableViewCell: UITableViewCell {
     @IBOutlet weak var arrivalReturning: UILabel!
     @IBOutlet weak var passengerReturning: UILabel!
     @IBOutlet weak var priceReturning: UILabel!
+    @IBOutlet weak var taxReturning: UILabel!
     
     @IBOutlet weak var subtotal: UILabel!
     

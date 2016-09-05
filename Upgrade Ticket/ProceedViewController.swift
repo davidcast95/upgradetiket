@@ -14,10 +14,13 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
     @IBOutlet weak var settingView : UIView!
     var tag = 0
     var textfields = Array<UITextField>()
+    var datePicker = UIDatePicker()
+    var datePickerToChange = UITextField()
     var isSettingShow = false
     var mask = Mask()
     var screen = CGRect()
     var isKeyboardShow = false
+    
     @IBOutlet weak var tableView: UITableView!
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -96,7 +99,7 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
     }
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if indexPath.row < searchFlight.passenger {
-            return 256
+            return 189
         } else {
             if searchFlight.isRoundTrip {
                 return 500
@@ -116,13 +119,15 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
             cell.fullNameTextfield.delegate = self
             textfields.append(cell.fullNameTextfield)
             cell.IDCardTextField.tag = tag
-            tag += 1
+            cell.IDCardTextField.addTarget(self, action: #selector(BirthDateEditBegin), forControlEvents: .EditingDidBegin)
             cell.IDCardTextField.delegate = self
-            textfields.append(cell.IDCardTextField)
-            cell.passportTextfield.tag = tag
             tag += 1
-            cell.passportTextfield.delegate = self
-            textfields.append(cell.passportTextfield)
+            
+            textfields.append(cell.IDCardTextField)
+//            cell.passportTextfield.tag = tag
+//            tag += 1
+//            cell.passportTextfield.delegate = self
+//            textfields.append(cell.passportTextfield)
             if (indexPath.row + 1 == searchFlight.passenger) {
                 cell.passportTextfield.returnKeyType = .Go
             }
@@ -137,18 +142,20 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
                 cell.flightNumberDestination.text = ": \(reservation.flight.number)"
                 cell.departureDestination.text = ": \(reservation.flight.departure.dateFormat) \(reservation.flight.departure.timeOnly)"
                 cell.arrivalDestination.text = ": \(reservation.flight.arrival.dateFormat) \(reservation.flight.departure.timeOnly)"
-                cell.passengerDestination.text = ": \(searchFlight.passenger.passengerFormat)"
-                cell.priceDestination.text = ": \(reservation.flight.new.currency)"
+                cell.passengerDestination.text = ": \(searchFlight.passenger.passengerFormat) (\(reservation.flight.type == "B" ? "Bisnis Class" : "First Class"))"
+                cell.priceDestination.text = ": \(reservation.flight.price.currency)"
+                cell.taxDestination.text = ": \(reservation.flight.tax.currency)"
                 
                 cell.returningFlight.text = "\(reservation.back.from.cityAlias) → \(reservation.back.to.cityAlias)"
                 cell.airlinesReturning.text = ": AirAsia)"
                 cell.flightNumberReturning.text = ": \(reservation.back.number)"
                 cell.departureReturning.text = ": \(reservation.back.departure.dateFormat) \(reservation.back.departure.timeOnly)"
                 cell.arrivalReturning.text = ": \(reservation.back.arrival.dateFormat) \(reservation.back.arrival.timeOnly)"
-                cell.passengerReturning.text = ": \(searchFlight.passenger.passengerFormat)"
-                cell.priceReturning.text = ": \(reservation.back.new.currency)"
+                cell.passengerReturning.text = ": \(searchFlight.passenger.passengerFormat) (\(reservation.back.type == "B" ? "Bisnis Class" : "First Class"))"
+                cell.priceReturning.text = ": \(reservation.back.price.currency)"
+                cell.taxReturning.text = ": \(reservation.back.tax.currency)"
                 
-                let subtotal = reservation.flight.new * Double(searchFlight.passenger) + (reservation.back.new * Double(searchFlight.passenger))
+                let subtotal = (reservation.flight.price * Double(searchFlight.passenger)) + (reservation.back.price * Double(searchFlight.passenger)) + reservation.flight.tax + reservation.back.tax
                 cell.subtotal.text = ": \(subtotal.currency)"
                 return cell
                 
@@ -160,9 +167,10 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
                 cell.flightNumberLabel.text = ": \(reservation.flight.number)"
                 cell.departureLabel.text = ": \(reservation.flight.departure.dateFormat), \(reservation.flight.departure.timeOnly)"
                 cell.arrivalLabel.text = ": \(reservation.flight.arrival.dateFormat), \(reservation.flight.arrival.timeOnly)"
-                cell.passengerLabel.text = ": \(searchFlight.passenger.passengerFormat)"
-                cell.priceLabel.text = ": \(reservation.flight.new.currency)"
-                let subtotal = reservation.flight.new * Double(searchFlight.passenger)
+                cell.passengerLabel.text = ": \(searchFlight.passenger.passengerFormat) (\(reservation.flight.type == "B" ? "Bisnis Class" : "First Class"))"
+                cell.taxLabel.text = ": \(reservation.flight.tax.currency)"
+                cell.priceLabel.text = ": \(reservation.flight.price.currency)"
+                let subtotal = (reservation.flight.price * Double(searchFlight.passenger)) + reservation.flight.tax
                 cell.subtotalLabel.text = ": \(subtotal.currency)"
                 return cell
             }
@@ -195,6 +203,15 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
         return false
     }
     
+    func BirthDateEditBegin(sender: UITextField) {
+        sender.inputView = datePicker
+        datePicker.datePickerMode = .Date
+        datePickerToChange = sender
+        datePicker.addTarget(self, action: #selector(DatePickerChange), forControlEvents: .ValueChanged)
+    }
+    func DatePickerChange(sender: UIDatePicker) {
+        datePickerToChange.text = sender.date.sqlDate
+    }
     
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -227,14 +244,14 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
                 valid = false
             }
             j+=1
-            if textfields[j].text == "" {
-                textfields[j].layer.borderColor = UIColor.redColor().CGColor
-                textfields[j].layer.borderWidth = 1.0;
-                textfields[j].layer.cornerRadius = 5.0;
-                valid = false
-            }
-            j+=1
-            reservation.passengers.append(Passenger(fullname: textfields[j-3].text!, idcard: textfields[j-2].text!, passport: textfields[j-1].text!))
+//            if textfields[j].text == "" {
+//                textfields[j].layer.borderColor = UIColor.redColor().CGColor
+//                textfields[j].layer.borderWidth = 1.0;
+//                textfields[j].layer.cornerRadius = 5.0;
+//                valid = false
+//            }
+//            j+=1
+            reservation.passengers.append(Passenger(fullname: textfields[j-2].text!, birthdate: textfields[j-1].text!))
         }
         if (valid) {
             let paymentVC = storyboard?.instantiateViewControllerWithIdentifier("payment") as! PaymentViewController

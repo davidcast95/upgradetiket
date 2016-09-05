@@ -200,20 +200,17 @@ class SearchFlight {
 
 class Passenger {
     var fullname = ""
-    var idcard = ""
-    var passport = ""
-    init(fullname:String,idcard:String,passport:String) {
+    var birthdate = ""
+    init(fullname:String,birthdate:String) {
         self.fullname = fullname
-        self.idcard = idcard
-        self.passport = passport
+        self.birthdate = birthdate
     }
-    func Set(fullname:String,idcard:String,passport:String) {
+    func Set(fullname:String,birthdate:String) {
         self.fullname = fullname
-        self.idcard = idcard
-        self.passport = passport
+        self.birthdate = birthdate
     }
     func IsValid() -> Bool {
-        return fullname != "" && idcard != "" && passport != ""
+        return fullname != "" && birthdate != ""
     }
 }
 class Flight {
@@ -225,9 +222,10 @@ class Flight {
     var departure = NSDate()
     var arrival = NSDate()
     var price = 0.0
-    var old = 0.0
-    var new = 0.0
+    var points = 0
     var type = ""
+    var tax = 0.0
+    var transit = ""
     func Print() {
         print("\(number) " + "from \(from.cityAlias) to \(to.cityAlias)" + " depart at \(departure) arrive at \(arrival)" + " with price \(price)")
     }

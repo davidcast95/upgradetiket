@@ -14,14 +14,16 @@ class FlightTableViewCell: UITableViewCell {
     @IBOutlet weak var airlinesLabel: UILabel!
     @IBOutlet weak var flightTimeLabel: UILabel!
     @IBOutlet weak var totalLabel: UILabel!
-    @IBOutlet weak var oldPrice: UILabel!
-    @IBOutlet weak var newPrice: UILabel!
+    @IBOutlet weak var points: UILabel!
+    @IBOutlet weak var transitFlag: UILabel!
+    @IBOutlet weak var transitLabel: UITextView!
     
     
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        transitFlag.layer.cornerRadius = 4
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

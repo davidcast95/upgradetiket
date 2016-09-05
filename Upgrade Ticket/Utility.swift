@@ -22,7 +22,13 @@ extension Double {
         let formatter = NSNumberFormatter()
         formatter.numberStyle = .DecimalStyle
         formatter.groupingSeparator = "."
-        return formatter.stringFromNumber(self)!
+        return "Rp. \(formatter.stringFromNumber(self)!),-"
+    }
+}
+
+extension Int {
+    var points:String {
+        return "\(self) pts"
     }
 }
 

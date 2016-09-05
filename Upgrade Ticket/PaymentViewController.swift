@@ -174,7 +174,7 @@ class PaymentViewController: UIViewController, UIPickerViewDelegate, UIGestureRe
         if let id = activeUser.valueForKey("id") as? String {
             print("Creating transasction = \(flight.id)")
             self.indicator.startAnimating()
-            let postParameter = "id_jadwal=\(flight.id)&flight_number=\(flight.airlines.airlines) \(flight.number)&id_member=\(id)&person=\(searchFlight.passenger)&total=\(Int(flight.price * Double(reservation.passengers.count)))&payment_method=\(paymentMethodTextField.text!)&card_holder=\(cardHolderTextField.text!)&card_number=\(cardNumberTextField.text!)"
+            let postParameter = "id_jadwal=\(flight.id)&flight_number=\(flight.airlines.airlines) \(flight.number)&id_member=\(id)&person=\(searchFlight.passenger)&total=\(Int(flight.price * Double(reservation.passengers.count)) + Int(flight.tax))&payment_method=\(paymentMethodTextField.text!)&card_holder=\(cardHolderTextField.text!)&card_number=\(cardNumberTextField.text!)&tipe=\(flight.type)"
             print(postParameter)
             let link = "http://rico.webmurahbagus.com/admin/API/InserttransactionAPI.php"
             AjaxPost(link, parameter: postParameter, done: { (data) in
@@ -191,10 +191,11 @@ class PaymentViewController: UIViewController, UIPickerViewDelegate, UIGestureRe
         var success = true
         var i = 0
         for passenger in reservation.passengers {
-            let postParameter = "id_transaksi=\(id)&fullname=\(passenger.fullname)&no_ktp=\(passenger.idcard)&no_passport=\(passenger.passport)"
+            let postParameter = "id_transaksi=\(id)&fullname=\(passenger.fullname)&birthdate=\(passenger.birthdate)"
             let link = "http://rico.webmurahbagus.com/admin/API/InsertdetailAPI.php"
             AjaxPost(link, parameter: postParameter, done: { (data) in
                 if let responseData = String(data: data, encoding: NSUTF8StringEncoding) {
+                    print(responseData)
                     if responseData != "1" {
                         success = false
                     }
