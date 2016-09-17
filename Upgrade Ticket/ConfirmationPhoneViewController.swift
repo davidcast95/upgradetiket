@@ -16,7 +16,7 @@ class ConfirmationPhoneViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var resendCode: UIButton!
     var idmember = "0"
     var timer = Timer()
-    var timeRemainInSeconds = 100
+    var timeRemainInSeconds = 300
     override func viewDidLoad() {
         super.viewDidLoad()
         timeRemaining.text = "\(self.timeRemainInSeconds.timerFormat) to resend code"
@@ -37,9 +37,6 @@ class ConfirmationPhoneViewController: UIViewController, UITextFieldDelegate {
             }
         }
     }
-    override func viewDidAppear(_ animated: Bool) {
-        SMSAPI()
-    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -51,7 +48,6 @@ class ConfirmationPhoneViewController: UIViewController, UITextFieldDelegate {
         sender.text = ""
     }
     func CodeChange(sender: UITextField) {
-        print("Dasdasdasdasd")
         let nextTag = sender.tag + 1
         if nextTag >= 6 {
             var code = ""
@@ -96,7 +92,7 @@ class ConfirmationPhoneViewController: UIViewController, UITextFieldDelegate {
         timeRemainInSeconds = 100 * tryattemp
         resendCode.isHidden = true
         resendCode.isEnabled = false
-        SMSAPI()
+        ResendUniqueCodeAPI()
     }
     
     //MARK : Connectivity
@@ -114,22 +110,46 @@ class ConfirmationPhoneViewController: UIViewController, UITextFieldDelegate {
         })
     }
     
-    func CheckCode(code:String) {
-        let postParameter = "id_member=\(idmember)&unique_code=\(code)"
-        print(postParameter)
-        let link = "http://rico.webmurahbagus.com/admin/API/CheckUniqueCodeAPI.php"
+    func ResendUniqueCodeAPI() {
+        let postParameter = "id_member=\(idmember)"
+        let link = "http://rico.webmurahbagus.com/admin/API/ResendUniqueCodeAPI.php"
         
         AjaxPost(link, parameter: postParameter, done: { data in
             if let responseData = String(bytes: data, encoding: .utf8) {
-                print("------------")
                 print(responseData)
-                if responseData != "0"  {
-                    if let destVC = self.storyboard?.instantiateViewController(withIdentifier: "confirmationemail") as? ConfirmationEmailViewController {
-                        destVC.username = responseData
-                        self.present(destVC, animated: true, completion: nil)
-                    }
+                if responseData == "1" {
+                    self.SMSAPI()
                 }
             }
+        })
+    }
+    
+    func CheckCode(code:String) {
+        
+        let processingAlert = self.ProcessingAlert("Processing . . .")
+        let postParameter = "id_member=\(idmember)&unique_code=\(code)"
+        print(postParameter)
+        let link = "http://rico.webmurahbagus.com/admin/API/CheckUniqueCodeAPI.php"
+        AjaxPost(link, parameter: postParameter, done: { data in
+            self.EndProcessingAlert(processingAlert, complete: {
+                if let responseData = String(bytes: data, encoding: .utf8) {
+                    if responseData != "0"  {
+                        if activeUser.value(forKey: "id") == nil {
+                            if let destVC = self.storyboard?.instantiateViewController(withIdentifier: "confirmationemail") as? ConfirmationEmailViewController {
+                                destVC.username = responseData
+                                self.present(destVC, animated: true, completion: nil)
+                            }
+                        } else {
+                            self.dismiss(animated: true, completion: nil)
+                        }
+                        
+                    }
+                }
+                else {
+                    self.Alert("Code is invalid!")
+                }
+            })
+            
         })
 
     }

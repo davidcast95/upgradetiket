@@ -58,6 +58,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSlider()
+        UpdateSlider()
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(Refresh), for: .valueChanged)
         flightTableView.addSubview(refreshControl)

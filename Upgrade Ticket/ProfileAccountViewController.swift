@@ -69,6 +69,7 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if loading {
             let cell = tableView.dequeueReusableCell(withIdentifier: "loading-transaction", for: indexPath)
+            cell.selectionStyle = .none
             return cell
         } else if filteredHistory.count == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "no-transaction", for: indexPath)
@@ -101,9 +102,10 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let index = (indexPath as NSIndexPath).row
-        viewTransaction = filteredHistory[index]
-        
+        if !loading && filteredHistory.count > 0 {
+            let index = (indexPath as NSIndexPath).row
+            viewTransaction = filteredHistory[index]
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -255,13 +257,14 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
                             history.append(tempTransaction)
                         }
                         
-                        DispatchQueue.main.async(execute: {
-                            self.loading = false
+                        DispatchQueue.main.async {
                             self.UpdateStatus(tempTransaction)
-                            self.FilterStatus()
-                        })
+                        }
                     }
-                    
+                    DispatchQueue.main.async(execute: {
+                        self.loading = false
+                        self.FilterStatus()
+                    })
                 } catch {
                     let string = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
                     print(string)

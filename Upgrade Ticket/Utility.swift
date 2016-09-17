@@ -115,7 +115,9 @@ extension UIViewController {
         return processingAlertController
     }
     func EndProcessingAlert(_ target:UIAlertController,complete: @escaping () -> Void) {
-        target.dismiss(animated: true, completion: complete)
+        DispatchQueue.main.async(execute: {
+            target.dismiss(animated: true, completion: complete)
+        })
     }
     func AjaxPost(_ link:String,parameter:String,done: @escaping (_ data: Data) -> Void) {
         if let requestURL = URL(string: link) {
