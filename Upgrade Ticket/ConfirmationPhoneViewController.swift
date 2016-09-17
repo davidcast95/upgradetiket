@@ -96,7 +96,7 @@ class ConfirmationPhoneViewController: UIViewController, UITextFieldDelegate {
         timeRemainInSeconds = 100 * tryattemp
         resendCode.isHidden = true
         resendCode.isEnabled = false
-        
+        SMSAPI()
     }
     
     //MARK : Connectivity
