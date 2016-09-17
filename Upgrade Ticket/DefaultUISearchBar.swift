@@ -14,7 +14,7 @@ class DefaultUISearchBar: UISearchBar {
         super.init(coder: aDecoder)!
         let textfield = self.subviews[1] as! UITextField
         textfield.font = UIFont(name: "Futura", size: 14)
-        textfield.textColor = UIColor.blackColor()
+        textfield.textColor = UIColor.black
         
     }
 

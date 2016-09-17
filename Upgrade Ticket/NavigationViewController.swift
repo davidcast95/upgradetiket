@@ -15,7 +15,7 @@ class NavigationViewController: UIViewController {
         super.viewDidLoad()
         
         //hidden navigation bar default
-        self.navigationController?.navigationBarHidden = true
+        self.navigationController?.isNavigationBarHidden = true
         navigationProperties.color = mainNav.backgroundColor!
         navigationProperties.height = mainNav.frame.height
         // Do any additional setup after loading the view.
@@ -26,11 +26,11 @@ class NavigationViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
     //Touch
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
 

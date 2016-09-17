@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate {
+class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate, UIPickerViewDelegate {
 
     @IBOutlet weak var proceedButton: UIButton!
     @IBOutlet weak var settingView : UIView!
@@ -20,11 +20,15 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
     var mask = Mask()
     var screen = CGRect()
     var isKeyboardShow = false
+    var titles = ["Mr.","Mrs.","Ms."]
+    var titlePickerView = UIPickerView()
+    var activeTitle = UITextField()
+    var first = true
     
     @IBOutlet weak var tableView: UITableView!
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
     
     override func viewDidLoad() {
@@ -32,7 +36,7 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
         screen = view.frame
         CreateMask()
         RespositioningSettingView()
-        // Do any additional setup after loading the view.
+        titlePickerView.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -46,7 +50,7 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
         tap.delegate = self
         mask.addGestureRecognizer(tap)
         view.addSubview(mask)
-        self.view.sendSubviewToBack(self.mask)
+        self.view.sendSubview(toBack: self.mask)
     }
     
     func RespositioningSettingView() {
@@ -54,31 +58,31 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
             var frame = settingView.frame
             frame.origin.y = screen.height
             frame.origin.x = 0
-            frame.size = CGSizeMake(screen.width, 100)
+            frame.size = CGSize(width: screen.width, height: 100)
             settingView.frame = frame
         }
     }
     
     //Actions
-    func MaskClicked(sender: UITapGestureRecognizer) {
+    func MaskClicked(_ sender: UITapGestureRecognizer) {
         if isSettingShow {
-            UIView.animateWithDuration(0.5, animations: {
+            UIView.animate(withDuration: 0.5, animations: {
                 self.mask.Hide()
                 var frame = self.settingView.frame
                 frame.origin.y = self.screen.height
                 self.settingView.frame = frame
                 }, completion: { finished in
                     self.isSettingShow = false
-                    self.view.sendSubviewToBack(self.mask)
+                    self.view.sendSubview(toBack: self.mask)
             })
         }
     }
-    @IBAction func SettingClicked(sender: UIButton) {
-        if activeUser.valueForKey("id") != nil {
+    @IBAction func SettingClicked(_ sender: UIButton) {
+        if activeUser.value(forKey: "id") != nil {
             if !isSettingShow {
-                self.view.bringSubviewToFront(self.mask)
-                self.view.bringSubviewToFront(self.settingView)
-                UIView.animateWithDuration(0.5, animations: {
+                self.view.bringSubview(toFront: self.mask)
+                self.view.bringSubview(toFront: self.settingView)
+                UIView.animate(withDuration: 0.5, animations: {
                     self.mask.Show()
                     var frame = self.settingView.frame
                     frame.origin.y = self.screen.height - 100
@@ -88,82 +92,95 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
                 })
             }
         } else {
-            let VC = storyboard?.instantiateViewControllerWithIdentifier("login")
-            self.showViewController(VC!, sender: self)
+            let VC = storyboard?.instantiateViewController(withIdentifier: "login")
+            self.show(VC!, sender: self)
         }
     }
 
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchFlight.passenger + 1
     }
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if indexPath.row < searchFlight.passenger {
-            return 189
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if (indexPath as NSIndexPath).row < searchFlight.passenger {
+            return 274
         } else {
             if searchFlight.isRoundTrip {
-                return 500
+                return 854
             } else {
-                return 303
+                return 472
             }
         }
     }
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if indexPath.row < searchFlight.passenger {
-            let cell = tableView.dequeueReusableCellWithIdentifier("person-cell", forIndexPath: indexPath) as! PersonTableViewCell
-            cell.personLabel.text = "Passenger \(indexPath.row + 1)"
-            cell.selectionStyle = .None
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if (indexPath as NSIndexPath).row < searchFlight.passenger {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "person-cell", for: indexPath) as! PersonTableViewCell
+            cell.personLabel.text = "Passenger \((indexPath as NSIndexPath).row + 1)"
+            cell.selectionStyle = .none
+            
+            cell.titleTextField.tag = tag
+            cell.titleTextField.delegate = self
+            if first {
+                cell.titleTextField.text = titles[0]
+            }
+            
+            cell.titleTextField.addTarget(self, action: #selector(TitlePickerSelect), for: .editingDidBegin)
+            textfields.append(cell.titleTextField)
+            tag += 1
             
             cell.fullNameTextfield.tag = tag
-            tag += 1
             cell.fullNameTextfield.delegate = self
+            tag += 1
             textfields.append(cell.fullNameTextfield)
-            cell.IDCardTextField.tag = tag
-            cell.IDCardTextField.addTarget(self, action: #selector(BirthDateEditBegin), forControlEvents: .EditingDidBegin)
-            cell.IDCardTextField.delegate = self
+            cell.birthdateTextField.tag = tag
+            cell.birthdateTextField.addTarget(self, action: #selector(BirthDateEditBegin), for: .editingDidBegin)
+            cell.birthdateTextField.delegate = self
             tag += 1
             
-            textfields.append(cell.IDCardTextField)
-//            cell.passportTextfield.tag = tag
-//            tag += 1
-//            cell.passportTextfield.delegate = self
-//            textfields.append(cell.passportTextfield)
-            if (indexPath.row + 1 == searchFlight.passenger) {
-                cell.passportTextfield.returnKeyType = .Go
+            textfields.append(cell.birthdateTextField)
+            if ((indexPath as NSIndexPath).row + 1 == searchFlight.passenger) {
+                cell.birthdateTextField.returnKeyType = .go
+                first = false
             }
             
             return cell
         } else {
             if searchFlight.isRoundTrip {
-                let cell = tableView.dequeueReusableCellWithIdentifier("roundtrip-ticket-cell", forIndexPath:  indexPath) as! RoundTripTicketTableViewCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "roundtrip-ticket-cell", for:  indexPath) as! RoundTripTicketTableViewCell
                 
+                let font = UIFont(name: "Futura-CondensedMedium", size: 14)
                 cell.destinationFlight.text = "\(reservation.flight.from.cityAlias) → \(reservation.flight.to.cityAlias)"
-                cell.airlinesDestination.text = ": AirAsia"
+                cell.airportDestination.text = "\(reservation.flight.from.airport) → \(reservation.flight.to.airport)"
+                cell.airlinesDestination.text = ": \(reservation.flight.airlines.airlines)"
                 cell.flightNumberDestination.text = ": \(reservation.flight.number)"
                 cell.departureDestination.text = ": \(reservation.flight.departure.dateFormat) \(reservation.flight.departure.timeOnly)"
                 cell.arrivalDestination.text = ": \(reservation.flight.arrival.dateFormat) \(reservation.flight.departure.timeOnly)"
                 cell.passengerDestination.text = ": \(searchFlight.passenger.passengerFormat) (\(reservation.flight.type == "B" ? "Bisnis Class" : "First Class"))"
                 cell.priceDestination.text = ": \(reservation.flight.price.currency)"
                 cell.taxDestination.text = ": \(reservation.flight.tax.currency)"
+                cell.transitDestination.attributedText = NSAttributedString(string: (reservation.flight.transit == "") ? "No transit" : reservation.flight.transit, attributes: [NSForegroundColorAttributeName: UIColor.gray, NSFontAttributeName : font!])
                 
                 cell.returningFlight.text = "\(reservation.back.from.cityAlias) → \(reservation.back.to.cityAlias)"
-                cell.airlinesReturning.text = ": AirAsia)"
+                cell.airportReturning.text = "\(reservation.back.from.airport) → \(reservation.back.to.airport)"
+                cell.airlinesReturning.text = ": \(reservation.back.airlines.airlines))"
                 cell.flightNumberReturning.text = ": \(reservation.back.number)"
                 cell.departureReturning.text = ": \(reservation.back.departure.dateFormat) \(reservation.back.departure.timeOnly)"
                 cell.arrivalReturning.text = ": \(reservation.back.arrival.dateFormat) \(reservation.back.arrival.timeOnly)"
                 cell.passengerReturning.text = ": \(searchFlight.passenger.passengerFormat) (\(reservation.back.type == "B" ? "Bisnis Class" : "First Class"))"
                 cell.priceReturning.text = ": \(reservation.back.price.currency)"
                 cell.taxReturning.text = ": \(reservation.back.tax.currency)"
+                cell.transitReturning.attributedText = NSAttributedString(string: (reservation.back.transit == "") ? "No transit" : reservation.flight.transit, attributes: [NSForegroundColorAttributeName: UIColor.gray, NSFontAttributeName : font!])
                 
                 let subtotal = (reservation.flight.price * Double(searchFlight.passenger)) + (reservation.back.price * Double(searchFlight.passenger)) + reservation.flight.tax + reservation.back.tax
                 cell.subtotal.text = ": \(subtotal.currency)"
                 return cell
                 
             } else {
-                let cell = tableView.dequeueReusableCellWithIdentifier("oneway-ticket-cell", forIndexPath: indexPath) as! OneWayTicketTableViewCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "oneway-ticket-cell", for: indexPath) as! OneWayTicketTableViewCell
                 
                 cell.destinationFlight.text = "\(reservation.flight.from.cityAlias) → \(reservation.flight.to.cityAlias)"
-                cell.airlinesLabel.text = ": AirAsia"
+                cell.airport.text = "\(reservation.flight.from.airport) → \(reservation.flight.to.airport)"
+                cell.airlinesLabel.text = ": \(reservation.flight.airlines.airlines)"
                 cell.flightNumberLabel.text = ": \(reservation.flight.number)"
                 cell.departureLabel.text = ": \(reservation.flight.departure.dateFormat), \(reservation.flight.departure.timeOnly)"
                 cell.arrivalLabel.text = ": \(reservation.flight.arrival.dateFormat), \(reservation.flight.arrival.timeOnly)"
@@ -172,24 +189,27 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
                 cell.priceLabel.text = ": \(reservation.flight.price.currency)"
                 let subtotal = (reservation.flight.price * Double(searchFlight.passenger)) + reservation.flight.tax
                 cell.subtotalLabel.text = ": \(subtotal.currency)"
+                
+                let font = UIFont(name: "Futura-CondensedMedium", size: 14)
+                cell.transitDescription.attributedText = NSAttributedString(string: (reservation.flight.transit == "") ? "No transit" : reservation.flight.transit, attributes: [NSForegroundColorAttributeName: UIColor.gray, NSFontAttributeName : font!])
                 return cell
             }
         }
     }
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         CloseInputView()
     }
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         isKeyboardShow = true
         self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 250, right: 0)
-        textField.backgroundColor = UIColor.whiteColor()
+        textField.backgroundColor = UIColor.white
         return true
     }
-    func textFieldDidEndEditing(textField: UITextField) {
+    func textFieldDidEndEditing(_ textField: UITextField) {
         self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         let nextTag = textField.tag + 1
         
         if let nextResponder = textField.superview?.viewWithTag(nextTag) {
@@ -203,18 +223,30 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
         return false
     }
     
-    func BirthDateEditBegin(sender: UITextField) {
+    func BirthDateEditBegin(_ sender: UITextField) {
         sender.inputView = datePicker
-        datePicker.datePickerMode = .Date
+        datePicker.datePickerMode = .date
         datePickerToChange = sender
-        datePicker.addTarget(self, action: #selector(DatePickerChange), forControlEvents: .ValueChanged)
+        datePicker.addTarget(self, action: #selector(DatePickerChange), for: .valueChanged)
     }
-    func DatePickerChange(sender: UIDatePicker) {
+    func DatePickerChange(_ sender: UIDatePicker) {
         datePickerToChange.text = sender.date.sqlDate
     }
+    func TitlePickerSelect(_ sender: UITextField) {
+        activeTitle = sender
+        sender.inputView = titlePickerView
+    }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return titles.count
+    }
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return titles[row]
+    }
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        activeTitle.text = titles[row]
+    }
     
-    
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         CloseInputView()
     }
     
@@ -225,41 +257,35 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
     }
     
     
-    @IBAction func Validation(sender: UIButton) {
+    @IBAction func Validation(_ sender: UIButton) {
         reservation.passengers.removeAll()
         var valid = true
         var j = 0
         for _ in 0..<searchFlight.passenger {
+            j+=1
             if (textfields[j].text == "") {
-                textfields[j].layer.borderColor = UIColor.redColor().CGColor
+                textfields[j].layer.borderColor = UIColor.red.cgColor
                 textfields[j].layer.borderWidth = 1.0;
                 textfields[j].layer.cornerRadius = 5.0;
                 valid = false
             }
             j+=1
             if textfields[j].text == "" {
-                textfields[j].layer.borderColor = UIColor.redColor().CGColor
+                textfields[j].layer.borderColor = UIColor.red.cgColor
                 textfields[j].layer.borderWidth = 1.0;
                 textfields[j].layer.cornerRadius = 5.0;
                 valid = false
             }
             j+=1
-//            if textfields[j].text == "" {
-//                textfields[j].layer.borderColor = UIColor.redColor().CGColor
-//                textfields[j].layer.borderWidth = 1.0;
-//                textfields[j].layer.cornerRadius = 5.0;
-//                valid = false
-//            }
-//            j+=1
-            reservation.passengers.append(Passenger(fullname: textfields[j-2].text!, birthdate: textfields[j-1].text!))
+            reservation.passengers.append(Passenger(fullname: "\(textfields[j-3].text!) \(textfields[j-2].text!)", birthdate: textfields[j-1].text!))
         }
         if (valid) {
-            let paymentVC = storyboard?.instantiateViewControllerWithIdentifier("payment") as! PaymentViewController
+            let paymentVC = storyboard?.instantiateViewController(withIdentifier: "payment") as! PaymentViewController
             self.navigationController?.pushViewController(paymentVC, animated: true)
         }
     }
     
-    @IBAction func BackToProceed(segue: UIStoryboardSegue) {
+    @IBAction func BackToProceed(_ segue: UIStoryboardSegue) {
         
     }
 

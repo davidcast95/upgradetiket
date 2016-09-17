@@ -11,24 +11,24 @@ import UIKit
 import CoreData
 
 enum State : Int {
-    case Flight
-    case Login
-    case Proceed
-    case Payment
+    case flight
+    case login
+    case proceed
+    case payment
 }
 
-func FecthFromCoreData(entity:String) -> [NSManagedObject] {
+func FecthFromCoreData(_ entity:String) -> [NSManagedObject] {
     var returnResult = Array<NSManagedObject>()
     
     let appDelegate =
-    UIApplication.sharedApplication().delegate as! AppDelegate
+    UIApplication.shared.delegate as! AppDelegate
     
     let managedContext = appDelegate.managedObjectContext
     
-    let fetchRequest = NSFetchRequest(entityName: entity)
+    let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
     
     do {
-        let results = try managedContext.executeFetchRequest(fetchRequest)
+        let results = try managedContext.fetch(fetchRequest)
         returnResult = results as! [NSManagedObject]
     } catch let error as NSError {
         print("Could not fetch \(error), \(error.userInfo)")
@@ -37,50 +37,57 @@ func FecthFromCoreData(entity:String) -> [NSManagedObject] {
     return returnResult
 }
 
-func SelectFromID(entity:String,id:Int) -> [NSManagedObject] {
+func SelectFromID(_ entity:String,id:Int) -> [NSManagedObject] {
     var returnResult = Array<NSManagedObject>()
     
     let appDelegate =
-        UIApplication.sharedApplication().delegate as! AppDelegate
+        UIApplication.shared.delegate as! AppDelegate
     
     let managedContext = appDelegate.managedObjectContext
     
-    let fetchRequest = NSFetchRequest(entityName: entity)
+    let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
     fetchRequest.predicate = NSPredicate(format: "id = \(id)", id)
     
     do {
-        let results = try managedContext.executeFetchRequest(fetchRequest)
+        let results = try managedContext.fetch(fetchRequest)
         returnResult = results as! [NSManagedObject]
     } catch let error as NSError {
         print("Could not fetch \(error), \(error.userInfo)")
     }
     
     return returnResult
+}
+
+class Admin {
+    var phone = ""
+    var rekening = ""
+    var conversion_points = ""
 }
 
 class City {
     var id = 0
     var city = ""
     var alias = ""
-    var image = NSData()
+    var airport = ""
+    var image = Data()
     
-    func isSame(other:City) -> Bool {
-        return self.id == other.id && self.city == other.city && self.alias == other.alias
+    func isSame(_ other:City) -> Bool {
+        return self.id == other.id
     }
     
     func SaveToCoreData() {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
-        let entity =  NSEntityDescription.entityForName("Destinations",inManagedObjectContext:managedContext)
-        let cityContext = NSManagedObject(entity: entity!,insertIntoManagedObjectContext: managedContext)
+        let entity =  NSEntityDescription.entity(forEntityName: "Destinations",in:managedContext)
+        let cityContext = NSManagedObject(entity: entity!,insertInto: managedContext)
         cityContext.setValue(id, forKey: "id")
         cityContext.setValue(city, forKey: "city")
         cityContext.setValue(alias, forKey: "alias")
         cityContext.setValue(image, forKey: "image")
-        
+        cityContext.setValue(airport, forKey: "airport")
         do {
             try managedContext.save()
-            print("\(city) has been saved to core data")
+            print("\(airport) has been saved to core data")
         } catch let error as NSError  {
             print("Could not save \(error), \(error.userInfo)")
         }
@@ -94,17 +101,17 @@ class City {
 class Airlines {
     var id = 0
     var airlines = ""
-    var image = NSData()
+    var image = Data()
     
-    func isSame(other:Airlines) -> Bool {
+    func isSame(_ other:Airlines) -> Bool {
         return self.id == other.id && self.airlines == other.airlines
     }
     
     func SaveToCoreData() {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
-        let entity =  NSEntityDescription.entityForName("Airlines",inManagedObjectContext:managedContext)
-        let cityContext = NSManagedObject(entity: entity!,insertIntoManagedObjectContext: managedContext)
+        let entity =  NSEntityDescription.entity(forEntityName: "Airlines",in:managedContext)
+        let cityContext = NSManagedObject(entity: entity!,insertInto: managedContext)
         cityContext.setValue(id, forKey: "id")
         cityContext.setValue(airlines, forKey: "airline")
         cityContext.setValue(image, forKey: "image")
@@ -128,9 +135,9 @@ class SearchFlight {
     var dest = City()
     var oneWay = true
     var passenger = 1
-    var dateFlight = NSDate()
-    var dateReturn = NSDate()
-    var activeResult:State = .Flight
+    var dateFlight = Date()
+    var dateReturn = Date()
+    var activeResult:State = .flight
     func Default() {
         if cities.count > 1 {
             origin = cities[0]
@@ -144,17 +151,17 @@ class SearchFlight {
         print("Flight from \(origin.city) to \(dest.city) for " + passenger.passengerFormat + " at \(dateFlight) and will return at \(dateReturn)")
     }
     
-    func FindCityByCityAlias(text:String) -> City {
+    func FindCityByCityAlias(_ text:String) -> City {
         let cityAlias = text.characters.split{$0 == " "}.map(String.init)
         for city in cities {
-            if (cityAlias[0].lowercaseString == city.city.lowercaseString && cityAlias[1].lowercaseString == "(\(city.alias.lowercaseString))") {
+            if (cityAlias[0].lowercased() == city.city.lowercased() && cityAlias[1].lowercased() == "(\(city.alias.lowercased()))") {
                 return city
             }
         }
         return City()
     }
     
-    func FindCityById(id:Int) -> City {
+    func FindCityById(_ id:Int) -> City {
         for city in cities {
             if city.id == id {
                 return city
@@ -163,7 +170,7 @@ class SearchFlight {
         return City()
     }
     
-    func FindAirlinesById(id:Int) -> Airlines {
+    func FindAirlinesById(_ id:Int) -> Airlines {
         for airline in airlines {
             if airline.id == id {
                 return airline
@@ -172,7 +179,7 @@ class SearchFlight {
         return Airlines()
     }
     
-    func IsCityExist(predicate:City) -> Bool {
+    func IsCityExist(_ predicate:City) -> Bool {
         var exist = false
         for city in cities {
             if city.id == predicate.id {
@@ -181,7 +188,7 @@ class SearchFlight {
         }
         return exist
     }
-    func IsAirlinesExist(predicate:Airlines) -> Bool {
+    func IsAirlinesExist(_ predicate:Airlines) -> Bool {
         var exist = false
         for airline in airlines {
             if airline.id == predicate.id {
@@ -205,7 +212,7 @@ class Passenger {
         self.fullname = fullname
         self.birthdate = birthdate
     }
-    func Set(fullname:String,birthdate:String) {
+    func Set(_ fullname:String,birthdate:String) {
         self.fullname = fullname
         self.birthdate = birthdate
     }
@@ -219,8 +226,8 @@ class Flight {
     var number = ""
     var from = City()
     var to = City()
-    var departure = NSDate()
-    var arrival = NSDate()
+    var departure = Date()
+    var arrival = Date()
     var price = 0.0
     var points = 0
     var type = ""
@@ -251,8 +258,8 @@ class Transaction {
     var from = ""
     var to = ""
     var flight_number = ""
-    var arrival = NSDate()
-    var departure = NSDate()
+    var arrival = Date()
+    var departure = Date()
     var passengers = Array<Passenger>()
     var payment_method = ""
     var card_number = ""
@@ -260,10 +267,10 @@ class Transaction {
     var total:Double = 0
     
     func SaveToCoreData() {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
-        let entity =  NSEntityDescription.entityForName("Transactions",inManagedObjectContext:managedContext)
-        let transactionContext = NSManagedObject(entity: entity!,insertIntoManagedObjectContext: managedContext)
+        let entity =  NSEntityDescription.entity(forEntityName: "Transactions",in:managedContext)
+        let transactionContext = NSManagedObject(entity: entity!,insertInto: managedContext)
         transactionContext.setValue(id, forKey: "id")
         transactionContext.setValue(status, forKey: "status")
         transactionContext.setValue(passenger, forKey: "passenger")
@@ -287,14 +294,15 @@ class Transaction {
     
 }
 
-
+var admin = Admin()
 var searchFlight = SearchFlight()
 var reservation = Reservation()
-var activeUser = NSUserDefaults()
+var activeUser = UserDefaults()
 var history = Array<Transaction>()
 var viewTransaction = Transaction()
-
+var tryattemp = 1
 var thankyou = false
+var payment_method = ""
 
 func SystemReset() {
     searchFlight = SearchFlight()

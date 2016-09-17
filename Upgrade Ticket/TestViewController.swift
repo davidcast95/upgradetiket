@@ -25,7 +25,7 @@ class TestViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         
         searchBar.delegate = self
         
-        searchFlight.activeResult = .Flight
+        searchFlight.activeResult = .flight
         if let id = restorationIdentifier {
             self.cities = searchFlight.cities
             print(searchFlight.origin.city)
@@ -51,7 +51,7 @@ class TestViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     
     //MARK : - TableViewCell Animation
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if (searchBar.text != "") {
             if (filteredCities.count == 0) {
                 no_result = true
@@ -65,7 +65,7 @@ class TestViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (searchBar.text != "") {
             if (filteredCities.count == 0) {
                 return 1
@@ -75,50 +75,50 @@ class TestViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         return cities.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if searchBar.text != "" {
             if (filteredCities.count == 0) {
-                let no_result_cell = tableView.dequeueReusableCellWithIdentifier("no-result")
-                no_result_cell!.selectionStyle = .None
+                let no_result_cell = tableView.dequeueReusableCell(withIdentifier: "no-result")
+                no_result_cell!.selectionStyle = .none
                 print("noresult")
                 return no_result_cell!
             } else {
-                let cell = tableView.dequeueReusableCellWithIdentifier("city_cell", forIndexPath: indexPath) as? CityTableViewCell
-                let imageData = filteredCities[indexPath.row].image
-                cell?.featureImage.image = UIImage(data: imageData)
-                cell?.cityLabel.text = filteredCities[indexPath.row].cityAlias
+                let cell = tableView.dequeueReusableCell(withIdentifier: "city_cell", for: indexPath) as? CityTableViewCell
+                let imageData = filteredCities[(indexPath as NSIndexPath).row].image
+                cell?.featureImage.image = UIImage(data: imageData as Data)
+                cell?.cityLabel.text = filteredCities[(indexPath as NSIndexPath).row].cityAlias
                 return cell!
             }
         } else {
-            let cell = tableView.dequeueReusableCellWithIdentifier("city_cell", forIndexPath: indexPath) as? CityTableViewCell
-            let imageData = cities[indexPath.row].image
-            if indexPath.row % 2 == 0 {
-                cell?.featureImage.image = UIImage(data: imageData)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "city_cell", for: indexPath) as? CityTableViewCell
+            let imageData = cities[(indexPath as NSIndexPath).row].image
+            if (indexPath as NSIndexPath).row % 2 == 0 {
+                cell?.featureImage.image = UIImage(data: imageData as Data)
             } else {
-                cell?.featureImage.image = UIImage(data: imageData)
+                cell?.featureImage.image = UIImage(data: imageData as Data)
             }
-            cell?.cityLabel.text = cities[indexPath.row].cityAlias
+            cell?.cityLabel.text = cities[(indexPath as NSIndexPath).row].cityAlias
             return cell!
         }
     }
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let id = self.restorationIdentifier {
             if !no_result {
                 if id == "origin" {
                     if searchBar.text == "" {
-                        searchFlight.origin = cities[indexPath.row]
+                        searchFlight.origin = cities[(indexPath as NSIndexPath).row]
                     } else {
-                        searchFlight.origin = filteredCities[indexPath.row]
+                        searchFlight.origin = filteredCities[(indexPath as NSIndexPath).row]
                     }
-                    if let destVC = storyboard?.instantiateViewControllerWithIdentifier("destination") as? TestViewController {
-                        self.presentViewController(destVC, animated: true, completion: nil)
+                    if let destVC = storyboard?.instantiateViewController(withIdentifier: "destination") as? TestViewController {
+                        self.present(destVC, animated: true, completion: nil)
                     }
                 } else {
                     if searchBar.text == "" {
-                        searchFlight.dest = cities[indexPath.row]
+                        searchFlight.dest = cities[(indexPath as NSIndexPath).row]
                     } else {
-                        searchFlight.dest = filteredCities[indexPath.row]
+                        searchFlight.dest = filteredCities[(indexPath as NSIndexPath).row]
                     }
                     
                 }
@@ -126,29 +126,29 @@ class TestViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
     }
     
-    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        let i = indexPath.row
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let i = (indexPath as NSIndexPath).row
         if i < displayCell.count {
             if displayCell[i] {
                 displayCell[i] = false
                 cell.alpha = 0
                 let angle:CGFloat = 10/180 * CGFloat(M_PI)
-                let rotation = CGAffineTransformMakeRotation(angle)
-                let translate = CGAffineTransformMakeTranslation(50, 80)
-                cell.transform = CGAffineTransformConcat(rotation, translate)
-                UIView.animateWithDuration(1, delay: 0.1 * Double(i), options: .CurveEaseInOut, animations: {
+                let rotation = CGAffineTransform(rotationAngle: angle)
+                let translate = CGAffineTransform(translationX: 50, y: 80)
+                cell.transform = rotation.concatenating(translate)
+                UIView.animate(withDuration: 1, delay: 0.1 * Double(i), options: UIViewAnimationOptions(), animations: {
                     cell.alpha = 1
-                    cell.transform = CGAffineTransformIdentity
+                    cell.transform = CGAffineTransform.identity
                     }, completion: nil)
             }
         }
     }
     
     //SearchBar
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         FilterCity(searchText)
     }
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         CloseInputView()
     }
     
@@ -157,10 +157,10 @@ class TestViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     }
     
     //Method
-    func FilterCity(search:String) {
+    func FilterCity(_ search:String) {
         filteredCities = cities.filter({
             city in
-            return city.cityAlias.lowercaseString.containsString(search.lowercaseString)
+            return city.cityAlias.lowercased().contains(search.lowercased())
         })
         
         displayCell.removeAll()

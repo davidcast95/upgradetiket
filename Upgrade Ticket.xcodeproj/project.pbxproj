@@ -10,6 +10,7 @@
 		51044EE21D0454E200B3D0B5 /* OriginFlightViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51044EE11D0454E200B3D0B5 /* OriginFlightViewController.swift */; };
 		51044EE41D0459D900B3D0B5 /* DestFlightViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51044EE31D0459D900B3D0B5 /* DestFlightViewController.swift */; };
 		510EE6601D46903000814117 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510EE65F1D46903000814117 /* LoadingViewController.swift */; };
+		5117A0D11D86913D00CBB5A3 /* ThankYouViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5117A0D01D86913D00CBB5A3 /* ThankYouViewController.swift */; };
 		51211CF61D273121007CD268 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51211CF51D273121007CD268 /* HomeViewController.swift */; };
 		51211CF81D273773007CD268 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51211CF71D273773007CD268 /* TestViewController.swift */; };
 		51211CFA1D273AFE007CD268 /* CityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51211CF91D273AFE007CD268 /* CityTableViewCell.swift */; };
@@ -40,7 +41,6 @@
 		5166B0B81CDCF446007EBA38 /* System.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5166B0B71CDCF446007EBA38 /* System.swift */; };
 		51821A4F1D734FB0007558B0 /* DetailButtonReservationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51821A4E1D734FB0007558B0 /* DetailButtonReservationViewController.swift */; };
 		51821A511D7370D1007558B0 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51821A501D7370D1007558B0 /* ForgotPasswordViewController.swift */; };
-		518C021B1D7C0730003D44F3 /* LoadingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518C021A1D7C0730003D44F3 /* LoadingTableViewCell.swift */; };
 		5191B8211CE8E67F00C5B133 /* FlightViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5191B8201CE8E67F00C5B133 /* FlightViewController.swift */; };
 		51B86F7A1D7015C0000CCB28 /* DefaultUITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B86F791D7015C0000CCB28 /* DefaultUITextField.swift */; };
 		51B86F7D1D701A40000CCB28 /* DefaultUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B86F7C1D701A40000CCB28 /* DefaultUIButton.swift */; };
@@ -49,6 +49,7 @@
 		51C3A9881CF9EDDF0029AC69 /* ProceedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C3A9871CF9EDDF0029AC69 /* ProceedViewController.swift */; };
 		51C3A98A1CF9F0550029AC69 /* PersonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C3A9891CF9F0550029AC69 /* PersonTableViewCell.swift */; };
 		51C3A98C1CFA0AF60029AC69 /* FlightTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C3A98B1CFA0AF60029AC69 /* FlightTableViewCell.swift */; };
+		51DCACB01D8D3897007034C6 /* ConfirmationPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51DCACAF1D8D3897007034C6 /* ConfirmationPhoneViewController.swift */; };
 		51E0239B1D217D5800504850 /* ProfileAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E0239A1D217D5800504850 /* ProfileAccountViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +74,7 @@
 		51044EE11D0454E200B3D0B5 /* OriginFlightViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OriginFlightViewController.swift; sourceTree = "<group>"; };
 		51044EE31D0459D900B3D0B5 /* DestFlightViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DestFlightViewController.swift; sourceTree = "<group>"; };
 		510EE65F1D46903000814117 /* LoadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
+		5117A0D01D86913D00CBB5A3 /* ThankYouViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThankYouViewController.swift; sourceTree = "<group>"; };
 		51211CF51D273121007CD268 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		51211CF71D273773007CD268 /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		51211CF91D273AFE007CD268 /* CityTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityTableViewCell.swift; sourceTree = "<group>"; };
@@ -109,7 +111,6 @@
 		5166B0B71CDCF446007EBA38 /* System.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = System.swift; sourceTree = "<group>"; };
 		51821A4E1D734FB0007558B0 /* DetailButtonReservationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailButtonReservationViewController.swift; sourceTree = "<group>"; };
 		51821A501D7370D1007558B0 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
-		518C021A1D7C0730003D44F3 /* LoadingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingTableViewCell.swift; sourceTree = "<group>"; };
 		5191B8201CE8E67F00C5B133 /* FlightViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightViewController.swift; sourceTree = "<group>"; };
 		51B86F791D7015C0000CCB28 /* DefaultUITextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultUITextField.swift; sourceTree = "<group>"; };
 		51B86F7C1D701A40000CCB28 /* DefaultUIButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultUIButton.swift; sourceTree = "<group>"; };
@@ -118,6 +119,7 @@
 		51C3A9871CF9EDDF0029AC69 /* ProceedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProceedViewController.swift; sourceTree = "<group>"; };
 		51C3A9891CF9F0550029AC69 /* PersonTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonTableViewCell.swift; sourceTree = "<group>"; };
 		51C3A98B1CFA0AF60029AC69 /* FlightTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightTableViewCell.swift; sourceTree = "<group>"; };
+		51DCACAF1D8D3897007034C6 /* ConfirmationPhoneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmationPhoneViewController.swift; sourceTree = "<group>"; };
 		51E0239A1D217D5800504850 /* ProfileAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileAccountViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -158,6 +160,7 @@
 				51044EE31D0459D900B3D0B5 /* DestFlightViewController.swift */,
 				513ACAAD1CFA7804004C09D4 /* LoginViewController.swift */,
 				51BC1DEF1D21A9460047B2D0 /* SignupViewController.swift */,
+				51DCACAF1D8D3897007034C6 /* ConfirmationPhoneViewController.swift */,
 				51546FF41D374771003C437D /* ConfirmationEmailViewController.swift */,
 				51C3A9871CF9EDDF0029AC69 /* ProceedViewController.swift */,
 				51E0239A1D217D5800504850 /* ProfileAccountViewController.swift */,
@@ -170,6 +173,7 @@
 				51447BD41D6E633000DA3D9D /* DetailReservationTableViewController.swift */,
 				51821A4E1D734FB0007558B0 /* DetailButtonReservationViewController.swift */,
 				51821A501D7370D1007558B0 /* ForgotPasswordViewController.swift */,
+				5117A0D01D86913D00CBB5A3 /* ThankYouViewController.swift */,
 			);
 			name = Scene;
 			sourceTree = "<group>";
@@ -186,7 +190,6 @@
 				5161AFEA1D6411FD0014F0A1 /* OneWayTicketTableViewCell.swift */,
 				5155CFF81D6755600057CA2C /* RoundTripTicketTableViewCell.swift */,
 				51447BE71D6FE4BE00DA3D9D /* DetailTransactionTableViewCell.swift */,
-				518C021A1D7C0730003D44F3 /* LoadingTableViewCell.swift */,
 			);
 			name = Component;
 			sourceTree = "<group>";
@@ -328,21 +331,24 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0710;
-				LastUpgradeCheck = 0710;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "David Wibisono";
 				TargetAttributes = {
 					5166B0771CDCD744007EBA38 = {
 						CreatedOnToolsVersion = 7.1.1;
 						DevelopmentTeam = YTFM8NUTZ8;
+						LastSwiftMigration = 0800;
 					};
 					5166B08E1CDCD745007EBA38 = {
 						CreatedOnToolsVersion = 7.1.1;
 						DevelopmentTeam = 57VL32B9VS;
+						LastSwiftMigration = 0800;
 						TestTargetID = 5166B0771CDCD744007EBA38;
 					};
 					5166B0991CDCD745007EBA38 = {
 						CreatedOnToolsVersion = 7.1.1;
 						DevelopmentTeam = 57VL32B9VS;
+						LastSwiftMigration = 0800;
 						TestTargetID = 5166B0771CDCD744007EBA38;
 					};
 				};
@@ -399,14 +405,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				518C021B1D7C0730003D44F3 /* LoadingTableViewCell.swift in Sources */,
 				513280031D0F04EB00A61D31 /* ProfileTableViewController.swift in Sources */,
+				51DCACB01D8D3897007034C6 /* ConfirmationPhoneViewController.swift in Sources */,
 				51044EE21D0454E200B3D0B5 /* OriginFlightViewController.swift in Sources */,
 				51B86F7A1D7015C0000CCB28 /* DefaultUITextField.swift in Sources */,
 				51211CF81D273773007CD268 /* TestViewController.swift in Sources */,
 				514FE6631D5E3877009DB446 /* ContentViewViewController.swift in Sources */,
 				51447BD51D6E633000DA3D9D /* DetailReservationTableViewController.swift in Sources */,
 				51BC1DF01D21A9460047B2D0 /* SignupViewController.swift in Sources */,
+				5117A0D11D86913D00CBB5A3 /* ThankYouViewController.swift in Sources */,
 				51821A511D7370D1007558B0 /* ForgotPasswordViewController.swift in Sources */,
 				51327FFD1D0CF95600A61D31 /* Mask.swift in Sources */,
 				513ACAAE1CFA7804004C09D4 /* LoginViewController.swift in Sources */,
@@ -504,8 +511,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -527,7 +536,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -549,8 +558,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -566,9 +577,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -585,6 +597,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.davidcast.Upgrade-Ticket";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -600,6 +613,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.davidcast.Upgrade-Ticket";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -612,6 +626,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.davidcast.Upgrade-TicketTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Upgrade Ticket.app/Upgrade Ticket";
 			};
 			name = Debug;
@@ -624,6 +639,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.davidcast.Upgrade-TicketTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Upgrade Ticket.app/Upgrade Ticket";
 			};
 			name = Release;
@@ -635,6 +651,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.davidcast.Upgrade-TicketUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = "Upgrade Ticket";
 				USES_XCTRUNNER = YES;
 			};
@@ -647,6 +664,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.davidcast.Upgrade-TicketUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = "Upgrade Ticket";
 				USES_XCTRUNNER = YES;
 			};

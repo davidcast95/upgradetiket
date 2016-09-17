@@ -19,12 +19,16 @@ class OneWayTicketTableViewCell: UITableViewCell {
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var subtotalLabel: UILabel!
     @IBOutlet weak var taxLabel: UILabel!
+    @IBOutlet weak var transitDescription: UITextView!
+    @IBOutlet weak var transitLabel: UILabel!
+    @IBOutlet weak var airport: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

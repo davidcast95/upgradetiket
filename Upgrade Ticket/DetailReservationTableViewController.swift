@@ -29,13 +29,13 @@ class DetailReservationTableViewController: UITableViewController {
         
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         GenerateDetail()
         GetDetail()
         if viewTransaction.status != 2 {
             print("asd")
-            buttonContainer.hidden = true
-            buttonContainer.frame = CGRectMake(0, 0, 0, 0)
+            buttonContainer.isHidden = true
+            buttonContainer.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
         }
         
     }
@@ -47,24 +47,24 @@ class DetailReservationTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 //
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return sectionsString.count
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return numOfRowsInSection[section]
     }
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sectionsString[section]
     }
-    override func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let header = view as! UITableViewHeaderFooterView
-        header.textLabel?.font = UIFont.systemFontOfSize(16, weight: UIFontWeightLight)
+        header.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
     }
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if indexPath.section == 0 {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if (indexPath as NSIndexPath).section == 0 {
             return 118
         } else {
             if loading {
@@ -74,23 +74,23 @@ class DetailReservationTableViewController: UITableViewController {
         }
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            if let cell = tableView.dequeueReusableCellWithIdentifier("ticket-information",forIndexPath: indexPath) as? HistoryTableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if (indexPath as NSIndexPath).section == 0 {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: "ticket-information",for: indexPath) as? HistoryTableViewCell {
                 let depart = "Depart at \(viewTransaction.departure.dateFormat) \(viewTransaction.departure.timeOnly)"
                 var mutableAttrString = NSMutableAttributedString(string: depart)
                 
-                mutableAttrString.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSRange(location:0,length:10))
-                mutableAttrString.addAttribute(NSForegroundColorAttributeName, value: UIColor.grayColor(), range: NSRange(location:10,length:depart.characters.count - 10))
-                mutableAttrString.addAttribute(NSFontAttributeName, value: UIFont.boldSystemFontOfSize(12), range: NSRange(location:10,length:depart.characters.count - 10))
+                mutableAttrString.addAttribute(NSForegroundColorAttributeName, value: UIColor.black, range: NSRange(location:0,length:10))
+                mutableAttrString.addAttribute(NSForegroundColorAttributeName, value: UIColor.gray, range: NSRange(location:10,length:depart.characters.count - 10))
+                mutableAttrString.addAttribute(NSFontAttributeName, value: UIFont.boldSystemFont(ofSize: 12), range: NSRange(location:10,length:depart.characters.count - 10))
                 
                 cell.depart.attributedText = mutableAttrString
                 let arrive = "Arrive at \(viewTransaction.arrival.dateFormat) \(viewTransaction.arrival.timeOnly)"
                 mutableAttrString = NSMutableAttributedString(string: arrive)
                 
-                mutableAttrString.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSRange(location:0,length:10))
-                mutableAttrString.addAttribute(NSForegroundColorAttributeName, value: UIColor.grayColor(), range: NSRange(location:10,length:arrive.characters.count - 10))
-                mutableAttrString.addAttribute(NSFontAttributeName, value: UIFont.boldSystemFontOfSize(12), range: NSRange(location:10,length:arrive.characters.count - 10))
+                mutableAttrString.addAttribute(NSForegroundColorAttributeName, value: UIColor.black, range: NSRange(location:0,length:10))
+                mutableAttrString.addAttribute(NSForegroundColorAttributeName, value: UIColor.gray, range: NSRange(location:10,length:arrive.characters.count - 10))
+                mutableAttrString.addAttribute(NSFontAttributeName, value: UIFont.boldSystemFont(ofSize: 12), range: NSRange(location:10,length:arrive.characters.count - 10))
                 cell.arrive.attributedText = mutableAttrString
                 cell.destinationFlight.text = "\(viewTransaction.from) → \(viewTransaction.to)"
                 cell.flightDetail.text = viewTransaction.flight_number
@@ -98,22 +98,22 @@ class DetailReservationTableViewController: UITableViewController {
                 cell.subtotal.text = viewTransaction.total.currency
                 return cell
             } else {
-                let cell = tableView.dequeueReusableCellWithIdentifier("error-detail", forIndexPath: indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: "error-detail", for: indexPath)
                 return cell
             }
         } else {
             if loading {
-                let cell = tableView.dequeueReusableCellWithIdentifier("loading-detail",forIndexPath: indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: "loading-detail",for: indexPath)
                 return cell
             }
-            if let cell = tableView.dequeueReusableCellWithIdentifier("cell-detail", forIndexPath: indexPath) as? DetailTransactionTableViewCell {
-                if indexPath.section == 1 {
-                    let index = indexPath.row
+            if let cell = tableView.dequeueReusableCell(withIdentifier: "cell-detail", for: indexPath) as? DetailTransactionTableViewCell {
+                if (indexPath as NSIndexPath).section == 1 {
+                    let index = (indexPath as NSIndexPath).row
                     cell.field.text = paymentField[index]
                     cell.value.text = paymentInformation[index]
                 }
                 else {
-                    let index = indexPath.row
+                    let index = (indexPath as NSIndexPath).row
                     if (index < passengersInformation.count) {
                         if (index % 4 == 0) {
                             cell.field.text = passengersInformation[index]
@@ -128,7 +128,7 @@ class DetailReservationTableViewController: UITableViewController {
                 }
                 return cell
             } else {
-                let cell = tableView.dequeueReusableCellWithIdentifier("error-detail", forIndexPath: indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: "error-detail", for: indexPath)
                 return cell
             }
         }
@@ -143,17 +143,17 @@ class DetailReservationTableViewController: UITableViewController {
 
     //MARK: Connectivity
     func GetDetail() {
-        if let userId = activeUser.valueForKey("id") {
+        if let userId = activeUser.value(forKey: "id") {
             let postParameter = "iduser=\(userId)&idtransaksi=\(viewTransaction.id)"
             print(postParameter)
             AjaxPost("http://rico.webmurahbagus.com/admin/API/GetDetailAPI.php", parameter: postParameter, done: { data in
                 do {
-                    let string = NSString(data: data, encoding: NSUTF8StringEncoding)
+                    let string = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
                     print(string)
-                    let details = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers) as? [[String : AnyObject]]
+                    let details = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String : AnyObject]]
                     var i = 1
                     for detail in details! {
-                        if let fullname = detail["fullname"] as? String, ktp = detail["no_ktp"] as? String, passport = detail["no_passport"] as? String {
+                        if let fullname = detail["fullname"] as? String, let ktp = detail["no_ktp"] as? String, let passport = detail["no_passport"] as? String {
                             self.passengersInformation.append("Person \(i)")
                             self.passengersInformation.append(fullname)
                             self.passengersInformation.append(ktp)
@@ -164,22 +164,22 @@ class DetailReservationTableViewController: UITableViewController {
                     self.loading = false
                     self.numOfRowsInSection[2] = (self.passengersInformation.count)
                     self.indexField = 0
-                    dispatch_async(dispatch_get_main_queue(), {
+                    DispatchQueue.main.async(execute: {
                         self.tableView.reloadData()
                         
                     })
                     
                 } catch {
-                    let string = NSString(data: data, encoding: NSUTF8StringEncoding)
+                    let string = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
                     print(string)
                     print("error")
                 }
             })
         } else {
-            NSUserDefaults.standardUserDefaults().removePersistentDomainForName(NSBundle.mainBundle().bundleIdentifier!)
-            NSUserDefaults.standardUserDefaults().synchronize()
-            let homeVC = storyboard?.instantiateViewControllerWithIdentifier("home")
-            presentViewController(homeVC!, animated: true, completion: nil)
+            UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
+            UserDefaults.standard.synchronize()
+            let homeVC = storyboard?.instantiateViewController(withIdentifier: "home")
+            present(homeVC!, animated: true, completion: nil)
         }
     }
     

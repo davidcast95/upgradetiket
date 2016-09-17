@@ -24,13 +24,13 @@ class SettingViewController: UIViewController {
 
     
     // MARK: - Actions
-    @IBAction func LogoutTapped(sender: AnyObject) {
-        activeUser.removeObjectForKey("id")
-        activeUser.removeObjectForKey("name")
-        activeUser.removeObjectForKey("email")
+    @IBAction func LogoutTapped(_ sender: AnyObject) {
+        activeUser.removeObject(forKey: "id")
+        activeUser.removeObject(forKey: "name")
+        activeUser.removeObject(forKey: "email")
         SystemReset()
-        if let homeVC = storyboard?.instantiateViewControllerWithIdentifier("home") as? HomeViewController {
-            self.presentViewController(homeVC, animated: true, completion: nil)
+        if let homeVC = storyboard?.instantiateViewController(withIdentifier: "home") as? HomeViewController {
+            self.present(homeVC, animated: true, completion: nil)
         }
     }
     

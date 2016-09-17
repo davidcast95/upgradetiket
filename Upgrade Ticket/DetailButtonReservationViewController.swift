@@ -22,37 +22,37 @@ class DetailButtonReservationViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func ConfirmTap(sender: AnyObject) {
-        let alert = UIAlertController(title: "Confirm Reservation", message: "You will confirm this reservation", preferredStyle: .Alert)
+    @IBAction func ConfirmTap(_ sender: AnyObject) {
+        let alert = UIAlertController(title: "Confirm Reservation", message: "You will confirm this reservation", preferredStyle: .alert)
         
-        let ok = UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
+        let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
             self.Confirm()
         })
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) -> Void in
         }
         
         alert.addAction(ok)
         alert.addAction(cancel)
         
-        presentViewController(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
     
-    @IBAction func CancelTap(sender: AnyObject) {
-        let alert = UIAlertController(title: "Cancel Reservation", message: "Are you sure to cancel this reservation? This action cannot be undo!", preferredStyle: .Alert)
+    @IBAction func CancelTap(_ sender: AnyObject) {
+        let alert = UIAlertController(title: "Cancel Reservation", message: "Are you sure to cancel this reservation? This action cannot be undo!", preferredStyle: .alert)
         
-        let ok = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+        let ok = UIAlertAction(title: "Yes", style: .default, handler: { (action) -> Void in
             self.Cancel()
         })
-        let cancel = UIAlertAction(title: "No", style: .Cancel) { (action) -> Void in
+        let cancel = UIAlertAction(title: "No", style: .cancel) { (action) -> Void in
         }
         
         alert.addAction(ok)
         alert.addAction(cancel)
         
-        presentViewController(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
     
-    func FindTransactionById(id:Int) -> Transaction {
+    func FindTransactionById(_ id:Int) -> Transaction {
         for hist in history {
             if hist.id == id {
                 return hist
@@ -68,11 +68,11 @@ class DetailButtonReservationViewController: UIViewController {
         let link = "http://rico.webmurahbagus.com/admin/API/ConfirmTransactionAPI.php"
         AjaxPost(link, parameter: postParameter, done: { (data) in
             self.EndProcessingAlert(processingAlert, complete: {
-                if let result = String(data: data,encoding: NSUTF8StringEncoding) {
+                if let result = String(data: data,encoding: String.Encoding.utf8) {
                     if result == "1" {
-                        dispatch_async(dispatch_get_main_queue(), {
+                        DispatchQueue.main.async(execute: {
                             self.FindTransactionById(viewTransaction.id).status = 4
-                            self.dismissViewControllerAnimated(true, completion: nil)
+                            self.dismiss(animated: true, completion: nil)
                         })
                     }
                 }
@@ -89,11 +89,11 @@ class DetailButtonReservationViewController: UIViewController {
         let link = "http://rico.webmurahbagus.com/admin/API/CancelTransactionAPI.php"
         AjaxPost(link, parameter: postParameter, done: { (data) in
             self.EndProcessingAlert(processingAlert, complete: {
-                if let result = String(data: data,encoding: NSUTF8StringEncoding) {
+                if let result = String(data: data,encoding: String.Encoding.utf8) {
                     if result == "1" {
-                        dispatch_async(dispatch_get_main_queue(), {
+                        DispatchQueue.main.async(execute: {
                             self.FindTransactionById(viewTransaction.id).status = 1
-                            self.dismissViewControllerAnimated(true, completion: nil)
+                            self.dismiss(animated: true, completion: nil)
                         })
                     }
                 }

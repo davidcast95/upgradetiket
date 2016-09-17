@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 struct NavigationProperties {
-    var color:UIColor = UIColor.blueColor()
+    var color:UIColor = UIColor.blue
     var height:CGFloat = 100
 }
 
@@ -19,26 +19,38 @@ var navigationProperties = NavigationProperties()
 
 extension Double {
     var currency:String {
-        let formatter = NSNumberFormatter()
-        formatter.numberStyle = .DecimalStyle
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
         formatter.groupingSeparator = "."
-        return "Rp. \(formatter.stringFromNumber(self)!),-"
+        return "Rp. \(formatter.string(for: self)!),-"
     }
 }
+
+
 
 extension Int {
     var points:String {
         return "\(self) pts"
     }
+    
+    var timerFormat: String {
+        var remain = self
+        let h = remain / 3600
+        remain %= 3600
+        let m = remain / 60
+        remain %= 60
+        let s = remain
+        return "\(h > 9 ? "\(h):" : h > 0 ? "0\(h):" : "")\(m > 9 ? "\(m):" : m > 0 ? "0\(m):" : "00:")\(s > 9 ? "\(s)" : s > 0 ? "0\(s)" : "00")"
+    }
 }
 
 extension Array {
-    mutating func RemoveByCityAlias(search:City) {
+    mutating func RemoveByCityAlias(_ search:City) {
         var i = 0
         for value in self {
             if let obj = value as? City {
                 if obj.isSame(search) {
-                    self.removeAtIndex(i)
+                    self.remove(at: i)
                 }
             }
             i += 1
@@ -53,127 +65,123 @@ extension City {
     }
 }
 
-extension NSDate {
-    var longFormat:String {
-        let format = NSDateFormatter()
-        format.dateStyle = .FullStyle
-        return format.stringFromDate(self)
-    }
-}
-
 extension Int {
     var passengerFormat:String {
         return "\(self)" + ((self > 1) ? " passengers" : " passenger")
     }
 }
 
-extension NSDate {
-    func AddDays(days:Double) -> NSDate {
-        return self.dateByAddingTimeInterval(3600.0*24.0*days)
+extension Date {
+    func AddDays(_ days:Double) -> Date {
+        return self.addingTimeInterval(3600.0*24.0*days)
     }
     var dateFormat:String {
-        let formater = NSDateFormatter()
-        formater.dateStyle = .MediumStyle
-        formater.timeStyle = .NoStyle
-        return formater.stringFromDate(self)
+        let formater = DateFormatter()
+        formater.dateStyle = .medium
+        formater.timeStyle = .none
+        return formater.string(from: self)
     }
     var sqlDate:String {
-        let formatter = NSDateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.stringFromDate(self)
+        return formatter.string(from: self)
     }
     
     var timeOnly:String {
-        let formatter = NSDateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
-        return formatter.stringFromDate(self)
+        return formatter.string(from: self)
     }
-    
+    var longFormat:String {
+        let format = DateFormatter()
+        format.dateStyle = .full
+        return format.string(from: self)
+    }
 }
 
 extension UIViewController {
-    func Alert(message:String) {
+    func Alert(_ message:String) {
         let alertController = UIAlertController(title: message, message:
-            "", preferredStyle: UIAlertControllerStyle.Alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default,handler: nil))
+            "", preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default,handler: nil))
         
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     
-    func ProcessingAlert(message:String) -> UIAlertController {
-        let processingAlertController = UIAlertController(title: message, message: "", preferredStyle: .Alert)
-        self.presentViewController(processingAlertController, animated: true, completion: nil)
+    func ProcessingAlert(_ message:String) -> UIAlertController {
+        let processingAlertController = UIAlertController(title: message, message: "", preferredStyle: .alert)
+        self.present(processingAlertController, animated: true, completion: nil)
         return processingAlertController
     }
-    func EndProcessingAlert(target:UIAlertController,complete: () -> Void) {
-        target.dismissViewControllerAnimated(true, completion: complete)
+    func EndProcessingAlert(_ target:UIAlertController,complete: @escaping () -> Void) {
+        target.dismiss(animated: true, completion: complete)
     }
-    func AjaxPost(link:String,parameter:String,done: (data: NSData) -> Void) {
-        if let requestURL = NSURL(string: link) {
-            let urlRequest = NSMutableURLRequest(URL: requestURL)
-            urlRequest.HTTPMethod = "POST"
-            urlRequest.HTTPBody = parameter.dataUsingEncoding(NSUTF8StringEncoding)
-            let session = NSURLSession.sharedSession()
-            let task = session.dataTaskWithRequest(urlRequest) {
+    func AjaxPost(_ link:String,parameter:String,done: @escaping (_ data: Data) -> Void) {
+        if let requestURL = URL(string: link) {
+            var urlRequest = URLRequest(url: requestURL)
+            urlRequest.httpMethod = "POST"
+            urlRequest.httpBody = parameter.data(using: String.Encoding.utf8)
+            let session = URLSession.shared
+            let task = session.dataTask(with: urlRequest, completionHandler: {
                 (data,response,error ) -> Void in
-                if let httpResponse = response as? NSHTTPURLResponse {
+                if let httpResponse = response as? HTTPURLResponse {
                     let statuscode = httpResponse.statusCode
                     if (statuscode == 200) {
                         if let verified_data = data {
-                            done(data: verified_data)
+                            done(verified_data)
                         }
                     }
                 } else {
                     self.Alert("Please check your internet connection!")
                 }
-            }
+            })
             task.resume()
         }
     }
     
-    func AjaxPost(link:String,parameter:String,done: (data: NSData) -> Void, error: () -> Void) {
-        if let requestURL = NSURL(string: link) {
-            let urlRequest = NSMutableURLRequest(URL: requestURL)
-            urlRequest.HTTPMethod = "POST"
-            urlRequest.HTTPBody = parameter.dataUsingEncoding(NSUTF8StringEncoding)
-            let session = NSURLSession.sharedSession()
-            let task = session.dataTaskWithRequest(urlRequest) {
+    func AjaxPost(_ link:String,parameter:String,done: @escaping (_ data: Data) -> Void, error: () -> Void) {
+        if let requestURL = URL(string: link) {
+            var urlRequest = URLRequest(url: requestURL)
+            urlRequest.httpMethod = "POST"
+            urlRequest.httpBody = parameter.data(using: String.Encoding.utf8)
+            let session = URLSession.shared
+            let task = session.dataTask(with: urlRequest, completionHandler: {
                 (data,response,error ) -> Void in
-                if let httpResponse = response as? NSHTTPURLResponse {
+                if let httpResponse = response as? HTTPURLResponse {
                     let statuscode = httpResponse.statusCode
                     if (statuscode == 200) {
                         if let verified_data = data {
-                            done(data: verified_data)
-                        }
-                    }
-                } else {
-                    error!
-                }
-            }
-            task.resume()
-        }
-    }
-    
-    func AjaxPost(link:String,parameter:String,done: (data: NSData) -> Void, error: () -> Void, completion: () -> Void) {
-        if let requestURL = NSURL(string: link) {
-            let urlRequest = NSMutableURLRequest(URL: requestURL)
-            urlRequest.HTTPMethod = "POST"
-            urlRequest.HTTPBody = parameter.dataUsingEncoding(NSUTF8StringEncoding)
-            let session = NSURLSession.sharedSession()
-            let task = session.dataTaskWithRequest(urlRequest) {
-                (data,response,error ) -> Void in
-                if let httpResponse = response as? NSHTTPURLResponse {
-                    let statuscode = httpResponse.statusCode
-                    if (statuscode == 200) {
-                        if let verified_data = data {
-                            done(data: verified_data)
+                            done(verified_data)
                         }
                     }
                 } else {
                     error
                 }
-            }
+            }) 
+            task.resume()
+        }
+    }
+    
+    func AjaxPost(_ link:String,parameter:String,done: @escaping (_ data: Data) -> Void, error: () -> Void, completion: () -> Void) {
+        if let requestURL = URL(string: link) {
+            var urlRequest = URLRequest(url: requestURL)
+            urlRequest.httpMethod = "POST"
+            urlRequest.httpBody = parameter.data(using: String.Encoding.utf8)
+            let session = URLSession.shared
+            let task = session.dataTask(with: urlRequest, completionHandler: {
+                (data,response,error ) -> Void in
+                if let httpResponse = response as? HTTPURLResponse {
+                    let statuscode = httpResponse.statusCode
+                    if (statuscode == 200) {
+                        if let verified_data = data {
+                            done(verified_data)
+                        }
+                    }
+                } else {
+                    error
+                }
+            }) 
             task.resume()
             completion()
         }
@@ -185,29 +193,29 @@ extension UIViewController {
 extension UITextField {
     func Required() {
         self.text = ""
-        self.attributedPlaceholder = NSAttributedString(string: "this field is required", attributes: [NSForegroundColorAttributeName : UIColor.redColor()])
+        self.attributedPlaceholder = NSAttributedString(string: "this field is required", attributes: [NSForegroundColorAttributeName : UIColor.red])
     }
     func PasswordDoesntMatch() {
         self.text = ""
-        self.attributedPlaceholder = NSAttributedString(string: "password doesn't match", attributes: [NSForegroundColorAttributeName : UIColor.redColor()])
+        self.attributedPlaceholder = NSAttributedString(string: "password doesn't match", attributes: [NSForegroundColorAttributeName : UIColor.red])
     }
     func PasswordInvalid() {
         self.text = ""
-        self.attributedPlaceholder = NSAttributedString(string: "password min 8 alphanumeric", attributes: [NSForegroundColorAttributeName : UIColor.redColor()])
+        self.attributedPlaceholder = NSAttributedString(string: "password min 8 alphanumeric", attributes: [NSForegroundColorAttributeName : UIColor.red])
     }
-    func Invalid(message:String) {
+    func Invalid(_ message:String) {
         self.text = ""
-        self.attributedPlaceholder = NSAttributedString(string: message, attributes: [NSForegroundColorAttributeName : UIColor.redColor()])
+        self.attributedPlaceholder = NSAttributedString(string: message, attributes: [NSForegroundColorAttributeName : UIColor.red])
     }
-    func Success(message:String) {
+    func Success(_ message:String) {
         self.text = ""
-        self.attributedPlaceholder = NSAttributedString(string: message, attributes: [NSForegroundColorAttributeName : UIColor.redColor()])
+        self.attributedPlaceholder = NSAttributedString(string: message, attributes: [NSForegroundColorAttributeName : UIColor.red])
     }
 }
 
 extension String {
     subscript (i: Int) -> Character {
-        return self[self.startIndex.advancedBy(i)]
+        return self[self.characters.index(self.startIndex, offsetBy: i)]
     }
     
     subscript (i: Int) -> String {
@@ -215,22 +223,22 @@ extension String {
     }
     
     subscript (r: Range<Int>) -> String {
-        let start = startIndex.advancedBy(r.startIndex)
-        let end = start.advancedBy(r.endIndex - r.startIndex)
+        let start = characters.index(startIndex, offsetBy: r.lowerBound)
+        let end = characters.index(start, offsetBy: r.upperBound - r.lowerBound)
         return self[Range(start ..< end)]
     }
     
     func IsValidEmail() -> Bool {
         let regexEmail = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
         let emailTest = NSPredicate(format:"SELF MATCHES %@", regexEmail)
-        return emailTest.evaluateWithObject(self)
+        return emailTest.evaluate(with: self)
     }
-    var dateTime : NSDate
+    var dateTime : Date
     {
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter()
         
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let dateFromString : NSDate = dateFormatter.dateFromString(self)!
+        let dateFromString : Date = dateFormatter.date(from: self)!
         return dateFromString
     }
     

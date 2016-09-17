@@ -7,6 +7,17 @@
 //
 
 import UIKit
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 class ProfileTableViewController: UITableViewController {
 
@@ -31,98 +42,98 @@ class ProfileTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    @IBAction func ChangeNameClick(sender: UIButton) {
-        let alert = UIAlertController(title: "You will change your name", message: "Please input your name and your password!", preferredStyle: .Alert)
+    @IBAction func ChangeNameClick(_ sender: UIButton) {
+        let alert = UIAlertController(title: "You will change your name", message: "Please input your name and your password!", preferredStyle: .alert)
         
-        let ok = UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
+        let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
             self.ChangeName()
         })
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) -> Void in
         }
         
         alert.addAction(ok)
         alert.addAction(cancel)
     
-        alert.addTextFieldWithConfigurationHandler{ (textField) -> Void in
+        alert.addTextField{ (textField) -> Void in
             // Enter the textfiled customization code here.
             self.nameTextfield = textField
             self.nameTextfield?.placeholder = "Your new name"
         }
         
-        alert.addTextFieldWithConfigurationHandler{ (textField) -> Void in
+        alert.addTextField{ (textField) -> Void in
             // Enter the textfiled customization code here.
             self.passwordTextfield = textField
-            self.passwordTextfield.secureTextEntry = true
+            self.passwordTextfield.isSecureTextEntry = true
             self.passwordTextfield?.placeholder = "Your password"
         }
         
         
-        presentViewController(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
     
-    @IBAction func EmailClick(sender: UIButton) {
-        let alert = UIAlertController(title: "You will change your email", message: "Please input your email and password!", preferredStyle: .Alert)
+    @IBAction func EmailClick(_ sender: UIButton) {
+        let alert = UIAlertController(title: "You will change your email", message: "Please input your email and password!", preferredStyle: .alert)
         
-        let ok = UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
+        let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
             self.ChangeEmail()
         })
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) -> Void in
         }
         
         alert.addAction(ok)
         alert.addAction(cancel)
         
-        alert.addTextFieldWithConfigurationHandler{ (textField) -> Void in
+        alert.addTextField{ (textField) -> Void in
             // Enter the textfiled customization code here.
             self.emailTextfield = textField
             self.emailTextfield?.placeholder = "Your new email"
         }
         
-        alert.addTextFieldWithConfigurationHandler{ (textField) -> Void in
+        alert.addTextField{ (textField) -> Void in
             // Enter the textfiled customization code here.
             self.passwordTextfield = textField
-            self.passwordTextfield.secureTextEntry = true
+            self.passwordTextfield.isSecureTextEntry = true
             self.passwordTextfield?.placeholder = "Your password"
         }
         
         
-        presentViewController(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
     
-    @IBAction func PasswordClick(sender: UIButton) {
-        let alert = UIAlertController(title: "You will change your password", message: "Please input your old password and new password!", preferredStyle: .Alert)
+    @IBAction func PasswordClick(_ sender: UIButton) {
+        let alert = UIAlertController(title: "You will change your password", message: "Please input your old password and new password!", preferredStyle: .alert)
         
-        let ok = UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
+        let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
             self.ChangePassword()
         })
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) -> Void in
         }
         
         alert.addAction(ok)
         alert.addAction(cancel)
         
-        alert.addTextFieldWithConfigurationHandler{ (textField) -> Void in
+        alert.addTextField{ (textField) -> Void in
             // Enter the textfiled customization code here.
             self.passwordTextfield = textField
-            self.passwordTextfield.secureTextEntry = true
+            self.passwordTextfield.isSecureTextEntry = true
             self.passwordTextfield?.placeholder = "Your old password"
         }
         
-        alert.addTextFieldWithConfigurationHandler{ (textField) -> Void in
+        alert.addTextField{ (textField) -> Void in
             // Enter the textfiled customization code here.
             self.newPasswordTextfield = textField
-            self.newPasswordTextfield.secureTextEntry = true
+            self.newPasswordTextfield.isSecureTextEntry = true
             self.newPasswordTextfield?.placeholder = "Your new password"
         }
         
-        alert.addTextFieldWithConfigurationHandler{ (textField) -> Void in
+        alert.addTextField{ (textField) -> Void in
             // Enter the textfiled customization code here.
             self.confirmPasswordTextfield = textField
-            self.confirmPasswordTextfield.secureTextEntry = true
+            self.confirmPasswordTextfield.isSecureTextEntry = true
             self.confirmPasswordTextfield?.placeholder = "Your confirm password"
         }
         
-        presentViewController(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
     
     //MARK: - Functions
@@ -156,12 +167,12 @@ class ProfileTableViewController: UITableViewController {
     
     //MARK: - API
     func GetMember() {
-        if let id = activeUser.valueForKey("id") {
+        if let id = activeUser.value(forKey: "id") {
             let postParameter = "id=\(id)"
             let link = "http://rico.webmurahbagus.com/admin/API/GetMemberAPI.php"
             AjaxPost(link, parameter: postParameter, done: { data in
                 do {
-                    let user = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers) as? [[String : AnyObject]]
+                    let user = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String : AnyObject]]
                     if let fullname = user![0]["fullname"] as? String {
                         activeUser.setValue(fullname, forKey: "name")
                     }
@@ -171,7 +182,7 @@ class ProfileTableViewController: UITableViewController {
                     if let status = user![0]["status"] as? String {
                         activeUser.setValue(status, forKey: "status")
                     }
-                    dispatch_async(dispatch_get_main_queue(),{
+                    DispatchQueue.main.async(execute: {
                         self.UpdateData()
                     })
                 } catch {
@@ -183,29 +194,29 @@ class ProfileTableViewController: UITableViewController {
     }
     
     func ChangePasswordAPI() {
-        if let id = activeUser.valueForKey("id") {
+        if let id = activeUser.value(forKey: "id") {
             let processingAlert = self.ProcessingAlert("Processing . . .")
             let postParameter = "id=\(id)&old=\(passwordTextfield.text!)&new=\(newPasswordTextfield.text!)&confirm=\(confirmPasswordTextfield.text!)"
             print(postParameter)
             let link = "http://rico.webmurahbagus.com/admin/API/ChangePasswordAPI.php"
             AjaxPost(link, parameter: postParameter, done: { (data) in
                 self.EndProcessingAlert(processingAlert, complete: {
-                    if let result = String(data: data,encoding: NSUTF8StringEncoding) {
+                    if let result = String(data: data,encoding: String.Encoding.utf8) {
                         print(result)
                         if result == "1" {
-                            dispatch_async(dispatch_get_main_queue(), {
+                            DispatchQueue.main.async(execute: {
                                 self.Alert("Your new password has been saved!")
                                 self.GetMember()
                                 self.UpdateData()
                             })
                             
                         } else if result == "-1" {
-                            dispatch_async(dispatch_get_main_queue(), {
+                            DispatchQueue.main.async(execute: {
                                 self.Alert("Authorization Error")
                             })
                             
                         } else {
-                            dispatch_async(dispatch_get_main_queue(), {
+                            DispatchQueue.main.async(execute: {
                                 self.Alert("Server is not responding, please try again later!")
                             })
                             
@@ -218,28 +229,28 @@ class ProfileTableViewController: UITableViewController {
 
     
     func ChangeNameAPI() {
-        if let id = activeUser.valueForKey("id") {
+        if let id = activeUser.value(forKey: "id") {
             let processingAlert = self.ProcessingAlert("Processing . . .")
             let postParameter = "id=\(id)&confirm=\(passwordTextfield.text!)&fullname=\(nameTextfield.text!)"
             let link = "http://rico.webmurahbagus.com/admin/API/ChangeFullnameAPI.php"
             AjaxPost(link, parameter: postParameter, done: { (data) in
                 self.EndProcessingAlert(processingAlert, complete: {
-                    if let result = String(data: data,encoding: NSUTF8StringEncoding) {
+                    if let result = String(data: data,encoding: String.Encoding.utf8) {
                         print(result)
                         if result == "1" {
-                            dispatch_async(dispatch_get_main_queue(), {
+                            DispatchQueue.main.async(execute: {
                                 self.Alert("Your new fullname has been saved!")
                                 self.GetMember()
                                 self.UpdateData()
                             })
                             
                         } else if result == "-1" {
-                            dispatch_async(dispatch_get_main_queue(), {
+                            DispatchQueue.main.async(execute: {
                                 self.Alert("Authorization Error")
                             })
                             
                         } else {
-                            dispatch_async(dispatch_get_main_queue(), {
+                            DispatchQueue.main.async(execute: {
                                 self.Alert("Server is not responding, please try again later!")
                             })
                             
@@ -257,35 +268,35 @@ class ProfileTableViewController: UITableViewController {
             let link = "http://rico.webmurahbagus.com/admin/API/CekEmail.php"
             let processingAlert = self.ProcessingAlert("Processing . . .")
             AjaxPost(link, parameter: postParameter, done: { (data) in
-                if let responseData = String(data: data, encoding: NSUTF8StringEncoding) {
+                if let responseData = String(data: data, encoding: String.Encoding.utf8) {
                     print(responseData)
                     if responseData == "1" {
-                        dispatch_async(dispatch_get_main_queue(), {
+                        DispatchQueue.main.async(execute: {
                             self.EndProcessingAlert(processingAlert, complete: {
                                 self.Alert("Sorry, your email has been registered!")
                             })
                         })
                     } else {
-                        if let id = activeUser.valueForKey("id") {
+                        if let id = activeUser.value(forKey: "id") {
                             let postParameter = "id=\(id)&confirm=\(self.passwordTextfield.text!)&email=\(email)"
                             let link = "http://rico.webmurahbagus.com/admin/API/ChangeEmailAPI.php"
                             self.AjaxPost(link, parameter: postParameter, done: { (data) in
                                 self.EndProcessingAlert(processingAlert, complete: {
-                                    if let result = String(data: data,encoding: NSUTF8StringEncoding) {
+                                    if let result = String(data: data,encoding: String.Encoding.utf8) {
                                     print(result)
                                     if result == "1" {
-                                        dispatch_async(dispatch_get_main_queue(), {
+                                        DispatchQueue.main.async(execute: {
                                             self.Alert("Your new email has been saved! Please check your inbox / spam for verification!")
                                             self.GetMember()
                                             self.UpdateData()
                                         })
                                     } else if result == "-1" {
-                                        dispatch_async(dispatch_get_main_queue(), {
+                                        DispatchQueue.main.async(execute: {
                                             self.Alert("Authorization Error")
                                         })
                                         
                                     } else {
-                                        dispatch_async(dispatch_get_main_queue(), {
+                                        DispatchQueue.main.async(execute: {
                                             self.Alert("Server is not responding, please try again later!")
                                         })
                                         
@@ -302,19 +313,19 @@ class ProfileTableViewController: UITableViewController {
     }
     
     func UpdateData() {
-        if let name = activeUser.valueForKey("name") as? String {
-            fullNameButton.setTitle(name, forState: .Normal)
+        if let name = activeUser.value(forKey: "name") as? String {
+            fullNameButton.setTitle(name, for: UIControlState())
         }
-        if let status = activeUser.valueForKey("status") as? String {
+        if let status = activeUser.value(forKey: "status") as? String {
             var emailText = ""
-            if let email = activeUser.valueForKey("email") as? String {
+            if let email = activeUser.value(forKey: "email") as? String {
                 emailText += email
                 
                 if status == "-1" {
                     emailText += "(Not Verified)"
                 }
             }
-            emailButton.setTitle(emailText, forState: .Normal)
+            emailButton.setTitle(emailText, for: UIControlState())
         }
     }
     

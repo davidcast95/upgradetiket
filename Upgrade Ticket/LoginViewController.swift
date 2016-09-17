@@ -7,6 +7,17 @@
 //
 
 import UIKit
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
 
@@ -18,15 +29,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     var postParameter = ""
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
     override func viewDidLoad() {
         super.viewDidLoad()
         //SetUpTextField()
-        if (activeUser.valueForKey("id") != nil) {
-            NSUserDefaults.standardUserDefaults().removePersistentDomainForName(NSBundle.mainBundle().bundleIdentifier!)
-            NSUserDefaults.standardUserDefaults().synchronize()
+        if (activeUser.value(forKey: "id") != nil) {
+            UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
+            UserDefaults.standard.synchronize()
         }
         // Do any additional setup after loading the view.
     }
@@ -37,17 +48,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     //MARK:Textfield
     func SetUpTextField() {
-        let frame = CGRectMake(0, usernameTextField.frame.height-4, usernameTextField.bounds.width, 4)
+        let frame = CGRect(x: 0, y: usernameTextField.frame.height-4, width: usernameTextField.bounds.width, height: 4)
         let borderdown = UIView(frame: frame)
-        borderdown.backgroundColor = UIColor.whiteColor()
+        borderdown.backgroundColor = UIColor.white
         usernameTextField.addSubview(borderdown)
     }
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-        textField.backgroundColor = UIColor.whiteColor()
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        textField.backgroundColor = UIColor.white
         
         return true
     }
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         let nextTag = textField.tag + 1
         if let nextResponded = textField.superview?.viewWithTag(nextTag) {
             nextResponded.becomeFirstResponder()
@@ -60,16 +71,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
 
     //MARK: Action
-    @IBAction func ForgotPasswordTap(sender: AnyObject) {
-        if let forgotVC = storyboard?.instantiateViewControllerWithIdentifier("forgotpassword") {
+    @IBAction func ForgotPasswordTap(_ sender: AnyObject) {
+        if let forgotVC = storyboard?.instantiateViewController(withIdentifier: "forgotpassword") {
             if let nav = self.navigationController {
                 nav.pushViewController(forgotVC, animated: true)
             } else {
-                self.showViewController(forgotVC, sender: nil)
+                self.show(forgotVC, sender: nil)
             }
         }
     }
-    @IBAction func Login(sender: UIButton) {
+    @IBAction func Login(_ sender: UIButton) {
         var flag = true
         if (usernameTextField.text == "") {
             usernameTextField.Required()
@@ -89,18 +100,18 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
         
     }
-    @IBAction func CancelPressed(sender: UIButton) {
+    @IBAction func CancelPressed(_ sender: UIButton) {
         if let navigation = self.navigationController {
-            navigation.popViewControllerAnimated(true)
+            navigation.popViewController(animated: true)
         } else {
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         }
     }
-    @IBAction func BackToLogin(segue:UIStoryboardSegue) {
+    @IBAction func BackToLogin(_ segue:UIStoryboardSegue) {
     }
     
     //MARK: Input
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         CloseInputView()
     }
     
@@ -111,26 +122,26 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     
     //MARK: Function
-    func SetLastVC(vc:UIViewController) {
+    func SetLastVC(_ vc:UIViewController) {
         lastVC = vc
     }
     func InvalidUser() {
         usernameTextField.text = ""
         usernameTextField.Invalid("Invalid username")
-        usernameTextField.layer.borderColor = UIColor.redColor().CGColor
+        usernameTextField.layer.borderColor = UIColor.red.cgColor
         usernameTextField.layer.borderWidth = 1.0;
         usernameTextField.layer.cornerRadius = 5.0;
         passwordTextField.text = ""
         passwordTextField.Invalid("Invalid password")
-        passwordTextField.layer.borderColor = UIColor.redColor().CGColor
+        passwordTextField.layer.borderColor = UIColor.red.cgColor
         passwordTextField.layer.borderWidth = 1.0;
         passwordTextField.layer.cornerRadius = 5.0;
     }
     func Dismiss() {
         if let navigation = navigationController {
-            navigation.popViewControllerAnimated(true)
+            navigation.popViewController(animated: true)
         } else {
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         }
     }
     
@@ -147,9 +158,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             AjaxPost(link, parameter: postParameter,
                 done: { (data) in
                     do {
-                        let user = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers) as? [[String : AnyObject]]
+                        let user = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String : AnyObject]]
                         if user?.count == 0 {
-                            dispatch_async(dispatch_get_main_queue(),{
+                            DispatchQueue.main.async(execute: {
                                 self.indicator.stopAnimating()
                                 self.InvalidUser()
                             })
@@ -167,7 +178,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                                 activeUser.setValue(status, forKey: "status")
                             }
                             
-                            dispatch_async(dispatch_get_main_queue(), {
+                            DispatchQueue.main.async(execute: {
                                 self.indicator.stopAnimating()
                                 self.Dismiss()
                             })

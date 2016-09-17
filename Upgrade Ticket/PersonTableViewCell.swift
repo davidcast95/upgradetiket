@@ -11,8 +11,8 @@ import UIKit
 class PersonTableViewCell: UITableViewCell {
     
     @IBOutlet weak var fullNameTextfield: UITextField!
-    @IBOutlet weak var IDCardTextField: UITextField!
-    @IBOutlet weak var passportTextfield: UITextField!
+    @IBOutlet weak var birthdateTextField: UITextField!
+    @IBOutlet weak var titleTextField: DefaultUITextField!
     @IBOutlet weak var personLabel: UILabel!
 
     override func awakeFromNib() {
@@ -20,7 +20,7 @@ class PersonTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

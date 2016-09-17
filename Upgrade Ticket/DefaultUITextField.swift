@@ -12,11 +12,11 @@ class DefaultUITextField: UITextField {
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
-        self.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.5)
+        self.backgroundColor = UIColor.white.withAlphaComponent(0.5)
         self.layer.cornerRadius = 2
         self.font = UIFont(name: "Futura", size: 14)
-        self.textColor = UIColor.blackColor()
-        self.attributedPlaceholder = NSAttributedString(string: self.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.grayColor()])
+        self.textColor = UIColor.black
+        self.attributedPlaceholder = NSAttributedString(string: self.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.gray])
     }
     
     

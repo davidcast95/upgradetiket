@@ -12,11 +12,19 @@ class FlightTableViewCell: UITableViewCell {
 
     @IBOutlet weak var airlinesLogo: UIImageView!
     @IBOutlet weak var airlinesLabel: UILabel!
-    @IBOutlet weak var flightTimeLabel: UILabel!
-    @IBOutlet weak var totalLabel: UILabel!
     @IBOutlet weak var points: UILabel!
     @IBOutlet weak var transitFlag: UILabel!
-    @IBOutlet weak var transitLabel: UITextView!
+    @IBOutlet weak var originFlight: UILabel!
+    @IBOutlet weak var destFlight: UILabel!
+    @IBOutlet weak var originCity: UILabel!
+    @IBOutlet weak var destCity: UILabel!
+    @IBOutlet weak var departureDate: UILabel!
+    @IBOutlet weak var arrivalDate: UILabel!
+    @IBOutlet weak var departAirport: UITextView!
+    @IBOutlet weak var arrivalAirport: UITextView!
+    @IBOutlet weak var transitDescription: UITextView!
+    @IBOutlet weak var flightNumber: UILabel!
+    
     
     
     
@@ -26,7 +34,7 @@ class FlightTableViewCell: UITableViewCell {
         transitFlag.layer.cornerRadius = 4
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

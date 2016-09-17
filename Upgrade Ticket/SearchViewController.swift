@@ -18,12 +18,12 @@ class SearchViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var dateReturnTextField: UITextField!
     @IBOutlet var table: UITableView!
     @IBOutlet weak var switchMode: UISwitch!
-    var today = NSDate()
+    var today = Date()
     var datepickerFlight = true
     var datepicker = UIDatePicker()
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
     
     override func viewDidLoad() {
@@ -49,15 +49,15 @@ class SearchViewController: UITableViewController, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let destination = segue.destinationViewController as? SearchCityViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destination = segue.destination as? SearchCityViewController {
             destination.identifier = segue.identifier!
             searchFlight.origin = searchFlight.FindCityByCityAlias((originButton.titleLabel?.text)!)
             searchFlight.dest = searchFlight.FindCityByCityAlias((destButton.titleLabel?.text)!)
         }
         if ((segue.identifier) == "result")  {
-            searchFlight.activeResult = .Flight
-            if let destination = segue.destinationViewController as? FlightViewController {
+            searchFlight.activeResult = .flight
+            if let destination = segue.destination as? FlightViewController {
                 destination.postParameter = "from=\(searchFlight.origin.id)&to=\(searchFlight.dest.id)&date=\(searchFlight.dateFlight.sqlDate)&passenger=\(searchFlight.passenger)"
             }
             
@@ -74,9 +74,9 @@ class SearchViewController: UITableViewController, UITextFieldDelegate {
     }
     
     //Action
-    @IBAction func SwitchMode(sender: UISwitch) {
-        searchFlight.oneWay = !switchMode.on
-        if switchMode.on {
+    @IBAction func SwitchMode(_ sender: UISwitch) {
+        searchFlight.oneWay = !switchMode.isOn
+        if switchMode.isOn {
             roundTripImage.image = UIImage(named: "arrows")
         } else {
             
@@ -84,37 +84,37 @@ class SearchViewController: UITableViewController, UITextFieldDelegate {
         }
         table.reloadData()
     }
-    @IBAction func PersonDidBegin(sender: UITextField) {
+    @IBAction func PersonDidBegin(_ sender: UITextField) {
         sender.text = ""
     }
-    @IBAction func PersonChange(sender:UITextField) {
+    @IBAction func PersonChange(_ sender:UITextField) {
         if (sender.text == "") {
             searchFlight.passenger = 1
         } else {
             searchFlight.passenger = Int(sender.text!)!
         }
     }
-    @IBAction func PersonDidEnd(sender: UITextField) {
+    @IBAction func PersonDidEnd(_ sender: UITextField) {
         sender.text = searchFlight.passenger.passengerFormat
     }
-    @IBAction func DateFlightBegin(sender: UITextField) {
+    @IBAction func DateFlightBegin(_ sender: UITextField) {
         datepickerFlight = true
         sender.inputView = datepicker
         datepicker.minimumDate = today
-        datepicker.datePickerMode = UIDatePickerMode.Date
-        datepicker.addTarget(self, action: "DatePickerChange:", forControlEvents: .ValueChanged)
+        datepicker.datePickerMode = UIDatePickerMode.date
+        datepicker.addTarget(self, action: #selector(SearchViewController.DatePickerChange(_:)), for: .valueChanged)
     }
-    @IBAction func DateReturnBegin(sender: UITextField) {
+    @IBAction func DateReturnBegin(_ sender: UITextField) {
         datepickerFlight = false
         sender.inputView = datepicker
-        datepicker.minimumDate = searchFlight.dateFlight
-        datepicker.datePickerMode = UIDatePickerMode.Date
-        datepicker.addTarget(self, action: "DatePickerChange:", forControlEvents: .ValueChanged)
+        datepicker.minimumDate = searchFlight.dateFlight as Date
+        datepicker.datePickerMode = UIDatePickerMode.date
+        datepicker.addTarget(self, action: #selector(SearchViewController.DatePickerChange(_:)), for: .valueChanged)
     }
-    @IBAction func BackToSearch(segue:UIStoryboardSegue) {
+    @IBAction func BackToSearch(_ segue:UIStoryboardSegue) {
     }
     
-    func DatePickerChange(sender: UIDatePicker) {
+    func DatePickerChange(_ sender: UIDatePicker) {
         if (datepickerFlight) {
             searchFlight.dateFlight = sender.date
             searchFlight.dateReturn = sender.date.AddDays(1)
@@ -127,12 +127,12 @@ class SearchViewController: UITableViewController, UITextFieldDelegate {
     }
     
     //Table
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         CloseInputView()
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if (indexPath.row == 4) {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if ((indexPath as NSIndexPath).row == 4) {
             if (searchFlight.oneWay) {
                 return 0
                 
@@ -147,7 +147,7 @@ class SearchViewController: UITableViewController, UITextFieldDelegate {
     }
     
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
@@ -157,7 +157,7 @@ class SearchViewController: UITableViewController, UITextFieldDelegate {
     }
     
     //Touch
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         CloseInputView()
     }
     
@@ -167,26 +167,26 @@ class SearchViewController: UITableViewController, UITextFieldDelegate {
         
         for cityContext in citiesContext {
             let tempCity = City()
-            tempCity.id = (cityContext.valueForKey("id") as? Int)!
-            tempCity.city = (cityContext.valueForKey("city") as? String)!
-            tempCity.alias = (cityContext.valueForKey("alias") as? String)!
+            tempCity.id = (cityContext.value(forKey: "id") as? Int)!
+            tempCity.city = (cityContext.value(forKey: "city") as? String)!
+            tempCity.alias = (cityContext.value(forKey: "alias") as? String)!
             
             searchFlight.cities.append(tempCity)
             print(tempCity.cityAlias)
         }
         
         let link = "http://rico.webmurahbagus.com/admin/API/GetDestinationAPI.php"
-        if let requestURL = NSURL(string: link) {
-            let urlRequest = NSMutableURLRequest(URL: requestURL)
-            let session = NSURLSession.sharedSession()
-            let task = session.dataTaskWithRequest(urlRequest) {
+        if let requestURL = URL(string: link) {
+            let urlRequest = URLRequest(url: requestURL)
+            let session = URLSession.shared
+            let task = session.dataTask(with: urlRequest, completionHandler: {
                 (data,response,error ) -> Void in
                 
-                if let httpResponse = response as? NSHTTPURLResponse {
+                if let httpResponse = response as? HTTPURLResponse {
                     let statuscode = httpResponse.statusCode
                     if (statuscode == 200) {
                         do {
-                            let cities = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers) as? [[String : AnyObject]]
+                            let cities = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? [[String : AnyObject]]
                             print(cities?.count)
                             for city in cities! {
                                 let tempCity = City()
@@ -203,7 +203,7 @@ class SearchViewController: UITableViewController, UITextFieldDelegate {
                                     searchFlight.cities.append(tempCity)
                                     tempCity.SaveToCoreData()
                                     
-                                    dispatch_async(dispatch_get_main_queue(),{
+                                    DispatchQueue.main.async(execute: {
                                         
                                         searchFlight.Default()
                                         self.table.reloadData()
@@ -218,17 +218,17 @@ class SearchViewController: UITableViewController, UITextFieldDelegate {
                     }
                 } else {
                     let alertController = UIAlertController(title: "Please check your internet connection!", message:
-                        "", preferredStyle: UIAlertControllerStyle.Alert)
-                    alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default,handler: nil))
+                        "", preferredStyle: UIAlertControllerStyle.alert)
+                    alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default,handler: nil))
                     
-                    self.presentViewController(alertController, animated: true, completion: nil)
+                    self.present(alertController, animated: true, completion: nil)
                 }
-            }
+            }) 
             
             task.resume()
         }
         
-        dispatch_async(dispatch_get_main_queue(),{
+        DispatchQueue.main.async(execute: {
             
             searchFlight.Default()
             self.table.reloadData()

@@ -7,6 +7,17 @@
 //
 
 import UIKit
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 class SignupViewController: UIViewController, UITextFieldDelegate {
 
@@ -19,34 +30,35 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var confirmTextfield: UITextField!
     @IBOutlet weak var signupButton: UIButton!
     @IBOutlet weak var indicator: UIActivityIndicatorView!
+    @IBOutlet weak var phoneTextfield:UITextField!
+    @IBOutlet weak var cancelButton: DefaultUIButton!
     var usernameInvalid = false
     var emailInvalid = false
     var keyboardHeight:CGFloat = 300
     var offsetScrollY:CGFloat = 0
     var isKeyboardShow = false
-    @IBOutlet weak var headerTitle: NSLayoutConstraint!
-    @IBOutlet weak var fieldHeaderTitle: NSLayoutConstraint!
     
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
     override func viewDidLoad() {
         super.viewDidLoad()
         usernameTextfield.delegate = self
         fullnameTextfield.delegate = self
         emailTextfield.delegate = self
+        phoneTextfield.delegate = self
         passwordTextfield.delegate = self
         confirmTextfield.delegate = self
-        print(view.frame.width)
-        if view.frame.width < 500 {
-            headerTitle.constant = 30
-            fieldHeaderTitle.constant = 0
-        } else {
-            headerTitle.constant = 58
-            fieldHeaderTitle.constant = 38
-            
-        }
+        
+//        if view.frame.width < 500 {
+//            headerTitle.constant = 30
+//            fieldHeaderTitle.constant = 0
+//        } else {
+//            headerTitle.constant = 58
+//            fieldHeaderTitle.constant = 38
+//            
+//        }
         // Do any additional setup after loading the view.
     }
 
@@ -57,16 +69,16 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: - Actions
     
-    @IBAction func UsernameDidEnd(sender: UITextField) {
+    @IBAction func UsernameDidEnd(_ sender: UITextField) {
         usernameInvalid = false
         if let username = usernameTextfield.text {
             let postParameter = "username=\(username)"
             let link = "http://rico.webmurahbagus.com/admin/API/CekUsername.php"
             AjaxPost(link, parameter: postParameter, done: { (data) in
-                if let responseData = String(data: data, encoding: NSUTF8StringEncoding) {
+                if let responseData = String(data: data, encoding: String.Encoding.utf8) {
                     print(responseData)
                     if responseData == "1" {
-                        dispatch_async(dispatch_get_main_queue(), {
+                        DispatchQueue.main.async(execute: {
                             self.usernameTextfield.Invalid("Username has been used")
                         })
                         
@@ -75,16 +87,16 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
             })
         }
     }
-    @IBAction func EmailDidEnd(sender: AnyObject) {
+    @IBAction func EmailDidEnd(_ sender: AnyObject) {
         if let email = emailTextfield.text {
             if email.IsValidEmail() {
                 let postParameter = "email=\(email)"
                 let link = "http://rico.webmurahbagus.com/admin/API/CekEmail.php"
                 AjaxPost(link, parameter: postParameter, done: { (data) in
-                    if let responseData = String(data: data, encoding: NSUTF8StringEncoding) {
+                    if let responseData = String(data: data, encoding: String.Encoding.utf8) {
                         print(responseData)
                         if responseData == "1" {
-                            dispatch_async(dispatch_get_main_queue(), {
+                            DispatchQueue.main.async(execute: {
                                 self.emailTextfield.Invalid("Email has been registered")
                             })
                             
@@ -97,25 +109,25 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         }
 
     }
-    @IBAction func SIgnUpTapped(sender: AnyObject) {
+    @IBAction func SIgnUpTapped(_ sender: AnyObject) {
         if (Validation()) {
             let message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet pharetra eros, eget varius ex. Etiam vestibulum mi ipsum, eget euismod est sollicitudin eu. Quisque vulputate est ut pharetra molestie. In sit amet consequat enim. Praesent dignissim tincidunt congue. Sed ex arcu, interdum pellentesque urna quis, tincidunt tempus lectus. Nullam pulvinar massa quis sodales cursus. Sed in odio varius, iaculis magna vitae, consectetur ligula. Nunc in elit dolor.\nEtiam sit amet nisl vel odio eleifend venenatis. In et nulla non sem molestie luctus. Vestibulum varius, magna vel pellentesque sagittis, dui lacus auctor dolor, quis malesuada diam nibh et enim. In non arcu non massa lobortis porttitor. Curabitur eleifend consectetur nisl quis facilisis. Etiam feugiat rhoncus rutrum. Ut sit amet mi id diam consequat congue eget id dolor. Maecenas pharetra, leo et euismod aliquam, velit augue congue sapien, lacinia venenatis justo elit vitae lorem. Nam accumsan dignissim condimentum.\nSuspendisse augue urna, congue rutrum tortor ac, convallis efficitur felis. Maecenas at nisl eget nunc tristique sagittis. Praesent ultrices turpis eu nulla venenatis luctus. Phasellus semper ullamcorper risus, vehicula imperdiet arcu vestibulum eget. Vivamus placerat quis magna id pulvinar. Curabitur purus ex, pharetra in semper vitae, sollicitudin commodo leo. Sed et iaculis mi. Fusce facilisis, velit quis fermentum mollis, tortor arcu laoreet quam, sit amet iaculis velit turpis quis lorem. Aliquam bibendum magna eu sagittis vehicula. Duis aliquam diam cursus faucibus interdum. Nam a lectus et nisl fringilla lobortis ut vitae ex. Curabitur non iaculis ante. Nullam aliquam ex ac consequat accumsan. Praesent ac quam massa. Maecenas vestibulum, nibh id pellentesque ornare, erat nisi semper justo, sit amet porta magna augue a massa.\nNullam ultricies urna et odio luctus imperdiet. Nunc id lorem a nulla lobortis commodo. Aliquam ultrices gravida elit vitae auctor. Pellentesque vitae iaculis diam. Integer velit diam, feugiat at finibus quis, vulputate sed risus. Duis nec massa id metus volutpat fermentum a ac eros. Suspendisse tristique tortor vel lectus vestibulum volutpat. In semper placerat mollis. Curabitur bibendum dictum tempus. Nullam eu laoreet augue. Nulla justo velit, rutrum convallis fermentum sit amet, egestas vitae sapien. Aenean eget purus varius, sagittis erat at, lobortis risus. Nam diam dolor, lobortis sed molestie a, convallis at quam. Vivamus id ligula eu sapien congue pellentesque sed sed mi. Nulla varius mattis augue.\nNullam pulvinar nunc eu dictum vulputate. Sed lobortis justo dolor, id iaculis orci ullamcorper a. Sed facilisis faucibus massa quis interdum. Maecenas hendrerit rhoncus ligula, vitae posuere purus. Fusce in elementum massa, vitae laoreet nisl. Phasellus feugiat, nunc et tempor mollis, purus urna tempus purus, in ultricies tortor ipsum in enim. Donec id ultricies odio. Ut eu vestibulum tellus. Mauris tincidunt auctor tempor. Nam sit amet porta mauris."
-            let alert = UIAlertController(title: "Agrement Term & Conditions", message: message, preferredStyle: .Alert)
+            let alert = UIAlertController(title: "Agrement Term & Conditions", message: message, preferredStyle: .alert)
             
-            let ok = UIAlertAction(title: "Agree", style: .Default, handler: { (action) -> Void in
+            let ok = UIAlertAction(title: "Agree", style: .default, handler: { (action) -> Void in
                 self.SignUpAPI()
             })
-            let cancel = UIAlertAction(title: "No", style: .Cancel) { (action) -> Void in
+            let cancel = UIAlertAction(title: "No", style: .cancel) { (action) -> Void in
             }
             
             alert.addAction(ok)
             alert.addAction(cancel)
             
-            presentViewController(alert, animated: true, completion: nil)
+            present(alert, animated: true, completion: nil)
         }
     }
     
-    @IBAction func PasswordDidEnd(sender: AnyObject) {
+    @IBAction func PasswordDidEnd(_ sender: AnyObject) {
         if passwordTextfield.text?.characters.count < 8 {
             passwordTextfield.PasswordInvalid()
         }
@@ -135,6 +147,9 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
             }
             if (emailTextfield.text == "") {
                 emailTextfield.Required()
+            }
+            if (phoneTextfield.text == "") {
+                phoneTextfield.Required()
             }
             if (passwordTextfield.text == "") {
                 passwordTextfield.Required()
@@ -165,29 +180,29 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     func SignUpAPI() {
         self.indicator.startAnimating()
         
-        if let username = usernameTextfield.text, let password = passwordTextfield.text, let fullname = fullnameTextfield.text, let email = emailTextfield.text {
-            let postParameter = "username=\(username)&fullname=\(fullname)&email=\(email)&password=\(password)"
+        if let username = usernameTextfield.text, let password = passwordTextfield.text, let fullname = fullnameTextfield.text, let email = emailTextfield.text, let phone = phoneTextfield.text {
+            let postParameter = "username=\(username)&fullname=\(fullname)&email=\(email)&password=\(password)&phone=\(phone)"
             let link = "http://rico.webmurahbagus.com/admin/API/InsertmemberAPI.php"
             AjaxPost(link, parameter: postParameter,
                      done: { (data) in
-                        if let responseData = String(data: data, encoding: NSUTF8StringEncoding) {
-                            if responseData == "1" {
-                                dispatch_async(dispatch_get_main_queue(), {
-                                    if let destinationVC = self.storyboard?.instantiateViewControllerWithIdentifier("confirmationemail") as?ConfirmationEmailViewController {
-                                        destinationVC.username = self.usernameTextfield.text!
-                                        self.presentViewController(destinationVC, animated: true, completion: nil)
+                        if let responseData = String(data: data, encoding: String.Encoding.utf8) {
+                            if responseData != "0" {
+                                DispatchQueue.main.async(execute: {
+                                    if let destinationVC = self.storyboard?.instantiateViewController(withIdentifier: "confirmphone") as? ConfirmationPhoneViewController {
+                                        destinationVC.idmember = responseData
+                                        self.present(destinationVC, animated: true, completion: nil)
                                     }
                                     
                                     
                                 })
                             } else {
-                                dispatch_async(dispatch_get_main_queue(), {
+                                DispatchQueue.main.async(execute: {
                                     self.indicator.stopAnimating()
                                     let alertController = UIAlertController(title: "Sorry, our server cannot be reached!", message:
-                                        "", preferredStyle: UIAlertControllerStyle.Alert)
-                                    alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default,handler: nil))
+                                        "", preferredStyle: UIAlertControllerStyle.alert)
+                                    alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default,handler: nil))
                                     
-                                    self.presentViewController(alertController, animated: true, completion: nil)
+                                    self.present(alertController, animated: true, completion: nil)
                                     
                                 })
                             }
@@ -199,45 +214,58 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
                     })        }
     }
     
-    @IBAction func Tapped(sender: AnyObject) {
+    @IBAction func Tapped(_ sender: AnyObject) {
         offsetScrollY = 0
-        UIView.animateWithDuration(0.5, animations: {
-            self.scrollView.contentOffset = CGPointMake(0, 0)
+        UIView.animate(withDuration: 0.5, animations: {
+            self.scrollView.contentOffset = CGPoint(x: 0, y: 0)
         })
         isKeyboardShow = false
         view.endEditing(true)
     }
     
-    @IBAction func Scroll(sender: UIPanGestureRecognizer) {
-        if isKeyboardShow {
-            let point = sender.translationInView(self.view)
-            offsetScrollY -= point.y / 3
-            if (offsetScrollY > 0 && offsetScrollY < 200) {
-                scrollView.contentOffset = CGPointMake(0, offsetScrollY)
-            }
-            if (offsetScrollY < 0) {
-                offsetScrollY = 0
-            }
-            if (offsetScrollY > 400) {
-                offsetScrollY = 400
-            }
+    @IBAction func Scroll(_ sender: UIPanGestureRecognizer) {
+        let point = sender.translation(in: self.view)
+        offsetScrollY -= point.y / 3.0
+        if (offsetScrollY > 0 && offsetScrollY < 200) {
+            scrollView.contentOffset = CGPoint(x: 0, y: offsetScrollY)
         }
+        if (offsetScrollY < 0) {
+            offsetScrollY = 0
+        }
+        if (offsetScrollY > 400) {
+            offsetScrollY = 400
+        }
+
     }
     
     
     //MARK: Text Field
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         isKeyboardShow = true
         let textfieldY = textField.frame.origin.y
         let keyboardY = self.view.frame.height - keyboardHeight
         if keyboardY - textfieldY < 0 {
             let offset = textfieldY - keyboardY
             offsetScrollY = offset
-            UIView.animateWithDuration(0.5, animations: {
-                self.scrollView.contentOffset = CGPointMake(0, offset)
+            UIView.animate(withDuration: 0.5, animations: {
+                self.scrollView.contentOffset = CGPoint(x: 0, y: offset)
             })
         }
         return true
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        let nextTag = textField.tag + 1
+        if nextTag > 5 {
+            SIgnUpTapped(signupButton)
+            view.endEditing(true)
+        }
+        if let nextResponder = textField.superview?.viewWithTag(nextTag) {
+            nextResponder.becomeFirstResponder()
+        }
+        else {
+            textField.resignFirstResponder()
+        }
+        return false
+    }
 }

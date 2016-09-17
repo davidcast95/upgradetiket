@@ -36,13 +36,13 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         badgeProccess.layer.cornerRadius = 10
         if processCount > 0 {
-            badgeProccess.hidden = false
+            badgeProccess.isHidden = false
             badgeLabel.text = "\(processCount)"
         } else {
-            badgeProccess.hidden = true
+            badgeProccess.isHidden = true
         }
         GetHistory()
         UpdateSession()
@@ -53,12 +53,12 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func DoneButtonPressed(sender: UIButton) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func DoneButtonPressed(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     //MARK: Tables
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if loading {
             return 1
         } else if filteredHistory.count == 0 {
@@ -66,47 +66,47 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
         }
         return filteredHistory.count
     }
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if loading {
-            let cell = tableView.dequeueReusableCellWithIdentifier("loading-transaction", forIndexPath: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "loading-transaction", for: indexPath)
             return cell
         } else if filteredHistory.count == 0 {
-            let cell = tableView.dequeueReusableCellWithIdentifier("no-transaction", forIndexPath: indexPath)
-            cell.selectionStyle = .None
+            let cell = tableView.dequeueReusableCell(withIdentifier: "no-transaction", for: indexPath)
+            cell.selectionStyle = .none
             return cell
         }
-        let cell = tableView.dequeueReusableCellWithIdentifier("history-cell", forIndexPath: indexPath) as! HistoryTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "history-cell", for: indexPath) as! HistoryTableViewCell
         
-        let transaction = filteredHistory[indexPath.row]
+        let transaction = filteredHistory[(indexPath as NSIndexPath).row]
         let depart = "Depart at \(transaction.departure.dateFormat) \(transaction.departure.timeOnly)"
         var mutableAttrString = NSMutableAttributedString(string: depart)
         
-        mutableAttrString.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSRange(location:0,length:10))
-        mutableAttrString.addAttribute(NSForegroundColorAttributeName, value: UIColor.grayColor(), range: NSRange(location:10,length:depart.characters.count - 10))
-        mutableAttrString.addAttribute(NSFontAttributeName, value: UIFont.boldSystemFontOfSize(12), range: NSRange(location:10,length:depart.characters.count - 10))
+        mutableAttrString.addAttribute(NSForegroundColorAttributeName, value: UIColor.black, range: NSRange(location:0,length:10))
+        mutableAttrString.addAttribute(NSForegroundColorAttributeName, value: UIColor.gray, range: NSRange(location:10,length:depart.characters.count - 10))
+        mutableAttrString.addAttribute(NSFontAttributeName, value: UIFont.boldSystemFont(ofSize: 12), range: NSRange(location:10,length:depart.characters.count - 10))
         
         cell.depart.attributedText = mutableAttrString
         let arrive = "Arrive at \(transaction.arrival.dateFormat) \(transaction.arrival.timeOnly)"
         mutableAttrString = NSMutableAttributedString(string: arrive)
         
-        mutableAttrString.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSRange(location:0,length:10))
-        mutableAttrString.addAttribute(NSForegroundColorAttributeName, value: UIColor.grayColor(), range: NSRange(location:10,length:arrive.characters.count - 10))
-        mutableAttrString.addAttribute(NSFontAttributeName, value: UIFont.boldSystemFontOfSize(12), range: NSRange(location:10,length:arrive.characters.count - 10))
+        mutableAttrString.addAttribute(NSForegroundColorAttributeName, value: UIColor.black, range: NSRange(location:0,length:10))
+        mutableAttrString.addAttribute(NSForegroundColorAttributeName, value: UIColor.gray, range: NSRange(location:10,length:arrive.characters.count - 10))
+        mutableAttrString.addAttribute(NSFontAttributeName, value: UIFont.boldSystemFont(ofSize: 12), range: NSRange(location:10,length:arrive.characters.count - 10))
         cell.arrive.attributedText = mutableAttrString
         cell.destinationFlight.text = "\(transaction.from) → \(transaction.to)"
         cell.flightDetail.text = transaction.flight_number
         cell.passenger.text = transaction.passenger.passengerFormat
         cell.subtotal.text = transaction.total.currency
-        cell.confirmed.hidden = (transaction.status != 4)
+        cell.confirmed.isHidden = (transaction.status != 4)
         return cell
     }
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let index = indexPath.row
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let index = (indexPath as NSIndexPath).row
         viewTransaction = filteredHistory[index]
         
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if loading || filteredHistory.count == 0 {
             return tableView.frame.height
         } else {
@@ -115,7 +115,7 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     //MARK: Actions
-    @IBAction func ProcessedClick(sender: UIButton) {
+    @IBAction func ProcessedClick(_ sender: UIButton) {
         indexSlider = 0
         status = 2
         UpdateSlider()
@@ -123,7 +123,7 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
             FilterStatus()
         }
     }
-    @IBAction func DoneClick(sender: UIButton) {
+    @IBAction func DoneClick(_ sender: UIButton) {
         indexSlider = 1
         status = 3
         UpdateSlider()
@@ -131,7 +131,7 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
             FilterStatus()
         }
     }
-    @IBAction func CanceledClick(sender: UIButton) {
+    @IBAction func CanceledClick(_ sender: UIButton) {
         indexSlider = 2
         status = 1
         UpdateSlider()
@@ -139,7 +139,7 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
             FilterStatus()
         }
     }
-    @IBAction func BackToProfile(sender: UIStoryboardSegue) {
+    @IBAction func BackToProfile(_ sender: UIStoryboardSegue) {
         
         
     }
@@ -147,7 +147,7 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
     //MARK: Functions
     func UpdateSlider() {
         let offset = CGFloat(indexSlider) * sliderButton.frame.width
-        UIView.animateWithDuration(0.25, animations: {
+        UIView.animate(withDuration: 0.25, animations: {
             self.slider.frame.origin.x = offset
             self.slider.backgroundColor = self.colors[self.status-1]
         })
@@ -175,7 +175,7 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
         }
         self.historyTableView.reloadData()
     }
-    func FindTransactionInSession(transaction:Transaction) -> Bool {
+    func FindTransactionInSession(_ transaction:Transaction) -> Bool {
         for hist in history {
             if hist.id == transaction.id {
                 return true
@@ -183,17 +183,17 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
         }
         return false
     }
-    func UpdateStatus(transaction:Transaction) {
+    func UpdateStatus(_ transaction:Transaction) {
         for hist in history {
             if hist.id == transaction.id {
                 hist.status = transaction.status
             }
         }
         if processCount > 0 {
-            badgeProccess.hidden = false
+            badgeProccess.isHidden = false
             badgeLabel.text = "\(processCount)"
         } else {
-            badgeProccess.hidden = true
+            badgeProccess.isHidden = true
         }
     }
     
@@ -202,13 +202,13 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
     func GetHistory() {
         processCount = 0
         loading = true
-        if let userId = activeUser.valueForKey("id") {
+        if let userId = activeUser.value(forKey: "id") {
             let postParameter = "iduser=\(userId)"
             AjaxPost("http://rico.webmurahbagus.com/admin/API/GetTransactionAPI.php", parameter: postParameter, done: { data in
                 do {
-                    let transactions = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers) as? [[String : AnyObject]]
+                    let transactions = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String : AnyObject]]
                     for transaction in transactions! {
-                        let formatter = NSDateFormatter()
+                        let formatter = DateFormatter()
                         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                         let tempTransaction = Transaction()
                         if let arrival = transaction["arrival"] as? String {
@@ -255,7 +255,7 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
                             history.append(tempTransaction)
                         }
                         
-                        dispatch_async(dispatch_get_main_queue(), {
+                        DispatchQueue.main.async(execute: {
                             self.loading = false
                             self.UpdateStatus(tempTransaction)
                             self.FilterStatus()
@@ -263,16 +263,16 @@ class ProfileAccountViewController: UIViewController, UITableViewDelegate, UITab
                     }
                     
                 } catch {
-                    let string = NSString(data: data, encoding: NSUTF8StringEncoding)
+                    let string = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
                     print(string)
                     print("error")
                 }
             })
         } else {
-            NSUserDefaults.standardUserDefaults().removePersistentDomainForName(NSBundle.mainBundle().bundleIdentifier!)
-            NSUserDefaults.standardUserDefaults().synchronize()
-            let homeVC = storyboard?.instantiateViewControllerWithIdentifier("home")
-            presentViewController(homeVC!, animated: true, completion: nil)
+            UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
+            UserDefaults.standard.synchronize()
+            let homeVC = storyboard?.instantiateViewController(withIdentifier: "home")
+            present(homeVC!, animated: true, completion: nil)
         }
     }
     

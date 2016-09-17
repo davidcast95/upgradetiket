@@ -16,7 +16,6 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     var isSearching = true
     var isDisconnected = false
     @IBOutlet var tapListener: UITapGestureRecognizer!
-    @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var leftOffsetNavTitle: NSLayoutConstraint!
     
     // MARK: - Slider Property
@@ -40,7 +39,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var dateFlightInput: UITextField!
     @IBOutlet weak var passengerInput: UITextField!
     var datePicker = UIDatePicker()
-    var today = NSDate()
+    var today = Date()
     
     // MARK: - Table Property
     @IBOutlet var flightTableView: UITableView!
@@ -48,49 +47,34 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     var flightResults = Array<Flight>()
     var flightDisplay = Array<Flight>()
     var displayCell = Array<Bool>()
-    var selectedCell = NSIndexPath()
+    var selectedCell = IndexPath()
     
     
     // MARK: - Core
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSlider()
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(Refresh), forControlEvents: .ValueChanged)
+        refreshControl.addTarget(self, action: #selector(Refresh), for: .valueChanged)
         flightTableView.addSubview(refreshControl)
         tapListener.cancelsTouchesInView = false
         
         screen = self.view.frame
         ReadCityData()
         ReadAirlinesData()
-        self.cityButton.setTitle("\(searchFlight.origin.city) → \(searchFlight.dest.city)", forState: .Normal)
+        self.cityButton.setTitle("\(searchFlight.origin.city) → \(searchFlight.dest.city)", for: UIControlState())
         dateFlightInput.text = today.dateFormat
         CreateMask()
         RespositioningSettingView()
         
-        if searchFlight.isRoundTrip {
-            leftOffsetNavTitle.constant = 16
-            backButton.hidden = false
-        } else {
-            leftOffsetNavTitle.constant = 36
-            backButton.hidden = true
-        }
-        
     }
-    override func viewWillAppear(animated: Bool) {
-        if searchFlight.isRoundTrip {
-            leftOffsetNavTitle.constant = 16
-            backButton.hidden = false
-        } else {
-            leftOffsetNavTitle.constant = 36
-            backButton.hidden = true
-        }
+    override func viewWillAppear(_ animated: Bool) {
         searchFlight.Print()
-        self.cityButton.setTitle("\(searchFlight.origin.city) → \(searchFlight.dest.city)", forState: .Normal)
+        self.cityButton.setTitle("\(searchFlight.origin.city) → \(searchFlight.dest.city)", for: UIControlState())
         GetResult()
         
     }
@@ -109,11 +93,11 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         var i:CGFloat = 0
         let buttonHeight:CGFloat = frame.height
         for button in buttons {
-            button.frame = CGRectMake(i * buttonWidth, 0, buttonWidth, buttonHeight)
+            button.frame = CGRect(x: i * buttonWidth, y: 0, width: buttonWidth, height: buttonHeight)
             i+=1
         }
         let offset:CGFloat = buttonWidth * 0.1
-        selectView.frame = CGRectMake((CGFloat(indexMenu) * buttonWidth) + offset/2, buttonHeight - CGFloat(5), buttonWidth - offset, 5)
+        selectView.frame = CGRect(x: (CGFloat(indexMenu) * buttonWidth) + offset/2, y: buttonHeight - CGFloat(5), width: buttonWidth - offset, height: 5)
     }
     
     
@@ -122,43 +106,43 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         sliderView.addSubview(selectView)
         for menu in menus {
             let button = UIButton()
-            button.setAttributedTitle(NSAttributedString(string: menu, attributes: [NSForegroundColorAttributeName : UIColor.grayColor(), NSFontAttributeName : UIFont(name: "Futura", size: 18)!]), forState: .Normal)
-            button.setAttributedTitle(NSAttributedString(string: menu, attributes: [NSForegroundColorAttributeName : UIColor.blackColor()]), forState: .Highlighted)
-            button.setAttributedTitle(NSAttributedString(string: menu, attributes: [NSForegroundColorAttributeName : UIColor.blackColor(), NSFontAttributeName : UIFont(name: "Futura", size: 18)!]), forState: .Selected)
-            button.addTarget(self, action: #selector(sliderChange), forControlEvents: .TouchUpInside)
+            button.setAttributedTitle(NSAttributedString(string: menu, attributes: [NSForegroundColorAttributeName : UIColor.gray, NSFontAttributeName : UIFont(name: "Futura", size: 18)!]), for: UIControlState())
+            button.setAttributedTitle(NSAttributedString(string: menu, attributes: [NSForegroundColorAttributeName : UIColor.black]), for: .highlighted)
+            button.setAttributedTitle(NSAttributedString(string: menu, attributes: [NSForegroundColorAttributeName : UIColor.black, NSFontAttributeName : UIFont(name: "Futura", size: 18)!]), for: .selected)
+            button.addTarget(self, action: #selector(sliderChange), for: .touchUpInside)
             
             sliderView.addSubview(button)
             buttons.append(button)
         }
         for button in buttons {
-            button.selected = false
+            button.isSelected = false
         }
-        buttons[indexMenu].selected = true
+        buttons[indexMenu].isSelected = true
         
         
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(LeftSlideOver))
-        leftSwipe.direction = .Left
+        leftSwipe.direction = .left
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(RightSlideOver))
-        rightSwipe.direction = .Right
+        rightSwipe.direction = .right
         leftSwipe.delegate = self
         rightSwipe.delegate = self
         flightTableView.addGestureRecognizer(leftSwipe)
         flightTableView.addGestureRecognizer(rightSwipe)
     }
     
-    func LeftSlideOver(sender: UISwipeGestureRecognizer) {
+    func LeftSlideOver(_ sender: UISwipeGestureRecognizer) {
         if indexMenu + 1 < menus.count {
             indexMenu+=1
             UpdateSlider()
         }
     }
-    func RightSlideOver(sender: UISwipeGestureRecognizer) {
+    func RightSlideOver(_ sender: UISwipeGestureRecognizer) {
         if indexMenu - 1 >= 0 {
             indexMenu-=1
             UpdateSlider()
         }
     }
-    func sliderChange(sender: UIButton) {
+    func sliderChange(_ sender: UIButton) {
         let index = Int(sender.frame.origin.x / sender.frame.width)
         if indexMenu != index {
             indexMenu = index
@@ -168,18 +152,18 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func UpdateSlider() {
-        UIView.animateWithDuration(0.5, animations: {
+        UIView.animate(withDuration: 0.5, animations: {
             let offset:CGFloat = self.buttonWidth * 0.1
             self.selectView.frame.origin.x = self.buttons[self.indexMenu].frame.origin.x + offset/2
         })
         for button in buttons {
-            button.selected = false
+            button.isSelected = false
         }
-        buttons[indexMenu].selected = true
+        buttons[indexMenu].isSelected = true
         GetResult()
     }
     
-    func Refresh(refreshControl: UIRefreshControl) {
+    func Refresh(_ refreshControl: UIRefreshControl) {
         GetResult()
         // Do your job, when done:
         refreshControl.endRefreshing()
@@ -191,7 +175,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         tap.delegate = self
         mask.addGestureRecognizer(tap)
         view.addSubview(mask)
-        self.view.sendSubviewToBack(self.mask)
+        self.view.sendSubview(toBack: self.mask)
     }
     
     func RespositioningSettingView() {
@@ -199,27 +183,28 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
             var frame = settingView.frame
             frame.origin.y = screen.height
             frame.origin.x = 0
-            frame.size = CGSizeMake(screen.width, 100)
+            frame.size = CGSize(width: screen.width, height: 100)
             settingView.frame = frame
         }
     }
     func NoFlight() {
         self.emptyResult = true
+        self.isSearching = false
         self.TableLoad()
     }
     
     func TableLoad() {
-        dispatch_async(dispatch_get_main_queue(),{
+        DispatchQueue.main.async(execute: {
             self.indicator.stopAnimating()
             self.flightTableView.reloadData()
         })
     }
     func Default() {
-        dispatch_async(dispatch_get_main_queue(),{
-            self.cityButton.setTitle("\(searchFlight.origin.city) → \(searchFlight.dest.city)", forState: .Normal)
+        DispatchQueue.main.async(execute: {
+            self.cityButton.setTitle("\(searchFlight.origin.city) → \(searchFlight.dest.city)", for: UIControlState())
         })
     }
-    func FindPrice(flight:Flight) -> (Double,Double) {
+    func FindPrice(_ flight:Flight) -> (Double,Double) {
         var prices:[Double] = []
         for _flight in flightResults {
             if _flight.number == flight.number && _flight.departure == flight.departure && _flight.arrival == flight.arrival {
@@ -227,7 +212,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
             }
         }
         
-        return (prices.maxElement()!,prices.minElement()!)
+        return (prices.max()!,prices.min()!)
     }
 //    func GroupFlight() {
 //        var result = Array<Flight>()
@@ -264,58 +249,58 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
 //        flightResults = result
 //    }
     func ShowRoundTripConfirmation() {
-        let alert = UIAlertController(title: "Are you want to round trip ?", message: "You will choose for your returning flight", preferredStyle: .Alert)
+        let alert = UIAlertController(title: "Are you want to round trip ?", message: "You will choose for your returning flight", preferredStyle: .alert)
         
-        let ok = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+        let ok = UIAlertAction(title: "Yes", style: .default, handler: { (action) -> Void in
             searchFlight.Swap()
             searchFlight.isRoundTrip = true
-            dispatch_async(dispatch_get_main_queue(), {
-                self.cityButton.setTitle("\(searchFlight.origin.city) → \(searchFlight.dest.city)", forState: .Normal)
+            DispatchQueue.main.async(execute: {
+                self.cityButton.setTitle("\(searchFlight.origin.city) → \(searchFlight.dest.city)", for: UIControlState())
             })
             self.GetResult()
         })
-        let cancel = UIAlertAction(title: "No", style: .Cancel) { (action) -> Void in
+        let cancel = UIAlertAction(title: "No", style: .cancel) { (action) -> Void in
             searchFlight.isRoundTrip = false
-            searchFlight.activeResult = .Proceed
-            let returnViewController = self.storyboard?.instantiateViewControllerWithIdentifier("proceed")
-            self.showViewController(returnViewController!, sender: self)
+            searchFlight.activeResult = .proceed
+            let returnViewController = self.storyboard?.instantiateViewController(withIdentifier: "proceed")
+            self.show(returnViewController!, sender: self)
         }
         
         alert.addAction(ok)
         alert.addAction(cancel)
-        presentViewController(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
 
     //MARK: - Segue
     
-    @IBAction func BackToFlight(segue:UIStoryboardSegue) {
+    @IBAction func BackToFlight(_ segue:UIStoryboardSegue) {
         if searchFlight.isRoundTrip {
             searchFlight.Swap()
         }
         searchFlight.isRoundTrip = false
-        searchFlight.activeResult = .Flight
+        searchFlight.activeResult = .flight
     }
     
     //MARK: - Action
-    func MaskClicked(sender: UITapGestureRecognizer) {
+    func MaskClicked(_ sender: UITapGestureRecognizer) {
         if isSettingShow {
-            UIView.animateWithDuration(0.5, animations: {
+            UIView.animate(withDuration: 0.5, animations: {
                 self.mask.Hide()
                 var frame = self.settingView.frame
                 frame.origin.y = self.screen.height
                 self.settingView.frame = frame
                 }, completion: { finished in
                     self.isSettingShow = false
-                    self.view.sendSubviewToBack(self.mask)
+                    self.view.sendSubview(toBack: self.mask)
             })
         }
     }
-    @IBAction func SettingClicked(sender: UIButton) {
-        if activeUser.valueForKey("id") != nil {
+    @IBAction func SettingClicked(_ sender: UIButton) {
+        if activeUser.value(forKey: "id") != nil {
             if !isSettingShow {
-                self.view.bringSubviewToFront(self.mask)
-                self.view.bringSubviewToFront(self.settingView)
-                UIView.animateWithDuration(0.5, animations: {
+                self.view.bringSubview(toFront: self.mask)
+                self.view.bringSubview(toFront: self.settingView)
+                UIView.animate(withDuration: 0.5, animations: {
                     self.mask.Show()
                     var frame = self.settingView.frame
                     frame.origin.y = self.screen.height - 100
@@ -325,20 +310,20 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
                 })
             }
         } else {
-            let VC = storyboard?.instantiateViewControllerWithIdentifier("login")
+            let VC = storyboard?.instantiateViewController(withIdentifier: "login")
             self.navigationController?.pushViewController(VC!, animated: true)
         }
     }
     
     
-    @IBAction func Tapped(sender: AnyObject) {
+    @IBAction func Tapped(_ sender: AnyObject) {
         view.endEditing(true)
         tapListener.cancelsTouchesInView = false
     }
     
     
     //MARK: - Table
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isSearching {
             return 1
         }
@@ -347,47 +332,53 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         }
         return flightResults.count
     }
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if emptyResult || isSearching {
-            print(tableView.frame.height)
             return tableView.frame.height
         }
         if (indexPath == selectedCell) {
-            return 277.5
+            return 403
         } else {
-            return 103.5
+            return 243
         }
     }
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if isSearching {
-            let cell = tableView.dequeueReusableCellWithIdentifier("searching", forIndexPath: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "searching", for: indexPath)
             return cell
         }
         else if emptyResult {
-            let cell = tableView.dequeueReusableCellWithIdentifier("noflight",forIndexPath: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "noflight",for: indexPath)
             return cell
         } else {
             
-            let cell = tableView.dequeueReusableCellWithIdentifier("flight-cell", forIndexPath: indexPath) as! FlightTableViewCell
-            let i = indexPath.row
+            let cell = tableView.dequeueReusableCell(withIdentifier: "flight-cell", for: indexPath) as! FlightTableViewCell
+            let i = (indexPath as NSIndexPath).row
             let flight = flightResults[i]
-            cell.airlinesLogo.image = UIImage(data: flight.airlines.image)
+            cell.airlinesLogo.image = UIImage(data: flight.airlines.image as Data)
             cell.airlinesLabel.text = flight.number
-            if flight.departure.dateFormat == flight.arrival.dateFormat {
-                cell.flightTimeLabel.text = "\(flight.departure.timeOnly) - \(flight.arrival.timeOnly)"
-            } else {
-                cell.flightTimeLabel.text = "\(flight.departure.timeOnly) - Tommorrow, \(flight.arrival.timeOnly)"
-            }
+            cell.destFlight.text = flight.arrival.timeOnly
+            cell.originFlight.text = flight.departure.timeOnly
+            cell.originCity.text = flight.from.city
+            cell.destCity.text = flight.to.city
+            cell.departureDate.text = flight.departure.dateFormat
+            cell.arrivalDate.text = flight.arrival.dateFormat
             cell.points.text = flight.points.points
-            cell.transitFlag.hidden = flight.transit == ""
-            cell.transitLabel.text = flight.transit
+            var font = UIFont(name: "Futura-CondensedMedium", size: 12)
+            let centerAlignment = NSMutableParagraphStyle()
+            centerAlignment.alignment = .center
+            cell.departAirport.attributedText = NSAttributedString(string: flight.from.airport, attributes: [NSForegroundColorAttributeName: UIColor.gray, NSFontAttributeName : font!, NSParagraphStyleAttributeName : centerAlignment])
+            cell.arrivalAirport.attributedText = NSAttributedString(string: flight.to.airport, attributes: [NSForegroundColorAttributeName: UIColor.gray, NSFontAttributeName : font!, NSParagraphStyleAttributeName : centerAlignment])
+            font = UIFont(name: "Futura-CondensedMedium", size: 15)
+            cell.transitFlag.isHidden = flight.transit == ""
+            cell.transitDescription.attributedText = NSAttributedString(string: flight.transit, attributes: [NSForegroundColorAttributeName: UIColor.gray, NSFontAttributeName : font!])
             return cell
         }
     }
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (!isSearching) {
             view.endEditing(true)
-            let reservedFlight = flightResults[indexPath.row]
+            let reservedFlight = flightResults[(indexPath as NSIndexPath).row]
             //transit
             if reservedFlight.transit != "" && selectedCell == indexPath {
                 
@@ -399,19 +390,19 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
                 }
                 
                 //push navigation
-                if activeUser.valueForKey("id") != nil {
+                if activeUser.value(forKey: "id") != nil {
                     if searchFlight.isRoundTrip {
-                        searchFlight.activeResult = .Proceed
-                        let returnViewController = self.storyboard?.instantiateViewControllerWithIdentifier("proceed")
-                        self.showViewController(returnViewController!, sender: self)
+                        searchFlight.activeResult = .proceed
+                        let returnViewController = self.storyboard?.instantiateViewController(withIdentifier: "proceed")
+                        self.show(returnViewController!, sender: self)
                     } else {
                         ShowRoundTripConfirmation()
                     }
                     
                 } else {
-                    let loginViewController = storyboard?.instantiateViewControllerWithIdentifier("login") as! LoginViewController
+                    let loginViewController = storyboard?.instantiateViewController(withIdentifier: "login") as! LoginViewController
                     loginViewController.lastVC = self
-                    self.presentViewController(loginViewController, animated: true, completion: nil)
+                    self.present(loginViewController, animated: true, completion: nil)
                 }
             }
             else if reservedFlight.transit != "" {
@@ -419,7 +410,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
                 tableView.beginUpdates()
                 tableView.endUpdates()
             }
-            else if indexPath.row < flightResults.count {
+            else if (indexPath as NSIndexPath).row < flightResults.count {
                 
                 //create reservation
                 if searchFlight.isRoundTrip {
@@ -429,35 +420,35 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
                 }
                 
                 //push navigation
-                if activeUser.valueForKey("id") != nil {
+                if activeUser.value(forKey: "id") != nil {
                     if searchFlight.isRoundTrip {
-                        searchFlight.activeResult = .Proceed
-                        let returnViewController = self.storyboard?.instantiateViewControllerWithIdentifier("proceed")
-                        self.showViewController(returnViewController!, sender: self)
+                        searchFlight.activeResult = .proceed
+                        let returnViewController = self.storyboard?.instantiateViewController(withIdentifier: "proceed")
+                        self.show(returnViewController!, sender: self)
                     } else {
                         ShowRoundTripConfirmation()
                     }
                     
                 } else {
-                    let loginViewController = storyboard?.instantiateViewControllerWithIdentifier("login") as! LoginViewController
+                    let loginViewController = storyboard?.instantiateViewController(withIdentifier: "login") as! LoginViewController
                     loginViewController.lastVC = self
-                    self.presentViewController(loginViewController, animated: true, completion: nil)
+                    self.present(loginViewController, animated: true, completion: nil)
                 }
             }
         }
     }
     
-    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        let i = indexPath.row
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let i = (indexPath as NSIndexPath).row
         if i < displayCell.count {
             if displayCell[i] {
                 displayCell[i] = false
                 cell.alpha = 0
-                let translate = CGAffineTransformMakeTranslation(50, 0)
+                let translate = CGAffineTransform(translationX: 50, y: 0)
                 cell.transform = translate
-                UIView.animateWithDuration(1, delay: 0.1 * Double(i), options: .CurveEaseInOut, animations: {
+                UIView.animate(withDuration: 1, delay: 0.1 * Double(i), options: UIViewAnimationOptions(), animations: {
                     cell.alpha = 1
-                    cell.transform = CGAffineTransformIdentity
+                    cell.transform = CGAffineTransform.identity
                     }, completion: nil)
             }
         }
@@ -467,28 +458,28 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     
     //MARK: Input
     
-    @IBAction func DateEditBegin(sender: UITextField) {
+    @IBAction func DateEditBegin(_ sender: UITextField) {
         tapListener.cancelsTouchesInView = true
         sender.inputView = datePicker
         datePicker.minimumDate = today
-        datePicker.datePickerMode = .Date
-        datePicker.addTarget(self, action: #selector(DatePickerChange), forControlEvents: .ValueChanged)
+        datePicker.datePickerMode = .date
+        datePicker.addTarget(self, action: #selector(DatePickerChange), for: .valueChanged)
     }
     
-    func DatePickerChange(sender: UIDatePicker) {
+    func DatePickerChange(_ sender: UIDatePicker) {
         tapListener.cancelsTouchesInView = true
         searchFlight.dateFlight = sender.date
         dateFlightInput.text = searchFlight.dateFlight.dateFormat
     }
     
-    @IBAction func DateFlightEditEnd(sender: UITextField) {
+    @IBAction func DateFlightEditEnd(_ sender: UITextField) {
         GetResult()
     }
     
-    @IBAction func PassengerEditBegin(sender: UITextField) {
+    @IBAction func PassengerEditBegin(_ sender: UITextField) {
         sender.text = ""
     }
-    @IBAction func PassengerChange(sender: UITextField) {
+    @IBAction func PassengerChange(_ sender: UITextField) {
         if sender.text == "" {
             searchFlight.passenger = 1
         } else if let person = Int(sender.text!) {
@@ -496,7 +487,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
-    @IBAction func PassengerEditEnd(sender: UITextField) {
+    @IBAction func PassengerEditEnd(_ sender: UITextField) {
         passengerInput.text = searchFlight.passenger.passengerFormat
         GetResult()
     }
@@ -505,7 +496,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     
     func GetResult() {
         isSearching = true
-        self.view.bringSubviewToFront(indicator)
+        self.view.bringSubview(toFront: indicator)
         self.indicator.startAnimating()
         flightResults.removeAll()
         displayCell.removeAll()
@@ -514,16 +505,16 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         AjaxPost(link, parameter: postParameter,
                  done: { (data) in
                     do {
-                        let string = NSString(data: data, encoding: NSUTF8StringEncoding)
-                        print(string)
-                        let flights = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers) as? [[String : AnyObject]]
+                        let string = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+                        let flights = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String : AnyObject]]
                         if flights?.count == 0 {
+                            print("no flight")
                             self.NoFlight()
                         } else {
                             self.emptyResult = false
                             for flight in flights! {
                                 
-                                let formatter = NSDateFormatter()
+                                let formatter = DateFormatter()
                                 formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                                 let tempFlight = Flight()
                                 if let id = flight["id_jadwal"] as? String {
@@ -539,10 +530,10 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
                                     tempFlight.to = searchFlight.FindCityById(Int(to)!)
                                 }
                                 if let departure = flight["departure"] as? String {
-                                    tempFlight.departure = formatter.dateFromString(departure)!
+                                    tempFlight.departure = formatter.date(from: departure)!
                                 }
                                 if let arrival = flight["arrival"] as? String {
-                                    tempFlight.arrival = formatter.dateFromString(arrival)!
+                                    tempFlight.arrival = formatter.date(from: arrival)!
                                 }
                                 if let price = flight["price"] as? String {
                                     tempFlight.price = Double(price)!
@@ -594,9 +585,9 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         searchFlight.airlines.removeAll()
         for cityContext in citiesContext {
             let tempAirline = Airlines()
-            tempAirline.id = (cityContext.valueForKey("id") as? Int)!
-            tempAirline.airlines = (cityContext.valueForKey("airline") as? String)!
-            tempAirline.image = (cityContext.valueForKey("image") as? NSData)!
+            tempAirline.id = (cityContext.value(forKey: "id") as? Int)!
+            tempAirline.airlines = (cityContext.value(forKey: "airline") as? String)!
+            tempAirline.image = (cityContext.value(forKey: "image") as? Data)!
             searchFlight.airlines.append(tempAirline)
         }
         
@@ -604,7 +595,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         let link = "http://rico.webmurahbagus.com/admin/API/GetAirplanesAPI.php"
         AjaxPost(link, parameter: "", done: { (data) in
             do {
-                let airplanes = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers) as? [[String : AnyObject]]
+                let airplanes = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String : AnyObject]]
                 for airplane in airplanes! {
                     let tempAirline = Airlines()
                     if let airline = airplane["airplane"] as? String {
@@ -614,8 +605,8 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
                         tempAirline.id = Int(id)!
                     }
                     if let image = airplane["image"] as? String {
-                        if let url = NSURL(string: "http://rico.webmurahbagus.com/admin/images/\(image)") {
-                            if let data = NSData(contentsOfURL: url) {
+                        if let url = URL(string: "http://rico.webmurahbagus.com/admin/images/\(image)") {
+                            if let data = try? Data(contentsOf: url) {
                                 tempAirline.image = data
                             }
                         }
@@ -643,10 +634,11 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         searchFlight.cities.removeAll()
         for cityContext in citiesContext {
             let tempCity = City()
-            tempCity.id = (cityContext.valueForKey("id") as? Int)!
-            tempCity.city = (cityContext.valueForKey("city") as? String)!
-            tempCity.alias = (cityContext.valueForKey("alias") as? String)!
-            tempCity.image = (cityContext.valueForKey("image") as? NSData)!
+            tempCity.id = (cityContext.value(forKey: "id") as? Int)!
+            tempCity.city = (cityContext.value(forKey: "city") as? String)!
+            tempCity.alias = (cityContext.value(forKey: "alias") as? String)!
+            tempCity.image = (cityContext.value(forKey: "image") as? Data)!
+            tempCity.airport = (cityContext.value(forKey: "airport") as? String)!
             searchFlight.cities.append(tempCity)
         }
         
@@ -655,7 +647,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         let link = "http://rico.webmurahbagus.com/admin/API/GetDestinationAPI.php"
         AjaxPost(link, parameter: "", done: { (data) in
             do {
-                let cities = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers) as? [[String : AnyObject]]
+                let cities = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String : AnyObject]]
                 for city in cities! {
                     let tempCity = City()
                     if let name = city["city"] as? String {
@@ -667,9 +659,12 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
                     if let id = city["id_destination"] as? String {
                         tempCity.id = Int(id)!
                     }
+                    if let airport = city["airport"] as? String {
+                        tempCity.airport = airport
+                    }
                     if let image = city["image"] as? String {
-                        if let url = NSURL(string: "http://rico.webmurahbagus.com/admin/images/\(image)") {
-                            if let data = NSData(contentsOfURL: url) {
+                        if let url = URL(string: "http://rico.webmurahbagus.com/admin/images/\(image)") {
+                            if let data = try? Data(contentsOf: url) {
                                 tempCity.image = data
                             }        
                         }

@@ -10,17 +10,17 @@ import UIKit
 
 class Mask: UIView {
 
-    func FitToScreen(screen:CGRect) {
+    func FitToScreen(_ screen:CGRect) {
         self.frame = screen
         Hide()
     }
     
     func Show() {
-        self.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.5)
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.5)
     }
     
     func Hide() {
-        self.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0)
+        self.backgroundColor = UIColor.black.withAlphaComponent(0)
     }
     
 

@@ -20,7 +20,7 @@ class OriginFlightViewController: UIViewController, UISearchBarDelegate, UITable
         super.viewDidLoad()
         searchFlight.isRoundTrip = false
         searchBar.delegate = self
-        searchFlight.activeResult = .Flight
+        searchFlight.activeResult = .flight
         self.cities = searchFlight.cities
     }
 
@@ -30,7 +30,7 @@ class OriginFlightViewController: UIViewController, UISearchBarDelegate, UITable
     }
     
     //MARK: Table
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (searchBar.text != "") {
             if (filteredCities.count == 0) {
                 return 1
@@ -40,37 +40,37 @@ class OriginFlightViewController: UIViewController, UISearchBarDelegate, UITable
         return cities.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("city_cell", forIndexPath: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "city_cell", for: indexPath)
         if searchBar.text != "" {
             if (filteredCities.count == 0) {
                 cell.textLabel?.text = "No Result Found"
             } else {
-                cell.textLabel?.text = filteredCities[indexPath.row].cityAlias
+                cell.textLabel?.text = filteredCities[(indexPath as NSIndexPath).row].cityAlias
             }
         } else {
-            cell.textLabel?.text = cities[indexPath.row].cityAlias
+            cell.textLabel?.text = cities[(indexPath as NSIndexPath).row].cityAlias
         }
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if searchBar.text == "" {
-            searchFlight.origin = cities[indexPath.row]
+            searchFlight.origin = cities[(indexPath as NSIndexPath).row]
         } else {
-            searchFlight.origin = filteredCities[indexPath.row]
+            searchFlight.origin = filteredCities[(indexPath as NSIndexPath).row]
         }
     }
     
     //MARK: SearchBar
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         FillterCity(searchText)
     }
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         CloseInputView()
     }
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let destination = segue.destinationViewController as? SearchViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destination = segue.destination as? SearchViewController {
             destination.UpdateCity()
         }
     }
@@ -78,10 +78,10 @@ class OriginFlightViewController: UIViewController, UISearchBarDelegate, UITable
     
     
     //MARK: Method
-    func FillterCity(search:String) {
+    func FillterCity(_ search:String) {
         filteredCities = cities.filter({
             city in
-            return city.cityAlias.lowercaseString.containsString(search.lowercaseString)
+            return city.cityAlias.lowercased().contains(search.lowercased())
         })
         tableView.reloadData()
     }

@@ -19,6 +19,8 @@ class RoundTripTicketTableViewCell: UITableViewCell {
     @IBOutlet weak var passengerDestination: UILabel!
     @IBOutlet weak var priceDestination: UILabel!
     @IBOutlet weak var taxDestination: UILabel!
+    @IBOutlet weak var transitDestination: UITextView!
+    @IBOutlet weak var airportDestination: UILabel!
     
     //MARK: returning properties
     @IBOutlet weak var returningFlight: UILabel!
@@ -29,6 +31,8 @@ class RoundTripTicketTableViewCell: UITableViewCell {
     @IBOutlet weak var passengerReturning: UILabel!
     @IBOutlet weak var priceReturning: UILabel!
     @IBOutlet weak var taxReturning: UILabel!
+    @IBOutlet weak var transitReturning: UITextView!
+    @IBOutlet weak var airportReturning: UILabel!
     
     @IBOutlet weak var subtotal: UILabel!
     
@@ -37,7 +41,7 @@ class RoundTripTicketTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
