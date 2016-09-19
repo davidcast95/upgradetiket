@@ -129,6 +129,7 @@ extension UIViewController {
                 (data,response,error ) -> Void in
                 if let httpResponse = response as? HTTPURLResponse {
                     let statuscode = httpResponse.statusCode
+                    print("status code : \(statuscode)")
                     if (statuscode == 200) {
                         if let verified_data = data {
                             done(verified_data)
@@ -152,6 +153,7 @@ extension UIViewController {
                 (data,response,error ) -> Void in
                 if let httpResponse = response as? HTTPURLResponse {
                     let statuscode = httpResponse.statusCode
+                    print("status code : \(statuscode)")
                     if (statuscode == 200) {
                         if let verified_data = data {
                             done(verified_data)
@@ -175,6 +177,7 @@ extension UIViewController {
                 (data,response,error ) -> Void in
                 if let httpResponse = response as? HTTPURLResponse {
                     let statuscode = httpResponse.statusCode
+                    print("status code : \(statuscode)")
                     if (statuscode == 200) {
                         if let verified_data = data {
                             done(verified_data)

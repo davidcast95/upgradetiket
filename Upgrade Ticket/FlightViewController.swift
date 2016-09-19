@@ -325,16 +325,13 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     
     //MARK: - Table
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isSearching {
-            return 1
-        }
-        if emptyResult {
+        if isDisconnected || isSearching || emptyResult {
             return 1
         }
         return flightResults.count
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if emptyResult || isSearching {
+        if emptyResult || isSearching || isDisconnected {
             return tableView.frame.height
         }
         if (indexPath == selectedCell) {
@@ -344,6 +341,10 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if isDisconnected {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "noconnectivity", for: indexPath)
+            return cell
+        }
         if isSearching {
             let cell = tableView.dequeueReusableCell(withIdentifier: "searching", for: indexPath)
             return cell
@@ -377,7 +378,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (!isSearching) {
+        if (!isSearching && !emptyResult && !isDisconnected) {
             view.endEditing(true)
             let reservedFlight = flightResults[(indexPath as NSIndexPath).row]
             //transit
@@ -509,12 +510,12 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
                         let string = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
                         let flights = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String : AnyObject]]
                         if flights?.count == 0 {
-                            print("no flight")
+                            self.emptyResult = true
                             self.NoFlight()
                         } else {
                             self.emptyResult = false
                             for flight in flights! {
-                                
+                                self.isSearching = false
                                 let formatter = DateFormatter()
                                 formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                                 let tempFlight = Flight()
@@ -555,7 +556,6 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
                                     tempFlight.transit = transit
                                 }
                                 self.flightResults.append(tempFlight)
-                                self.isSearching = false
                             }
                             
                             for _ in self.flightResults {
@@ -571,6 +571,10 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
                 },
                  error: {
                     self.isSearching = false
+                    self.isDisconnected = true
+                    DispatchQueue.main.async(execute: {
+                        self.flightTableView.reloadData()
+                    })
                     self.Alert("Please check your internet connection!")
                 },
                  completion: {
