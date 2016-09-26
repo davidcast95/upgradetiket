@@ -61,7 +61,11 @@ class DetailReservationTableViewController: UITableViewController {
     }
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let header = view as! UITableViewHeaderFooterView
-        header.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
+        if #available(iOS 8.2, *) {
+            header.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightLight)
+        } else {
+            // Fallback on earlier versions
+        }
     }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if (indexPath as NSIndexPath).section == 0 {

@@ -115,7 +115,7 @@ extension UIViewController {
         return processingAlertController
     }
     func EndProcessingAlert(_ target:UIAlertController,complete: @escaping () -> Void) {
-        DispatchQueue.main.async(execute: {
+        DispatchQueue.main.sync(execute: {
             target.dismiss(animated: true, completion: complete)
         })
     }

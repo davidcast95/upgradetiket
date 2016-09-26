@@ -13,8 +13,8 @@ class PaymentViewController: UIViewController, UIPickerViewDelegate, UIGestureRe
     @IBOutlet weak var paymentMethodTextField: UITextField!
     @IBOutlet weak var cardHolderTextField: UITextField!
     @IBOutlet weak var cardNumberTextField: UITextField!
-    var paymentMethodPicker = UIPickerView()
-    var paymentMethod = ["Transfer Bank","Use My Own Milespoints"]
+//    var paymentMethodPicker = UIPickerView()
+//    var paymentMethod = ["Transfer Bank","Use My Own Milespoints"]
     
     //MARK: Setting Properties
     
@@ -30,16 +30,19 @@ class PaymentViewController: UIViewController, UIPickerViewDelegate, UIGestureRe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        thankyou = false
         screen = view.frame
         CreateMask()
         RespositioningSettingView()
-        paymentMethodPicker.delegate = self
-        paymentMethodTextField.text = paymentMethod[0]
-        
-        // Do any additional setup after loading the view.
+//        paymentMethodPicker.delegate = self
+//        paymentMethodTextField.text = paymentMethod[0]
+        if let nav = self.navigationController {
+            nav.interactivePopGestureRecognizer?.delegate = self
+        }
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        thankyou = false
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -102,21 +105,21 @@ class PaymentViewController: UIViewController, UIPickerViewDelegate, UIGestureRe
 
     }
     
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return paymentMethod.count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return paymentMethod[row]
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        paymentMethodTextField.text = paymentMethod[row]
-    }
-
-    @IBAction func paymentMethodBeginEditing(_ sender: UITextField) {
-        sender.inputView = paymentMethodPicker
-    }
+//    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+//        return paymentMethod.count
+//    }
+//    
+//    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+//        return paymentMethod[row]
+//    }
+//    
+//    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+//        paymentMethodTextField.text = paymentMethod[row]
+//    }
+//
+//    @IBAction func paymentMethodBeginEditing(_ sender: UITextField) {
+//        sender.inputView = paymentMethodPicker
+//    }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         CloseInputView()
     }
@@ -169,9 +172,9 @@ class PaymentViewController: UIViewController, UIPickerViewDelegate, UIGestureRe
     
     func CreateReservation(_ flight:Flight) {
         if let id = activeUser.value(forKey: "id") as? String {
-            payment_method = paymentMethodTextField.text!
+            payment_method = "Transfer Bank"
             self.indicator.startAnimating()
-            let postParameter = "id_jadwal=\(flight.id)&flight_number=\(flight.airlines.airlines) \(flight.number)&id_member=\(id)&person=\(searchFlight.passenger)&total=\(Int(flight.price * Double(reservation.passengers.count)) + Int(flight.tax))&payment_method=\(paymentMethodTextField.text!)&card_holder=\(cardHolderTextField.text!)&card_number=\(cardNumberTextField.text!)&tipe=\(flight.type)"
+            let postParameter = "id_jadwal=\(flight.id)&flight_number=\(flight.airlines.airlines) \(flight.number)&id_member=\(id)&person=\(searchFlight.passenger)&total=\(Int(flight.price * Double(reservation.passengers.count)) + Int(flight.tax))&payment_method=\(payment_method)&card_holder=\(cardHolderTextField.text!)&card_number=\(cardNumberTextField.text!)&tipe=\(flight.type)"
             let link = "http://rico.webmurahbagus.com/admin/API/InserttransactionAPI.php"
             AjaxPost(link, parameter: postParameter, done: { (data) in
                 DispatchQueue.main.async(execute: {

@@ -8,6 +8,7 @@
 
 import UIKit
 
+@available(iOS 9.0, *)
 class ConfirmationPhoneViewController: UIViewController, UITextFieldDelegate {
     
     
@@ -22,9 +23,14 @@ class ConfirmationPhoneViewController: UIViewController, UITextFieldDelegate {
         timeRemaining.text = "\(self.timeRemainInSeconds.timerFormat) to resend code"
         resendCode.isHidden = true
         resendCode.isEnabled = false
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: {_ in
-            self.UpdateTimer()
-        })
+        if #available(iOS 10.0, *) {
+            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: {_ in
+                self.UpdateTimer()
+            })
+        } else {
+            // Fallback on earlier versions
+            
+        }
         var tagCount = 0
         for subview in codeLine.subviews {
             if let textview = subview as? UITextField {

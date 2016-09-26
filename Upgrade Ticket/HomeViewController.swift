@@ -20,7 +20,6 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        GetAdmin()
         
         if let fullname = activeUser.value(forKey: "name") as? String {
             signButton.setTitle("Hi, \(fullname)", for: UIControlState())
@@ -43,6 +42,10 @@ class HomeViewController: UIViewController {
         UIView.animate(withDuration: 1, delay: 0.45, options: UIViewAnimationOptions(), animations: {
             self.logoImage.alpha = 1
             }, completion: nil)
+        let backgroundQueue = DispatchQueue(label: "background", qos: .background, attributes: .concurrent)
+        backgroundQueue.sync {
+            self.GetAdmin()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -75,6 +78,61 @@ class HomeViewController: UIViewController {
             }
         })
 
+    }
+    
+    func ReadCityData() {
+        //        check in core data
+        let citiesContext = FecthFromCoreData("Destinations")
+        searchFlight.cities.removeAll()
+        for cityContext in citiesContext {
+            let tempCity = City()
+            tempCity.id = (cityContext.value(forKey: "id") as? Int)!
+            tempCity.city = (cityContext.value(forKey: "city") as? String)!
+            tempCity.alias = (cityContext.value(forKey: "alias") as? String)!
+            tempCity.image = (cityContext.value(forKey: "image") as? Data)!
+            tempCity.airport = (cityContext.value(forKey: "airport") as? String)!
+            searchFlight.cities.append(tempCity)
+        }
+        
+        
+        let link = "http://rico.webmurahbagus.com/admin/API/GetDestinationAPI.php"
+        AjaxPost(link, parameter: "", done: { (data) in
+            do {
+                let cities = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String : AnyObject]]
+                for city in cities! {
+                    let tempCity = City()
+                    if let name = city["city"] as? String {
+                        tempCity.city = name
+                    }
+                    if let alias = city["alias"] as? String {
+                        tempCity.alias = alias
+                    }
+                    if let id = city["id_destination"] as? String {
+                        tempCity.id = Int(id)!
+                    }
+                    if let airport = city["airport"] as? String {
+                        tempCity.airport = airport
+                    }
+                    if let image = city["image"] as? String {
+                        if let url = URL(string: "http://rico.webmurahbagus.com/admin/images/\(image)") {
+                            if let data = try? Data(contentsOf: url) {
+                                tempCity.image = data
+                            }
+                        }
+                    }
+                    
+                    if !searchFlight.IsCityExist(tempCity) {
+                        searchFlight.cities.append(tempCity)
+                        tempCity.SaveToCoreData()
+                    }
+                }
+                
+            } catch {
+                print("error")
+            }
+        })
+        
+        
     }
     
 }

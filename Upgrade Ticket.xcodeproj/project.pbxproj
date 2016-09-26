@@ -51,6 +51,7 @@
 		51C3A98C1CFA0AF60029AC69 /* FlightTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C3A98B1CFA0AF60029AC69 /* FlightTableViewCell.swift */; };
 		51DCACB01D8D3897007034C6 /* ConfirmationPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51DCACAF1D8D3897007034C6 /* ConfirmationPhoneViewController.swift */; };
 		51E0239B1D217D5800504850 /* ProfileAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E0239A1D217D5800504850 /* ProfileAccountViewController.swift */; };
+		51EC1BD51D98B464009CE372 /* PaymentMethodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EC1BD41D98B464009CE372 /* PaymentMethodViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,7 @@
 		51211CF51D273121007CD268 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		51211CF71D273773007CD268 /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		51211CF91D273AFE007CD268 /* CityTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityTableViewCell.swift; sourceTree = "<group>"; };
+		5130D0D11D95750E00CFEFC3 /* Upgrade Ticket.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Upgrade Ticket.entitlements"; sourceTree = "<group>"; };
 		51327FFC1D0CF95600A61D31 /* Mask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mask.swift; sourceTree = "<group>"; };
 		513280001D0EFFC000A61D31 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		513280021D0F04EB00A61D31 /* ProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTableViewController.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 		51C3A98B1CFA0AF60029AC69 /* FlightTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightTableViewCell.swift; sourceTree = "<group>"; };
 		51DCACAF1D8D3897007034C6 /* ConfirmationPhoneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmationPhoneViewController.swift; sourceTree = "<group>"; };
 		51E0239A1D217D5800504850 /* ProfileAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileAccountViewController.swift; sourceTree = "<group>"; };
+		51EC1BD41D98B464009CE372 /* PaymentMethodViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethodViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +177,7 @@
 				51821A4E1D734FB0007558B0 /* DetailButtonReservationViewController.swift */,
 				51821A501D7370D1007558B0 /* ForgotPasswordViewController.swift */,
 				5117A0D01D86913D00CBB5A3 /* ThankYouViewController.swift */,
+				51EC1BD41D98B464009CE372 /* PaymentMethodViewController.swift */,
 			);
 			name = Scene;
 			sourceTree = "<group>";
@@ -217,6 +221,7 @@
 		5166B07A1CDCD744007EBA38 /* Upgrade Ticket */ = {
 			isa = PBXGroup;
 			children = (
+				5130D0D11D95750E00CFEFC3 /* Upgrade Ticket.entitlements */,
 				51B86F7B1D7015C9000CCB28 /* Properties */,
 				5166B07B1CDCD744007EBA38 /* AppDelegate.swift */,
 				5166B07F1CDCD744007EBA38 /* Main.storyboard */,
@@ -338,6 +343,11 @@
 						CreatedOnToolsVersion = 7.1.1;
 						DevelopmentTeam = YTFM8NUTZ8;
 						LastSwiftMigration = 0800;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					5166B08E1CDCD745007EBA38 = {
 						CreatedOnToolsVersion = 7.1.1;
@@ -443,6 +453,7 @@
 				51C3A98A1CF9F0550029AC69 /* PersonTableViewCell.swift in Sources */,
 				5161AFEB1D6411FD0014F0A1 /* OneWayTicketTableViewCell.swift in Sources */,
 				51821A4F1D734FB0007558B0 /* DetailButtonReservationViewController.swift in Sources */,
+				51EC1BD51D98B464009CE372 /* PaymentMethodViewController.swift in Sources */,
 				5166B0AF1CDCDFCB007EBA38 /* SearchCityViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -590,9 +601,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Upgrade Ticket/Upgrade Ticket.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Upgrade Ticket/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.davidcast.Upgrade-Ticket";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -606,9 +619,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Upgrade Ticket/Upgrade Ticket.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Upgrade Ticket/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.davidcast.Upgrade-Ticket";
 				PRODUCT_NAME = "$(TARGET_NAME)";

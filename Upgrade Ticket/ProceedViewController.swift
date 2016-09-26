@@ -12,11 +12,13 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
 
     @IBOutlet weak var proceedButton: UIButton!
     @IBOutlet weak var settingView : UIView!
+    @IBOutlet weak var paymentMethodView: UIView!
     var tag = 0
     var textfields = Array<UITextField>()
     var datePicker = UIDatePicker()
     var datePickerToChange = UITextField()
     var isSettingShow = false
+    var isPaymentMethodShow = false
     var mask = Mask()
     var screen = CGRect()
     var isKeyboardShow = false
@@ -24,6 +26,7 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
     var titlePickerView = UIPickerView()
     var activeTitle = UITextField()
     var first = true
+    
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -36,7 +39,12 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
         screen = view.frame
         CreateMask()
         RespositioningSettingView()
+        paymentMethodView.isHidden = true
+    
         titlePickerView.delegate = self
+        if let nav = navigationController {
+            nav.interactivePopGestureRecognizer?.delegate = self
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -73,6 +81,16 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
                 self.settingView.frame = frame
                 }, completion: { finished in
                     self.isSettingShow = false
+                    self.view.sendSubview(toBack: self.mask)
+            })
+        }
+        if isPaymentMethodShow {
+            UIView.animate(withDuration: 0.5, animations: {
+                self.mask.Hide()
+                self.paymentMethodView.alpha = 1
+                }, completion: { finished in
+                    self.isPaymentMethodShow = false
+                    self.paymentMethodView.isHidden = true
                     self.view.sendSubview(toBack: self.mask)
             })
         }
@@ -280,8 +298,16 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
             reservation.passengers.append(Passenger(fullname: "\(textfields[j-3].text!) \(textfields[j-2].text!)", birthdate: textfields[j-1].text!))
         }
         if (valid) {
-            let paymentVC = storyboard?.instantiateViewController(withIdentifier: "payment") as! PaymentViewController
-            self.navigationController?.pushViewController(paymentVC, animated: true)
+            self.mask.Hide()
+            self.paymentMethodView.alpha = 0
+            self.paymentMethodView.isHidden = false
+            self.view.bringSubview(toFront: self.mask)
+            self.view.bringSubview(toFront: self.paymentMethodView)
+            UIView.animate(withDuration: 1, animations: {
+                self.paymentMethodView.alpha = 1
+                self.mask.Show()
+            })
+            
         }
     }
     

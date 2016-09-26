@@ -13,7 +13,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     
     //MARK : General Property
     var screen:CGRect!
-    var isSearching = true
+    var isSearching = false
     var isDisconnected = false
     @IBOutlet var tapListener: UITapGestureRecognizer!
     @IBOutlet weak var leftOffsetNavTitle: NSLayoutConstraint!
@@ -71,12 +71,18 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         dateFlightInput.text = today.dateFormat
         CreateMask()
         RespositioningSettingView()
+        self.TableLoad()
         
+        if let nav = self.navigationController {
+            nav.interactivePopGestureRecognizer?.delegate = self
+        }
     }
     override func viewWillAppear(_ animated: Bool) {
-        searchFlight.Print()
+        UpdateSlider()
         self.cityButton.setTitle("\(searchFlight.origin.city) → \(searchFlight.dest.city)", for: UIControlState())
-        GetResult()
+        DispatchQueue.main.async(execute: {
+            self.GetResult()
+        })
         
     }
     override func didReceiveMemoryWarning() {
@@ -107,8 +113,8 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         sliderView.addSubview(selectView)
         for menu in menus {
             let button = UIButton()
-            button.setAttributedTitle(NSAttributedString(string: menu, attributes: [NSForegroundColorAttributeName : UIColor.gray, NSFontAttributeName : UIFont(name: "Futura", size: 18)!]), for: UIControlState())
-            button.setAttributedTitle(NSAttributedString(string: menu, attributes: [NSForegroundColorAttributeName : UIColor.black]), for: .highlighted)
+            button.setAttributedTitle(NSAttributedString(string: menu, attributes: [NSForegroundColorAttributeName : UIColor.gray, NSFontAttributeName : UIFont(name: "Futura", size: 18)!]), for: .normal)
+            button.setAttributedTitle(NSAttributedString(string: menu, attributes: [NSForegroundColorAttributeName : UIColor.black, NSFontAttributeName : UIFont(name: "Futura", size: 18)!]), for: .highlighted)
             button.setAttributedTitle(NSAttributedString(string: menu, attributes: [NSForegroundColorAttributeName : UIColor.black, NSFontAttributeName : UIFont(name: "Futura", size: 18)!]), for: .selected)
             button.addTarget(self, action: #selector(sliderChange), for: .touchUpInside)
             
@@ -136,12 +142,14 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
             indexMenu+=1
             UpdateSlider()
         }
+        GetResult()
     }
     func RightSlideOver(_ sender: UISwipeGestureRecognizer) {
         if indexMenu - 1 >= 0 {
             indexMenu-=1
             UpdateSlider()
         }
+        GetResult()
     }
     func sliderChange(_ sender: UIButton) {
         let index = Int(sender.frame.origin.x / sender.frame.width)
@@ -150,6 +158,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
             
             UpdateSlider()
         }
+        GetResult()
     }
     
     func UpdateSlider() {
@@ -161,7 +170,6 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
             button.isSelected = false
         }
         buttons[indexMenu].isSelected = true
-        GetResult()
     }
     
     func Refresh(_ refreshControl: UIRefreshControl) {
@@ -202,6 +210,9 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     }
     func Default() {
         DispatchQueue.main.async(execute: {
+            searchFlight.Default()
+            self.GetResult()
+            self.TableLoad()
             self.cityButton.setTitle("\(searchFlight.origin.city) → \(searchFlight.dest.city)", for: UIControlState())
         })
     }
@@ -497,90 +508,93 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     //MARK: - Connectivity
     
     func GetResult() {
-        isSearching = true
-        self.view.bringSubview(toFront: indicator)
-        self.indicator.startAnimating()
-        flightResults.removeAll()
-        displayCell.removeAll()
-        postParameter = "from=\(searchFlight.origin.id)&to=\(searchFlight.dest.id)&date=\(searchFlight.dateFlight.sqlDate)&passenger=\(searchFlight.passenger)&tipe=\(idMenus[indexMenu])"
-        let link = "http://rico.webmurahbagus.com/admin/API/GetJadwalAPI.php"
-        AjaxPost(link, parameter: postParameter,
-                 done: { (data) in
-                    do {
-                        let string = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
-                        let flights = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String : AnyObject]]
-                        if flights?.count == 0 {
-                            self.emptyResult = true
-                            self.NoFlight()
-                        } else {
-                            self.emptyResult = false
-                            for flight in flights! {
-                                self.isSearching = false
-                                let formatter = DateFormatter()
-                                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                                let tempFlight = Flight()
-                                if let id = flight["id_jadwal"] as? String {
-                                    tempFlight.id = id
+        if !isSearching {
+            print("getting result")
+            searchFlight.Print()
+            isSearching = true
+            self.view.bringSubview(toFront: indicator)
+            self.indicator.startAnimating()
+            flightResults.removeAll()
+            displayCell.removeAll()
+            postParameter = "from=\(searchFlight.origin.id)&to=\(searchFlight.dest.id)&date=\(searchFlight.dateFlight.sqlDate)&passenger=\(searchFlight.passenger)&tipe=\(idMenus[indexMenu])"
+            let link = "http://rico.webmurahbagus.com/admin/API/GetJadwalAPI.php"
+            AjaxPost(link, parameter: postParameter,
+                     done: { (data) in
+                        do {
+                            
+                            self.isSearching = false
+                            let flights = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String : AnyObject]]
+                            print(flights)
+                            if flights?.count == 0 {
+                                self.NoFlight()
+                            } else {
+                                self.emptyResult = false
+                                for flight in flights! {
+                                    let formatter = DateFormatter()
+                                    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                                    let tempFlight = Flight()
+                                    if let id = flight["id_jadwal"] as? String {
+                                        tempFlight.id = id
+                                    }
+                                    if let number = flight["flight_number"] as? String {
+                                        tempFlight.number = number
+                                    }
+                                    if let from = flight["origin"] as? String {
+                                        tempFlight.from = searchFlight.FindCityById(Int(from)!)
+                                    }
+                                    if let to = flight["dest"] as? String {
+                                        tempFlight.to = searchFlight.FindCityById(Int(to)!)
+                                    }
+                                    if let departure = flight["departure"] as? String {
+                                        tempFlight.departure = formatter.date(from: departure)!
+                                    }
+                                    if let arrival = flight["arrival"] as? String {
+                                        tempFlight.arrival = formatter.date(from: arrival)!
+                                    }
+                                    if let price = flight["price"] as? String {
+                                        tempFlight.price = Double(price)!
+                                    }
+                                    if let points = flight["points"] as? String {
+                                        tempFlight.points = Int(points)!
+                                    }
+                                    if let type = flight["tipe"] as? String {
+                                        tempFlight.type = type
+                                    }
+                                    if let tax = flight["tax"] as? String {
+                                        tempFlight.tax = Double(tax)!
+                                    }
+                                    if let id_airplane = flight["id_airplane"] as? String {
+                                        tempFlight.airlines = searchFlight.FindAirlinesById(Int(id_airplane)!)
+                                    }
+                                    if let transit = flight["transit"] as? String {
+                                        tempFlight.transit = transit
+                                    }
+                                    self.flightResults.append(tempFlight)
                                 }
-                                if let number = flight["flight_number"] as? String {
-                                    tempFlight.number = number
+                                
+                                for _ in self.flightResults {
+                                    self.displayCell.append(true)
                                 }
-                                if let from = flight["origin"] as? String {
-                                    tempFlight.from = searchFlight.FindCityById(Int(from)!)
-                                }
-                                if let to = flight["dest"] as? String {
-                                    tempFlight.to = searchFlight.FindCityById(Int(to)!)
-                                }
-                                if let departure = flight["departure"] as? String {
-                                    tempFlight.departure = formatter.date(from: departure)!
-                                }
-                                if let arrival = flight["arrival"] as? String {
-                                    tempFlight.arrival = formatter.date(from: arrival)!
-                                }
-                                if let price = flight["price"] as? String {
-                                    tempFlight.price = Double(price)!
-                                }
-                                if let points = flight["points"] as? String {
-                                    tempFlight.points = Int(points)!
-                                }
-                                if let type = flight["tipe"] as? String {
-                                    tempFlight.type = type
-                                }
-                                if let tax = flight["tax"] as? String {
-                                    tempFlight.tax = Double(tax)!
-                                }
-                                if let id_airplane = flight["id_airplane"] as? String {
-                                    tempFlight.airlines = searchFlight.FindAirlinesById(Int(id_airplane)!)
-                                }
-                                if let transit = flight["transit"] as? String {
-                                    tempFlight.transit = transit
-                                }
-                                self.flightResults.append(tempFlight)
+                                self.TableLoad()
                             }
                             
-                            for _ in self.flightResults {
-                                self.displayCell.append(true)
-                            }
-                            self.TableLoad()
+                        } catch {
+                            print("error")
                         }
-                        
-                    } catch {
-                        print("error")
-                    }
 
-                },
-                 error: {
-                    self.isSearching = false
-                    self.isDisconnected = true
-                    DispatchQueue.main.async(execute: {
-                        self.flightTableView.reloadData()
+                    },
+                     error: {
+                        self.isSearching = false
+                        self.isDisconnected = true
+                        DispatchQueue.main.async(execute: {
+                            self.flightTableView.reloadData()
+                        })
+                        self.Alert("Please check your internet connection!")
+                    },
+                     completion: {
+                        self.TableLoad()
                     })
-                    self.Alert("Please check your internet connection!")
-                },
-                 completion: {
-                    self.TableLoad()
-                })
-        
+        }
     }
     
     
@@ -594,6 +608,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
             tempAirline.airlines = (cityContext.value(forKey: "airline") as? String)!
             tempAirline.image = (cityContext.value(forKey: "image") as? Data)!
             searchFlight.airlines.append(tempAirline)
+            print("read airlines")
         }
         
         
@@ -619,15 +634,12 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
                     if !searchFlight.IsAirlinesExist(tempAirline) {
                         searchFlight.airlines.append(tempAirline)
                         tempAirline.SaveToCoreData()
-                        self.Default()
-                        searchFlight.Default()
                     }
                 }
             } catch {
                 print("error")
             }
         })
-        searchFlight.Default()
         
         
     }
@@ -647,7 +659,6 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
             searchFlight.cities.append(tempCity)
         }
         
-        //ResetCitiesData()
         
         let link = "http://rico.webmurahbagus.com/admin/API/GetDestinationAPI.php"
         AjaxPost(link, parameter: "", done: { (data) in
@@ -679,15 +690,14 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
                         searchFlight.cities.append(tempCity)
                         tempCity.SaveToCoreData()
                         self.Default()
-                        searchFlight.Default()
                     }
                 }
                 
             } catch {
                 print("error")
             }
-        })        
-        searchFlight.Default()
+        })
+        self.Default()
         
         
     }

@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/ProceedViewController.swift"
-            timestampString = "495364471.994694"
+            timestampString = "496472132.65168"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "149"
-            endingLineNumber = "149"
+            startingLineNumber = "167"
+            endingLineNumber = "167"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/FlightViewController.swift"
-            timestampString = "495944180.970834"
+            timestampString = "496469619.237221"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "652"
-            endingLineNumber = "652"
+            startingLineNumber = "663"
+            endingLineNumber = "663"
             landmarkName = "ReadCityData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/FlightViewController.swift"
-            timestampString = "495944180.970834"
+            timestampString = "496469619.237221"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "638"
-            endingLineNumber = "638"
+            startingLineNumber = "650"
+            endingLineNumber = "650"
             landmarkName = "ReadCityData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/FlightViewController.swift"
-            timestampString = "495944180.970834"
+            timestampString = "496469619.237221"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "679"
-            endingLineNumber = "679"
+            startingLineNumber = "690"
+            endingLineNumber = "690"
             landmarkName = "ReadCityData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -106,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/FlightViewController.swift"
-            timestampString = "495944180.970834"
+            timestampString = "496469619.237221"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "604"
-            endingLineNumber = "604"
+            startingLineNumber = "619"
+            endingLineNumber = "619"
             landmarkName = "ReadAirlinesData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -122,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/DetailReservationTableViewController.swift"
-            timestampString = "494099254.710739"
+            timestampString = "496333147.311449"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "138"
-            endingLineNumber = "138"
+            startingLineNumber = "142"
+            endingLineNumber = "142"
             landmarkName = "GenerateDetail()"
             landmarkType = "7">
          </BreakpointContent>
@@ -138,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/DetailReservationTableViewController.swift"
-            timestampString = "494099254.710739"
+            timestampString = "496333147.311449"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "152"
-            endingLineNumber = "152"
+            startingLineNumber = "156"
+            endingLineNumber = "156"
             landmarkName = "GetDetail()"
             landmarkType = "7">
          </BreakpointContent>
@@ -154,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/ConfirmationPhoneViewController.swift"
-            timestampString = "495824446.350035"
+            timestampString = "496333147.311449"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
             landmarkName = "CheckCode(code:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -186,12 +186,12 @@
                   moduleName = "Upgrade Ticket"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/davidwibisono/Documents/Xcode/upgradetiketb/Upgrade%20Ticket/ProfileAccountViewController.swift"
-                  timestampString = "495823714.293239"
+                  timestampString = "496549965.29688"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "260"
                   endingLineNumber = "260"
-                  offsetFromSymbolStart = "9072">
+                  offsetFromSymbolStart = "13298">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -201,12 +201,12 @@
                   moduleName = "Upgrade Ticket"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/davidwibisono/Documents/Xcode/upgradetiketb/Upgrade%20Ticket/ProfileAccountViewController.swift"
-                  timestampString = "495823714.295481"
+                  timestampString = "496549965.299119"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "261"
                   endingLineNumber = "261"
-                  offsetFromSymbolStart = "28">
+                  offsetFromSymbolStart = "23">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -218,11 +218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/ConfirmationPhoneViewController.swift"
-            timestampString = "495824446.350035"
+            timestampString = "496333147.311449"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
+            startingLineNumber = "134"
+            endingLineNumber = "134"
             landmarkName = "CheckCode(code:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -234,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/ConfirmationPhoneViewController.swift"
-            timestampString = "495824446.350035"
+            timestampString = "496333147.311449"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
+            startingLineNumber = "139"
+            endingLineNumber = "139"
             landmarkName = "CheckCode(code:)"
             landmarkType = "7">
             <Locations>
@@ -250,12 +250,12 @@
                   moduleName = "Upgrade Ticket"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/davidwibisono/Documents/Xcode/upgradetiketb/Upgrade%20Ticket/ConfirmationPhoneViewController.swift"
-                  timestampString = "495823714.299537"
+                  timestampString = "496549965.303363"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "119"
-                  endingLineNumber = "119"
-                  offsetFromSymbolStart = "668">
+                  startingLineNumber = "139"
+                  endingLineNumber = "139"
+                  offsetFromSymbolStart = "839">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -265,12 +265,12 @@
                   moduleName = "Upgrade Ticket"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/davidwibisono/Documents/Xcode/upgradetiketb/Upgrade%20Ticket/ConfirmationPhoneViewController.swift"
-                  timestampString = "495823714.30144"
+                  timestampString = "496549965.30539"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "120"
-                  endingLineNumber = "120"
-                  offsetFromSymbolStart = "28">
+                  startingLineNumber = "140"
+                  endingLineNumber = "140"
+                  offsetFromSymbolStart = "27">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -282,11 +282,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/ConfirmationPhoneViewController.swift"
-            timestampString = "495824446.350035"
+            timestampString = "496333147.311449"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "135"
-            endingLineNumber = "135"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
             landmarkName = "CheckCode(code:)"
             landmarkType = "7">
          </BreakpointContent>
