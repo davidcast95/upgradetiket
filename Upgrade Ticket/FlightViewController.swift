@@ -47,7 +47,8 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     var flightResults = Array<Flight>()
     var flightDisplay = Array<Flight>()
     var displayCell = Array<Bool>()
-    var selectedCell = IndexPath()
+    var selectedCell = IndexPath(row: -1, section: -1)
+    
     
     
     // MARK: - Core
@@ -65,8 +66,8 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         tapListener.cancelsTouchesInView = false
         
         screen = self.view.frame
+        
         ReadCityData()
-        ReadAirlinesData()
         self.cityButton.setTitle("\(searchFlight.origin.city) → \(searchFlight.dest.city)", for: UIControlState())
         dateFlightInput.text = today.dateFormat
         CreateMask()
@@ -78,11 +79,13 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     override func viewWillAppear(_ animated: Bool) {
+        
         UpdateSlider()
         self.cityButton.setTitle("\(searchFlight.origin.city) → \(searchFlight.dest.city)", for: UIControlState())
         DispatchQueue.main.async(execute: {
             self.GetResult()
         })
+        
         
     }
     override func didReceiveMemoryWarning() {
@@ -141,15 +144,15 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         if indexMenu + 1 < menus.count {
             indexMenu+=1
             UpdateSlider()
+            GetResult()
         }
-        GetResult()
     }
     func RightSlideOver(_ sender: UISwipeGestureRecognizer) {
         if indexMenu - 1 >= 0 {
             indexMenu-=1
             UpdateSlider()
+            GetResult()
         }
-        GetResult()
     }
     func sliderChange(_ sender: UIButton) {
         let index = Int(sender.frame.origin.x / sender.frame.width)
@@ -162,7 +165,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func UpdateSlider() {
-        UIView.animate(withDuration: 0.5, animations: {
+        UIView.animate(withDuration: 0.25, animations: {
             let offset:CGFloat = self.buttonWidth * 0.1
             self.selectView.frame.origin.x = self.buttons[self.indexMenu].frame.origin.x + offset/2
         })
@@ -209,12 +212,14 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         })
     }
     func Default() {
-        DispatchQueue.main.async(execute: {
-            searchFlight.Default()
-            self.GetResult()
-            self.TableLoad()
-            self.cityButton.setTitle("\(searchFlight.origin.city) → \(searchFlight.dest.city)", for: UIControlState())
-        })
+        if searchFlight.cities.count >= 2 {
+            
+            DispatchQueue.main.async(execute: {
+                searchFlight.Default()
+                self.cityButton.setTitle("\(searchFlight.origin.city) → \(searchFlight.dest.city)", for: UIControlState())
+                self.GetResult()
+            })
+        }
     }
     func FindPrice(_ flight:Flight) -> (Double,Double) {
         var prices:[Double] = []
@@ -366,6 +371,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         } else {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "flight-cell", for: indexPath) as! FlightTableViewCell
+//            cell.selectionStyle = .none
             let i = (indexPath as NSIndexPath).row
             let flight = flightResults[i]
             cell.airlinesLogo.image = UIImage(data: flight.airlines.image as Data)
@@ -459,7 +465,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
                 cell.alpha = 0
                 let translate = CGAffineTransform(translationX: 50, y: 0)
                 cell.transform = translate
-                UIView.animate(withDuration: 1, delay: 0.1 * Double(i), options: UIViewAnimationOptions(), animations: {
+                UIView.animate(withDuration: 0.5, delay: 0.1 * Double(i), options: .curveEaseInOut, animations: {
                     cell.alpha = 1
                     cell.transform = CGAffineTransform.identity
                     }, completion: nil)
@@ -467,6 +473,14 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
         }
 
     }
+//    
+//    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+//        if selectedCell.row != -1 {
+//            tableView.cellForRow(at: selectedCell)?.transform = CGAffineTransform.identity
+//        }
+//        tableView.cellForRow(at: indexPath)?.transform = CGAffineTransform(scaleX: 0.95, y: 0.75)
+//        return indexPath
+//    }
     
     
     //MARK: Input
@@ -508,7 +522,7 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     //MARK: - Connectivity
     
     func GetResult() {
-        if !isSearching {
+        if !isSearching && searchFlight.cities.count > 2 {
             print("getting result")
             searchFlight.Print()
             isSearching = true
@@ -608,7 +622,6 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
             tempAirline.airlines = (cityContext.value(forKey: "airline") as? String)!
             tempAirline.image = (cityContext.value(forKey: "image") as? Data)!
             searchFlight.airlines.append(tempAirline)
-            print("read airlines")
         }
         
         
@@ -647,8 +660,8 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
     
     func ReadCityData() {
 //        check in core data
+        print("reading city data")
         let citiesContext = FecthFromCoreData("Destinations")
-        searchFlight.cities.removeAll()
         for cityContext in citiesContext {
             let tempCity = City()
             tempCity.id = (cityContext.value(forKey: "id") as? Int)!
@@ -658,47 +671,45 @@ class FlightViewController: UIViewController, UITableViewDataSource, UITableView
             tempCity.airport = (cityContext.value(forKey: "airport") as? String)!
             searchFlight.cities.append(tempCity)
         }
-        
-        
+        self.Default()
         let link = "http://rico.webmurahbagus.com/admin/API/GetDestinationAPI.php"
         AjaxPost(link, parameter: "", done: { (data) in
             do {
                 let cities = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String : AnyObject]]
                 for city in cities! {
                     let tempCity = City()
-                    if let name = city["city"] as? String {
-                        tempCity.city = name
-                    }
-                    if let alias = city["alias"] as? String {
-                        tempCity.alias = alias
-                    }
                     if let id = city["id_destination"] as? String {
                         tempCity.id = Int(id)!
                     }
-                    if let airport = city["airport"] as? String {
-                        tempCity.airport = airport
-                    }
-                    if let image = city["image"] as? String {
-                        if let url = URL(string: "http://rico.webmurahbagus.com/admin/images/\(image)") {
-                            if let data = try? Data(contentsOf: url) {
-                                tempCity.image = data
-                            }        
-                        }
-                    }
-                    
                     if !searchFlight.IsCityExist(tempCity) {
+                        if let name = city["city"] as? String {
+                            tempCity.city = name
+                        }
+                        if let alias = city["alias"] as? String {
+                            tempCity.alias = alias
+                        }
+                        if let airport = city["airport"] as? String {
+                            tempCity.airport = airport
+                        }
+                        if let image = city["image"] as? String {
+                            if let url = URL(string: "http://rico.webmurahbagus.com/admin/images/\(image)") {
+                                if let data = try? Data(contentsOf: url) {
+                                    tempCity.image = data
+                                }
+                            }
+                        }
+                        
                         searchFlight.cities.append(tempCity)
                         tempCity.SaveToCoreData()
                         self.Default()
                     }
                 }
+                self.ReadAirlinesData()
                 
             } catch {
                 print("error")
             }
         })
-        self.Default()
-        
         
     }
     

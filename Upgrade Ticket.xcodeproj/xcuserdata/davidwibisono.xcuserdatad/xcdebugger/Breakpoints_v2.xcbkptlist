@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/ProceedViewController.swift"
-            timestampString = "496472132.65168"
+            timestampString = "496551736.772876"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "167"
@@ -26,43 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/FlightViewController.swift"
-            timestampString = "496469619.237221"
+            timestampString = "496594548.541497"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "663"
-            endingLineNumber = "663"
-            landmarkName = "ReadCityData()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Upgrade Ticket/FlightViewController.swift"
-            timestampString = "496469619.237221"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "650"
-            endingLineNumber = "650"
-            landmarkName = "ReadCityData()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Upgrade Ticket/FlightViewController.swift"
-            timestampString = "496469619.237221"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "690"
-            endingLineNumber = "690"
+            startingLineNumber = "666"
+            endingLineNumber = "666"
             landmarkName = "ReadCityData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -106,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Upgrade Ticket/FlightViewController.swift"
-            timestampString = "496469619.237221"
+            timestampString = "496594548.541497"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "619"
-            endingLineNumber = "619"
+            startingLineNumber = "634"
+            endingLineNumber = "634"
             landmarkName = "ReadAirlinesData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -186,12 +154,12 @@
                   moduleName = "Upgrade Ticket"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/davidwibisono/Documents/Xcode/upgradetiketb/Upgrade%20Ticket/ProfileAccountViewController.swift"
-                  timestampString = "496549965.29688"
+                  timestampString = "496565647.515084"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "260"
                   endingLineNumber = "260"
-                  offsetFromSymbolStart = "13298">
+                  offsetFromSymbolStart = "9072">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -201,12 +169,12 @@
                   moduleName = "Upgrade Ticket"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/davidwibisono/Documents/Xcode/upgradetiketb/Upgrade%20Ticket/ProfileAccountViewController.swift"
-                  timestampString = "496549965.299119"
+                  timestampString = "496565647.517637"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "261"
                   endingLineNumber = "261"
-                  offsetFromSymbolStart = "23">
+                  offsetFromSymbolStart = "28">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -250,12 +218,12 @@
                   moduleName = "Upgrade Ticket"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/davidwibisono/Documents/Xcode/upgradetiketb/Upgrade%20Ticket/ConfirmationPhoneViewController.swift"
-                  timestampString = "496549965.303363"
+                  timestampString = "496565647.521651"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "139"
                   endingLineNumber = "139"
-                  offsetFromSymbolStart = "839">
+                  offsetFromSymbolStart = "668">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -265,12 +233,12 @@
                   moduleName = "Upgrade Ticket"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/davidwibisono/Documents/Xcode/upgradetiketb/Upgrade%20Ticket/ConfirmationPhoneViewController.swift"
-                  timestampString = "496549965.30539"
+                  timestampString = "496565647.523498"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "140"
                   endingLineNumber = "140"
-                  offsetFromSymbolStart = "27">
+                  offsetFromSymbolStart = "28">
                </Location>
             </Locations>
          </BreakpointContent>

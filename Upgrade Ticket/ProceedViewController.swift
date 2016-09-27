@@ -74,7 +74,7 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
     //Actions
     func MaskClicked(_ sender: UITapGestureRecognizer) {
         if isSettingShow {
-            UIView.animate(withDuration: 0.5, animations: {
+            UIView.animate(withDuration: 0.25, animations: {
                 self.mask.Hide()
                 var frame = self.settingView.frame
                 frame.origin.y = self.screen.height
@@ -85,9 +85,9 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
             })
         }
         if isPaymentMethodShow {
-            UIView.animate(withDuration: 0.5, animations: {
+            UIView.animate(withDuration: 0.25, animations: {
                 self.mask.Hide()
-                self.paymentMethodView.alpha = 1
+                self.paymentMethodView.alpha = 0
                 }, completion: { finished in
                     self.isPaymentMethodShow = false
                     self.paymentMethodView.isHidden = true
@@ -100,7 +100,7 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
             if !isSettingShow {
                 self.view.bringSubview(toFront: self.mask)
                 self.view.bringSubview(toFront: self.settingView)
-                UIView.animate(withDuration: 0.5, animations: {
+                UIView.animate(withDuration: 0.3, animations: {
                     self.mask.Show()
                     var frame = self.settingView.frame
                     frame.origin.y = self.screen.height - 100
@@ -299,11 +299,12 @@ class ProceedViewController: UIViewController, UITextFieldDelegate, UITableViewD
         }
         if (valid) {
             self.mask.Hide()
+            isPaymentMethodShow = true
             self.paymentMethodView.alpha = 0
             self.paymentMethodView.isHidden = false
             self.view.bringSubview(toFront: self.mask)
             self.view.bringSubview(toFront: self.paymentMethodView)
-            UIView.animate(withDuration: 1, animations: {
+            UIView.animate(withDuration: 0.3, animations: {
                 self.paymentMethodView.alpha = 1
                 self.mask.Show()
             })

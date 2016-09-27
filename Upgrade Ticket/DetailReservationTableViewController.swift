@@ -18,7 +18,7 @@ class DetailReservationTableViewController: UITableViewController {
     var paymentInformation = Array<String>()
     var passengersInformation = Array<String>()
     let paymentField = ["Card Holder","Payment Method","Rekening"]
-    let passengerField = ["Fullname","ID Card","Passport"]
+    let passengerField = ["Fullname","Birthdate"]
     var indexField = 0
     
     @IBOutlet var detailTableView: UITableView!
@@ -119,7 +119,7 @@ class DetailReservationTableViewController: UITableViewController {
                 else {
                     let index = (indexPath as NSIndexPath).row
                     if (index < passengersInformation.count) {
-                        if (index % 4 == 0) {
+                        if (index % 3 == 0) {
                             cell.field.text = passengersInformation[index]
                             cell.value.text = ""
                             
@@ -157,11 +157,12 @@ class DetailReservationTableViewController: UITableViewController {
                     let details = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String : AnyObject]]
                     var i = 1
                     for detail in details! {
-                        if let fullname = detail["fullname"] as? String, let ktp = detail["no_ktp"] as? String, let passport = detail["no_passport"] as? String {
+                        if let fullname = detail["fullname"] as? String, let birthdate = detail["birthdate"] as? String {
                             self.passengersInformation.append("Person \(i)")
                             self.passengersInformation.append(fullname)
-                            self.passengersInformation.append(ktp)
-                            self.passengersInformation.append(passport)
+                            let formatter = DateFormatter()
+                            formatter.dateFormat = "yyyy-MM-dd"
+                            self.passengersInformation.append((formatter.date(from: birthdate)?.dateFormat)!)
                             i+=1
                         }
                     }

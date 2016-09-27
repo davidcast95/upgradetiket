@@ -132,11 +132,9 @@ class TestViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             if displayCell[i] {
                 displayCell[i] = false
                 cell.alpha = 0
-                let angle:CGFloat = 10/180 * CGFloat(M_PI)
-                let rotation = CGAffineTransform(rotationAngle: angle)
-                let translate = CGAffineTransform(translationX: 50, y: 80)
-                cell.transform = rotation.concatenating(translate)
-                UIView.animate(withDuration: 1, delay: 0.1 * Double(i), options: UIViewAnimationOptions(), animations: {
+                let translate = CGAffineTransform(translationX: 100, y: 0)
+                cell.transform = translate
+                UIView.animate(withDuration: 0.75, delay: 0.25 * Double(i), options: .curveEaseInOut, animations: {
                     cell.alpha = 1
                     cell.transform = CGAffineTransform.identity
                     }, completion: nil)

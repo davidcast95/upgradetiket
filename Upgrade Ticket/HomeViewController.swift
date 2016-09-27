@@ -21,6 +21,9 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        ReadCitiesData()
+        
         if let fullname = activeUser.value(forKey: "name") as? String {
             signButton.setTitle("Hi, \(fullname)", for: UIControlState())
             signButton.isEnabled = false
@@ -30,16 +33,16 @@ class HomeViewController: UIViewController {
         signButton.alpha = 0
         exploreButton.alpha = 0
         //animations
-        UIView.animate(withDuration: 0.5, delay: 0.2, options: UIViewAnimationOptions(), animations: {
+        UIView.animate(withDuration: 0.3, delay: 0.12, options: UIViewAnimationOptions(), animations: {
             self.logoImage.frame.origin.y -= 100
             }, completion: nil)
-        UIView.animate(withDuration: 1, delay: 0.4, options: UIViewAnimationOptions(), animations: {
+        UIView.animate(withDuration: 0.7, delay: 0.28, options: UIViewAnimationOptions(), animations: {
             self.signButton.alpha = 1
             }, completion: nil)
-        UIView.animate(withDuration: 1.5, delay: 0.5, options: UIViewAnimationOptions(), animations: {
+        UIView.animate(withDuration: 1, delay: 0.33, options: UIViewAnimationOptions(), animations: {
             self.exploreButton.alpha = 1
             }, completion: nil)
-        UIView.animate(withDuration: 1, delay: 0.45, options: UIViewAnimationOptions(), animations: {
+        UIView.animate(withDuration: 0.7, delay: 0.315, options: UIViewAnimationOptions(), animations: {
             self.logoImage.alpha = 1
             }, completion: nil)
         let backgroundQueue = DispatchQueue(label: "background", qos: .background, attributes: .concurrent)
@@ -80,10 +83,8 @@ class HomeViewController: UIViewController {
 
     }
     
-    func ReadCityData() {
-        //        check in core data
+    func ReadCitiesData() {
         let citiesContext = FecthFromCoreData("Destinations")
-        searchFlight.cities.removeAll()
         for cityContext in citiesContext {
             let tempCity = City()
             tempCity.id = (cityContext.value(forKey: "id") as? Int)!
@@ -93,46 +94,5 @@ class HomeViewController: UIViewController {
             tempCity.airport = (cityContext.value(forKey: "airport") as? String)!
             searchFlight.cities.append(tempCity)
         }
-        
-        
-        let link = "http://rico.webmurahbagus.com/admin/API/GetDestinationAPI.php"
-        AjaxPost(link, parameter: "", done: { (data) in
-            do {
-                let cities = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [[String : AnyObject]]
-                for city in cities! {
-                    let tempCity = City()
-                    if let name = city["city"] as? String {
-                        tempCity.city = name
-                    }
-                    if let alias = city["alias"] as? String {
-                        tempCity.alias = alias
-                    }
-                    if let id = city["id_destination"] as? String {
-                        tempCity.id = Int(id)!
-                    }
-                    if let airport = city["airport"] as? String {
-                        tempCity.airport = airport
-                    }
-                    if let image = city["image"] as? String {
-                        if let url = URL(string: "http://rico.webmurahbagus.com/admin/images/\(image)") {
-                            if let data = try? Data(contentsOf: url) {
-                                tempCity.image = data
-                            }
-                        }
-                    }
-                    
-                    if !searchFlight.IsCityExist(tempCity) {
-                        searchFlight.cities.append(tempCity)
-                        tempCity.SaveToCoreData()
-                    }
-                }
-                
-            } catch {
-                print("error")
-            }
-        })
-        
-        
     }
-    
 }

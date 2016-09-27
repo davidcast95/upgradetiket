@@ -15,6 +15,8 @@ class PaymentMethodViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        rekeningLabel.text = "A.N Upgrade Ticket \(admin.rekening)"
+        milespointsLabel.text = "Call \(admin.phone)"
         // Do any additional setup after loading the view.
     }
 
